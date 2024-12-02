@@ -33,6 +33,7 @@ const App = () => {
           <Route path="/upload" element={<UploadPage />} />
         </Routes>
       </Router>
+      <UploadPage />
       <Footer />
     </div>
   );
