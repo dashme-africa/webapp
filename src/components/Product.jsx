@@ -4,13 +4,15 @@ const Product = ({ product }) => {
   // Assuming your backend serves images from 'http://localhost:5000/uploads/'
   // const imageUrl = `https://dashmeafrica.onrender.com/uploads/${product.image}`;
   // const imageUrl = `http://localhost:5000/${product.image}`;
-  const imageUrl = product.image;
+  // const imageUrl = product.image;
 
   return (
     <Card className="my-3 p-3 rounded">
-      <a href={`/product/${product._id}`}>
-        <Card.Img src={imageUrl} variant="top" />
-      </a>
+      {/* <a href={`/product/${product._id}`}> */}
+        <Card.Img src={product.image} variant="top" />
+        <strong>{product.image}</strong>
+
+      {/* </a> */}
 
       <Card.Body>
         <div href={`/product/${product._id}`}>
