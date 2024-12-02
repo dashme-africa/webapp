@@ -2,7 +2,9 @@ import { Card } from 'react-bootstrap';
 
 const Product = ({ product }) => {
   // Assuming your backend serves images from 'http://localhost:5000/uploads/'
-  const imageUrl = `https://dashmeafrica.onrender.com/${product.image}`;
+  // const imageUrl = `https://dashmeafrica.onrender.com/uploads/${product.image}`;
+  // const imageUrl = `http://localhost:5000/${product.image}`;
+  const imageUrl = product.image;
 
   return (
     <Card className="my-3 p-3 rounded">

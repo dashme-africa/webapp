@@ -10,17 +10,13 @@ const UploadForm = () => {
     price: '',
     priceCategory: '$0-50',
     location: '',
-    photos: [],
+    image: '', // Change to single image URL
     isPremium: false,
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
-  };
-
-  const handleFileChange = (e) => {
-    setFormData({ ...formData, photos: e.target.files });
   };
 
   const handleCheckboxChange = () => {
@@ -30,32 +26,21 @@ const UploadForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const formDataToSubmit = new FormData();
-    formDataToSubmit.append('name', formData.name);  // Changed from 'title' to 'name'
-    formDataToSubmit.append('description', formData.description);
-    formDataToSubmit.append('category', formData.category);
-    formDataToSubmit.append('subcategory', formData.subcategory);
-    formDataToSubmit.append('price', formData.price);
-    formDataToSubmit.append('priceCategory', formData.priceCategory);
-    formDataToSubmit.append('location', formData.location);
-    
-
-    
-
-    // Append multiple files to FormData
-    for (let i = 0; i < formData.photos.length; i++) {
-      formDataToSubmit.append('photos', formData.photos[i]);
+    if (!formData.name || !formData.category || !formData.price || !formData.image) {
+      console.error('Error: Please fill all required fields and upload at least one image');
+      return;
     }
 
     try {
-      const response = await axios.post('https://dashmeafrica.onrender.com/api/products', formDataToSubmit, {
+      const response = await axios.post('https://dashmeafrica.onrender.com/api/products', formData, {
+      // const response = await axios.post('http://localhost:5000/api/products', formData, {
         headers: {
-          'Content-Type': 'multipart/form-data',
+          'Content-Type': 'application/json',
         },
       });
       console.log('Product uploaded:', response.data);
     } catch (error) {
-      console.error('Error uploading product:', error.response.data.message);
+      console.error('Error uploading product:', error.response?.data?.message || error.message);
     }
   };
 
@@ -68,7 +53,7 @@ const UploadForm = () => {
       price: '',
       priceCategory: '$0-50',
       location: '',
-      photos: [],
+      image: '', // Clear image URL
       isPremium: false,
     });
   };
@@ -172,13 +157,15 @@ const UploadForm = () => {
           </div>
 
           <div className="mb-3">
-            <label htmlFor="upload_photos" className="form-label">Upload Photos</label>
+            <label htmlFor="image" className="form-label">Image URL</label>
             <input
+              type="text"
               className="form-control"
-              id="upload_photos"
-              type="file"
-              multiple
-              onChange={handleFileChange}
+              id="image"
+              name="image"
+              placeholder="Enter image URL"
+              value={formData.image}
+              onChange={handleChange}
             />
           </div>
 
