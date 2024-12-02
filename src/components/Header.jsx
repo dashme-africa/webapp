@@ -5,7 +5,7 @@ import { FaUser, FaBell, FaEnvelope, FaHeart, FaSearch } from 'react-icons/fa';
 const Header = () => {
   return (
     <header className="bg-white shadow-sm">
-      <Navbar bg="white" variant="light" expand="lg" collapseOnSelect>
+      <Navbar bg="white" variant="light" expand="lg" >
         <Container>
           {/* Logo / Brand */}
           <Navbar.Brand href="/" className="d-flex align-items-center">

@@ -28,12 +28,12 @@ const App = () => {
             <main>
               <Hero />
               <HomeScreen />
+              <UploadPage />
             </main>
           } />
           <Route path="/upload" element={<UploadPage />} />
         </Routes>
       </Router>
-      <UploadPage />
       <Footer />
     </div>
   );
