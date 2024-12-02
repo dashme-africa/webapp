@@ -16,6 +16,7 @@ const Product = ({ product }) => {
         <div href={`/product/${product._id}`}>
           <Card.Title as="div" className="product-title">
             <strong>{product.name}</strong>
+            <strong>{product.image}</strong>
           </Card.Title>
           <Card.Text as="div" className="product-price">
           <strong>{"N"+product.price}</strong>
