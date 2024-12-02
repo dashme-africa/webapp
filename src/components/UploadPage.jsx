@@ -32,7 +32,7 @@ const UploadForm = () => {
     }
 
     try {
-      const response = await axios.post('https://dashmeafrica.onrender.com/api/products', formData, {
+      const response = await axios.post('https://dashmeafrica-backend.onrender.com/api/products', formData, {
       // const response = await axios.post('http://localhost:5000/api/products', formData, {
         headers: {
           'Content-Type': 'application/json',
