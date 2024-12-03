@@ -26,6 +26,7 @@ const Product = ({ product }) => {
           </Card.Text>
           <Card.Text as="div" className="product-location">
             <p>{`${product.location}`}</p>
+            <span className="text-success text-end">{`${product.tag}`}</span>
           </Card.Text>
         </a>
       </Card.Body>
