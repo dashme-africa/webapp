@@ -29,7 +29,7 @@ const Register = () => {
     setIsSubmitting(true);
     try {
       const response = await axios.post(
-        'https://your-backend-url/api/users/register',
+        'https://dashmeafrica-backend.vercel.app/api/users/register',
         formData
       );
       alert('Registration Successful');
@@ -45,54 +45,70 @@ const Register = () => {
 
   return (
     <div className="container mt-5">
-      <h2 className="text-center mb-4">Register</h2>
+      <h2 className="text-center mb-4">Register with email</h2>
       {error && <div className="alert alert-danger">{error}</div>}
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
-          <label className="form-label">Name</label>
+          {/* <label className="form-label">Full name</label> */}
           <input
             type="text"
-            name="name"
+            name="fullName"
             className="form-control"
-            value={formData.name}
+            value={formData.fullName}
             onChange={handleChange}
+            placeholder="Full name"
             required
           />
         </div>
         <div className="mb-3">
-          <label className="form-label">Email</label>
+          {/* <label className="form-label">Username</label> */}
+          <input
+            type="text"
+            name="username"
+            className="form-control"
+            value={formData.username}
+            onChange={handleChange}
+            placeholder="Username"
+            required
+          />
+        </div>
+        <div className="mb-3">
+          {/* <label className="form-label">Email</label> */}
           <input
             type="email"
             name="email"
             className="form-control"
             value={formData.email}
             onChange={handleChange}
+            placeholder="Email"
             required
           />
         </div>
         <div className="mb-3">
-          <label className="form-label">Password</label>
+          {/* <label className="form-label">Password</label> */}
           <input
             type="password"
             name="password"
             className="form-control"
             value={formData.password}
             onChange={handleChange}
+            placeholder="Password"
             required
           />
         </div>
         <div className="mb-3">
-          <label className="form-label">Confirm Password</label>
+          {/* <label className="form-label">Confirm Password</label> */}
           <input
             type="password"
             name="confirmPassword"
             className="form-control"
             value={formData.confirmPassword}
             onChange={handleChange}
+            placeholder="Confirm Password"
             required
           />
         </div>
-        <button type="submit" className="btn btn-primary w-100" disabled={isSubmitting}>
+        <button type="submit" className="btn btn-success w-100" disabled={isSubmitting}>
           {isSubmitting ? 'Registering...' : 'Register'}
         </button>
       </form>

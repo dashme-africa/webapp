@@ -21,9 +21,11 @@ const Product = ({ product }) => {
           <Card.Title as="div" className="product-title">
             <strong>{product.title}</strong>
           </Card.Title>
-          <Card.Text as="div" className="product-price">
-            <p>{`N${product.price}`}</p>
-          </Card.Text>
+          {product.tag === 'sell' && (
+            <Card.Text as="div" className="product-price">
+              <p>{`N${product.price}`}</p>
+            </Card.Text>
+          )}
           <Card.Text as="div" className="product-location">
             <p>{`${product.location}`}</p>
             <span className="text-success text-end">{`${product.tag}`}</span>
