@@ -5,7 +5,7 @@ const Product = ({ product }) => {
   // const imageUrl = `http://localhost:5000/${product.image}`;
   // Directly use the Cloudinary URL stored in the product object
   const imageUrl = product.image;  // This should be the Cloudinary URL now
-  
+
   console.log(imageUrl)
 
   return (
@@ -28,7 +28,7 @@ const Product = ({ product }) => {
             <p>{`N${product.price}`}</p>
           </Card.Text>
           <Card.Text as="div" className="product-location">
-            <p>{`N${product.location}`}</p>
+            <p>{`${product.location}`}</p>
           </Card.Text>
         </a>
       </Card.Body>
