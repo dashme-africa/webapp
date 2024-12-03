@@ -31,24 +31,24 @@ const Header = () => {
             {/* Icons and Links */}
             <Nav className="d-flex flex-row align-items-center justify-content-space-between">
               <Nav.Link href="/messages" className="me-3">
-                <FaEnvelope size={35} />
+                <FaEnvelope size={30} />
               </Nav.Link>
               <Nav.Link href="/notifications" className="me-3">
-                <FaBell size={35} />
+                <FaBell size={30} />
               </Nav.Link>
               <Nav.Link href="/favorites" className="me-3">
-                <FaHeart size={35} />
+                <FaHeart size={30} />
               </Nav.Link>
               <Nav.Link href="/account" className="me-5">
-                <FaUser size={35} />
+                <FaUser size={30} />
               </Nav.Link>
-              <Nav.Link href="/upload" className="me-4 fs-5 fs-sm-6 text-dark">
+              <Nav.Link href="/upload" className="me-4 fs-6  text-dark">
                 Upload
               </Nav.Link>
-              <Nav.Link href="/signup" className="me-3 fs-5 fs-sm-6 text-dark">
+              <Nav.Link href="/signup" className="me-3 fs-6  text-dark">
                 Sign Up
               </Nav.Link>
-              <Nav.Link href="/language" className="fs-5 fs-sm-6 text-dark">
+              <Nav.Link href="/language" className="fs-6  text-dark">
                 EN <span className="fw-light">&#x25BC;</span>
               </Nav.Link>
             </Nav>
