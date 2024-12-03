@@ -1,13 +1,14 @@
 import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { setItems } from './features/items/itemsSlice';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Hero from './components/Hero';
 import UploadPage from './components/UploadPage';
 import HomeScreen from './screens/HomeScreen';
-// import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import { HashRouter as Router, Routes, Route } from 'react-router-dom';
+
 
 const App = () => {
   const dispatch = useDispatch();
@@ -20,22 +21,21 @@ const App = () => {
 
   return (
     <div>
-      <Header />
       <Router>
-        <Routes>
-          <Route path="/" element={
-            <main>
-              <Hero />
-              <HomeScreen />
-              <UploadPage />
-            </main>
-          } />
-          <Route path="/upload" element={<UploadPage />} />
-        </Routes>
+        <Header />
+        <main>
+          <Routes>
+            <Route path="/" element={ <><Hero /> <HomeScreen /></>} />
+            <Route path="/upload" element={<UploadPage />} />
+          </Routes>
+        </main>
+        <Footer />
       </Router>
-      <Footer />
+
     </div>
   );
 };
 
 export default App;
+
+
