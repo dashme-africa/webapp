@@ -10,7 +10,8 @@ const HomeScreen = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const { data } = await axios.get('https://dashmeafrica-backend.onrender.com/api/products'); // Make a GET request to your backend
+        // const { data } = await axios.get('https://dashmeafrica-backend.onrender.com/api/products'); // Make a GET request to your backend
+        const { data } = await axios.get('https://dashmeafrica-backend.vercel.app/api/products'); // Make a GET request to your backend
         setProducts(data); // Store fetched products in state
       } catch (error) {
         console.error('Error fetching products:', error);
