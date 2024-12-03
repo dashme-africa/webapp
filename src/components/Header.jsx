@@ -14,6 +14,8 @@ const Header = () => {
 
           {/* Toggle for Mobile */}
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
+
+
           {/* Search Bar */}
           <Form className="d-flex mx-auto my-3 my-lg-0" style={{ maxWidth: '500px', width: '100%' }}>
             <div className="input-group">
@@ -24,11 +26,10 @@ const Header = () => {
             </div>
           </Form>
 
-
           {/* Navbar Links */}
           <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
             {/* Icons and Links */}
-            <Nav className="d-flex align-items-center">
+            <Nav className="d-flex flex-row align-items-center justify-content-space-between">
               <Nav.Link href="/messages" className="me-3">
                 <FaEnvelope size={35} />
               </Nav.Link>
@@ -38,7 +39,7 @@ const Header = () => {
               <Nav.Link href="/favorites" className="me-3">
                 <FaHeart size={35} />
               </Nav.Link>
-              <Nav.Link href="/account" className="me-4">
+              <Nav.Link href="/account" className="me-5">
                 <FaUser size={35} />
               </Nav.Link>
               <Nav.Link href="/upload" className="me-4 fs-5 text-dark">
