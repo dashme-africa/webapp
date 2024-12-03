@@ -39,7 +39,7 @@ const Header = () => {
               <Nav.Link href="/favorites" className="me-3">
                 <FaHeart size={30} />
               </Nav.Link>
-              <Nav.Link href="/account" className="me-5">
+              <Nav.Link href="/profile" className="me-5">
                 <FaUser size={30} />
               </Nav.Link>
               <Nav.Link href="/upload" className="me-4 fs-6  text-dark">

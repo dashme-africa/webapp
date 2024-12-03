@@ -10,7 +10,7 @@ const Profile = () => {
 
       if (token) {
         try {
-          const response = await axios.get('https://your-backend-url/api/users/profile', {
+          const response = await axios.get('https://dashmeafrica-backend.vercel.app/api/userProfile/profile', {
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -26,13 +26,14 @@ const Profile = () => {
   }, []);
 
   if (!user) {
-    return <div>Loading...</div>;
+    return <div className='text-center p-5 m-5'>Loading...</div>;
   }
 
   return (
     <div className="container mt-5">
       <h2>User Profile</h2>
-      <p><strong>Name:</strong> {user.name}</p>
+      <p><strong>Full name</strong> {user.fullName}</p>
+      <p><strong>Username:</strong> {user.username}</p>
       <p><strong>Email:</strong> {user.email}</p>
     </div>
   );

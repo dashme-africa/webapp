@@ -4,6 +4,7 @@ import { setItems } from './features/items/itemsSlice';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 import Header from './components/Header';
+import Formhead from './components/Formhead';
 import Footer from './components/Footer';
 import Hero from './components/Hero';
 import UploadPage from './components/UploadPage';
@@ -26,14 +27,13 @@ const App = () => {
   return (
     <div>
       <Router>
-        <Header />
         <main>
           <Routes>
-            <Route path="/" element={<><Hero /> <HomeScreen /></>} />
-            <Route path="/upload" element={<UploadPage />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/profile" element={<Profile />} />
+            <Route path="/" element={ <> <Header /> <Hero /> <HomeScreen /> </> } />
+            <Route path="/upload" element={<><Header /> <UploadPage /></>} />
+            <Route path="/profile" element={<><Header /> <Profile /></>} />
+            <Route path="/register" element={<><Formhead /> <Register /></>} />
+            <Route path="/login" element={<><Formhead /><Login /></>} />
           </Routes>
         </main>
         <Footer />
