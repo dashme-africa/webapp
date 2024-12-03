@@ -22,21 +22,21 @@ const HomeScreen = () => {
   return (
     <>
       {/* Header Row with "Recommended for You" and "See All" */}
-      <Row className="align-items-center mb-3">
+      <Row className="align-items-center mb-1 px-5">
         <Col>
           <h4 className="mb-0">Recommended for You</h4>
         </Col>
         <Col className="text-end">
-          <a href="/products" className="text-primary">
+          <a href="/products" className="text-success fs-5 text-decoration-none">
             See All
           </a>
         </Col>
       </Row>
 
       {/* Product Cards */}
-      <Row>
+      <Row className="px-5">
         {products.map((product) => (
-          <Col key={product._id} sm={12} md={6} lg={4} xl={3}>
+          <Col key={product._id} sm={12} md={6} lg={4} xl={2}>
             <Product product={product} />
           </Col>
         ))}

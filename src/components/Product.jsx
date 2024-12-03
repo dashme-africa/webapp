@@ -1,8 +1,8 @@
-import { Card, Row, Col, Container } from 'react-bootstrap';
+import { Card } from 'react-bootstrap';
 
 const Product = ({ product }) => {
   return (
-    <Card className="my-3 p-3 rounded">
+    <Card className="my-4 border-0">
       <a href={`/product/${product._id}`}>
         {/* Enforce consistent image height */}
         <Card.Img
@@ -18,7 +18,10 @@ const Product = ({ product }) => {
             <strong>{product.name}</strong>
           </Card.Title>
           <Card.Text as="div" className="product-price">
-            <strong>{`N${product.price}`}</strong>
+            <p>{`N${product.price}`}</p>
+          </Card.Text>
+          <Card.Text as="div" className="product-location">
+            <p>{`N${product.location}`}</p>
           </Card.Text>
         </a>
       </Card.Body>
