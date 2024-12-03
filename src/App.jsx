@@ -9,6 +9,9 @@ import Hero from './components/Hero';
 import UploadPage from './components/UploadPage';
 import HomeScreen from './screens/HomeScreen';
 import Register from './components/Register';
+import Login from './components/Login';
+import Profile from './components/Profile';
+// import Home from './components/Home';
 
 
 const App = () => {
@@ -26,9 +29,11 @@ const App = () => {
         <Header />
         <main>
           <Routes>
-            <Route path="/" element={ <><Hero /> <HomeScreen /></>} />
+            <Route path="/" element={<><Hero /> <HomeScreen /></>} />
             <Route path="/upload" element={<UploadPage />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/profile" element={<Profile />} />
           </Routes>
         </main>
         <Footer />

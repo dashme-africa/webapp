@@ -45,7 +45,7 @@ const Header = () => {
               <Nav.Link href="/upload" className="me-4 fs-6  text-dark">
                 Upload
               </Nav.Link>
-              <Nav.Link href="/signup" className="me-3 fs-6  text-dark">
+              <Nav.Link href="/register" className="me-3 fs-6  text-dark">
                 Sign Up
               </Nav.Link>
               <Nav.Link href="/language" className="fs-6  text-dark">
