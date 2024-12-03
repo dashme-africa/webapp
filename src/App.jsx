@@ -1,13 +1,14 @@
 import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { setItems } from './features/items/itemsSlice';
-// import RecommendedItems from './components/RecommendedItems';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Hero from './components/Hero';
 import UploadPage from './components/UploadPage';
 import HomeScreen from './screens/HomeScreen';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+// import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route } from 'react-router-dom';
+
 // import Container from 'react-bootstrap';
 
 const App = () => {
