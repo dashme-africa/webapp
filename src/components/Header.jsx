@@ -19,34 +19,34 @@ const Header = () => {
 
           {/* Toggle for Mobile */}
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
-            {/* Search Bar */}
-            <Form className="d-flex mx-auto my-3 my-lg-0" style={{ maxWidth: '600px', width: '100%' }}>
-              <FormControl
-                type="search"
-                placeholder="Search for items"
-                className="rounded-start"
-                aria-label="Search"
-                style={{
-                  border: '1px solid green',
-                  borderRight: 'none',
-                  borderTopLeftRadius: '25px',
-                  borderBottomLeftRadius: '25px',
-                }}
-              />
-              <Button
-                variant="outline-success"
-                className="rounded-end"
-                style={{
-                  backgroundColor: 'green',
-                  color: 'white',
-                  borderTopRightRadius: '25px',
-                  borderBottomRightRadius: '25px',
-                  border: '1px solid green',
-                }}
-              >
-                <FaSearch />
-              </Button>
-            </Form>
+          {/* Search Bar */}
+          <Form className="d-flex mx-auto my-3 my-lg-0" style={{ maxWidth: '600px', width: '100%' }}>
+            <FormControl
+              type="search"
+              placeholder="Search for items"
+              className="rounded-start"
+              aria-label="Search"
+              style={{
+                border: '1px solid green',
+                borderRight: 'none',
+                borderTopLeftRadius: '25px',
+                borderBottomLeftRadius: '25px',
+              }}
+            />
+            <Button
+              variant="outline-success"
+              className="rounded-end"
+              style={{
+                backgroundColor: 'green',
+                color: 'white',
+                borderTopRightRadius: '25px',
+                borderBottomRightRadius: '25px',
+                border: '1px solid green',
+              }}
+            >
+              <FaSearch />
+            </Button>
+          </Form>
           {/* Navbar Links */}
           <Navbar.Collapse id="basic-navbar-nav" className="justify-content-between">
             {/* Icons and Links */}

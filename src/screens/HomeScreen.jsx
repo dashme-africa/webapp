@@ -21,12 +21,23 @@ const HomeScreen = () => {
 
   return (
     <>
-      <h1>Latest Products</h1>
+      {/* Header Row with "Recommended for You" and "See All" */}
+      <Row className="align-items-center mb-3">
+        <Col>
+          <h4 className="mb-0">Recommended for You</h4>
+        </Col>
+        <Col className="text-end">
+          <a href="/products" className="text-primary">
+            See All
+          </a>
+        </Col>
+      </Row>
+
+      {/* Product Cards */}
       <Row>
         {products.map((product) => (
           <Col key={product._id} sm={12} md={6} lg={4} xl={3}>
             <Product product={product} />
-            {console.log(product)}
           </Col>
         ))}
       </Row>

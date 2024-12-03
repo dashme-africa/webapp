@@ -1,23 +1,26 @@
-import { Card } from 'react-bootstrap';
+import { Card, Row, Col, Container } from 'react-bootstrap';
 
 const Product = ({ product }) => {
-  // Assuming your backend serves images from 'http://localhost:5000/uploads/'
-
   return (
     <Card className="my-3 p-3 rounded">
       <a href={`/product/${product._id}`}>
-        <Card.Img src={product.image} variant="top" />
+        {/* Enforce consistent image height */}
+        <Card.Img
+          src={product.image}
+          variant="top"
+          style={{ height: '200px', objectFit: 'cover' }}
+        />
       </a>
 
       <Card.Body>
-        <div href={`/product/${product._id}`}>
+        <a href={`/product/${product._id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
           <Card.Title as="div" className="product-title">
             <strong>{product.name}</strong>
           </Card.Title>
           <Card.Text as="div" className="product-price">
-          <strong>{"N"+product.price}</strong>
+            <strong>{`N${product.price}`}</strong>
           </Card.Text>
-        </div>
+        </a>
       </Card.Body>
     </Card>
   );
