@@ -1,59 +1,88 @@
-import React from 'react';
+import React from "react";
+import { Button } from "react-bootstrap";
 
-const Hero = () => {
+const HeroPage = () => {
   return (
-    <section className="bg-light py-5">
-      <div className="container d-flex align-items-center justify-content-between">
-        {/* Text Content */}
-        <div className="col-md-6 text-left">
-          <h1 className="fw-bold mb-3" style={{ fontSize: '2.5rem' }}>Sell It! Donate It! Don’t Trash It!</h1>
-          <p className="text-secondary mb-4" style={{ fontSize: '1.2rem' }}>
-            Join a community of sustainable living. List items you don’t need and let others benefit.
-          </p>
-          <button className="btn btn-success" style={{ fontSize: '1.2rem', padding: '12px 24px', borderRadius: '25px' }}>
-            Upload
-          </button>
-        </div>
+    <div style={{ position: "relative", height: "100vh", overflow: "hidden" }}>
+      {/* Background Image */}
+      <div
+        style={{
+          backgroundImage: "url('https://res.cloudinary.com/df2q6gyuq/image/upload/v1733150204/hero_z088oi.png')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          width: "100%",
+          height: "100%",
+        }}
+      ></div>
 
-        {/* Hero Image */}
-        <div className="col-md-6">
-          <img
-            src="https://res.cloudinary.com/df2q6gyuq/image/upload/v1733150204/hero_z088oi.png"  // Change to the actual image path you uploaded
-            alt="Hero"
-            className="img-fluid rounded"
-          />
+      {/* Navigation Links */}
+      <div
+        className="d-flex justify-content-left align-items-center"
+        style={{
+          position: "absolute",
+          top: "0",
+          width: "100%",
+          backgroundColor: "white",
+          zIndex: 2,
+        }}
+      >
+        <nav className="d-flex justify-content-center">
+          <a
+            href="#clothes"
+            className="mx-4 text-dark fw-bold"
+            style={{ textDecoration: "none" }}
+          >
+            Clothes
+          </a>
+          <a
+            href="#household-items"
+            className="mx-4 text-dark fw-bold"
+            style={{ textDecoration: "none" }}
+          >
+            Household Items
+          </a>
+          <a
+            href="#accessories"
+            className="mx-4 text-dark fw-bold"
+            style={{ textDecoration: "none" }}
+          >
+            Accessories
+          </a>
+        </nav>
+      </div>
+
+      {/* Bottom Left Section */}
+      <div
+        className="position-absolute"
+        style={{
+          left: "10%",
+          bottom: "10%",
+          backgroundColor: "white",
+          padding: "20px",
+          borderRadius: "15px",
+          boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+          zIndex: 3,
+        }}
+      >
+        <h2 className="mb-3 text-center fw-bold">Sell It!</h2>
+        <h2 className="mb-3 text-center fw-bold">Donate It!</h2>
+        <h2 className="mb-4 text-center fw-bold">Don't Trash It!</h2>
+        <div className="text-center">
+          <Button
+            style={{
+              backgroundColor: "green",
+              borderColor: "green",
+              borderRadius: "25px",
+              padding: "10px 30px",
+              fontWeight: "bold",
+            }}
+          >
+            Upload
+          </Button>
         </div>
       </div>
-    </section>
+    </div>
   );
 };
 
-export default Hero;
-
-// import React from 'react';
-// import '../Hero.css';
-
-
-
-// const Hero = () => {
-//   return (
-//     <div className="container-fluid">
-//       <div className="row">
-//         <div className="col-md-6">
-//           <div className="hero-text">
-//             <h1>Sell It!</h1>
-//             <h1>Donate It!</h1>
-//             <h1>Don't Trash It!</h1>
-//             <button className="btn btn-primary">Upload</button>
-//           </div>
-//         </div>
-//         <div className="col-md-6">
-//           {/* <img src="https://images.unsplash.com/photo-1542838132-92c53300491e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80" alt="Hero Image" className="hero-image" /> */}
-//           <img src="https://res.cloudinary.com/df2q6gyuq/image/upload/v1733150204/hero_z088oi.png" alt="Hero Image" className="hero-image"/> 
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default Hero;
+export default HeroPage;
