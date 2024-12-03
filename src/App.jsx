@@ -8,6 +8,7 @@ import Footer from './components/Footer';
 import Hero from './components/Hero';
 import UploadPage from './components/UploadPage';
 import HomeScreen from './screens/HomeScreen';
+import Register from './components/Register';
 
 
 const App = () => {
@@ -27,6 +28,7 @@ const App = () => {
           <Routes>
             <Route path="/" element={ <><Hero /> <HomeScreen /></>} />
             <Route path="/upload" element={<UploadPage />} />
+            <Route path="/register" element={<Register />} />
           </Routes>
         </main>
         <Footer />

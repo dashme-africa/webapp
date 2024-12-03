@@ -19,7 +19,7 @@ const Product = ({ product }) => {
       <Card.Body>
         <a href={`/product/${product._id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
           <Card.Title as="div" className="product-title">
-            <strong>{product.name}</strong>
+            <strong>{product.title}</strong>
           </Card.Title>
           <Card.Text as="div" className="product-price">
             <p>{`N${product.price}`}</p>
