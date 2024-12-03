@@ -403,9 +403,10 @@ const UploadPage = () => {
                   </>
                 ) : (
                   <>
-                    <option value="books">Books</option>
                     <option value="clothes">Clothes</option>
-                    <option value="other">Other</option>
+                    <option value="electronics">Electronics</option>
+                    <option value="accessories">Accessories</option>
+                    <option value="household-items">Household Items</option>
                   </>
                 )}
               </select>
@@ -428,6 +429,7 @@ const UploadPage = () => {
             )}
 
             {/* Price Category */}
+            {activeTab === 'sell' && (
             <div className="mb-3">
               <label className="form-label">Price Category</label>
               <select
@@ -440,21 +442,15 @@ const UploadPage = () => {
                 <option value="" disabled>
                   Select category
                 </option>
-                {activeTab === 'sell' ? (
                   <>
                     <option value="500-15000">N500 - N15,000</option>
                     <option value="15000-25000">N15,000 - N25,000</option>
                     <option value="25000-50000">N25,000 - N50,000</option>
                   </>
-                ) : (
-                  <>
-                    <option value="books">Books</option>
-                    <option value="clothes">Clothes</option>
-                    <option value="other">Other</option>
-                  </>
-                )}
+                
               </select>
             </div>
+            )}
 
             {/* Location */}
             <div className="mb-3">
