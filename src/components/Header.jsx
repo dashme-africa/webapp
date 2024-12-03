@@ -42,13 +42,13 @@ const Header = () => {
               <Nav.Link href="/account" className="me-5">
                 <FaUser size={35} />
               </Nav.Link>
-              <Nav.Link href="/upload" className="me-4 fs-5 text-dark">
+              <Nav.Link href="/upload" className="me-4 fs-5 fs-sm-6 text-dark">
                 Upload
               </Nav.Link>
-              <Nav.Link href="/signup" className="me-3 fs-5 text-dark">
+              <Nav.Link href="/signup" className="me-3 fs-5 fs-sm-6 text-dark">
                 Sign Up
               </Nav.Link>
-              <Nav.Link href="/language" className="fs-5 text-dark">
+              <Nav.Link href="/language" className="fs-5 fs-sm-6 text-dark">
                 EN <span className="fw-light">&#x25BC;</span>
               </Nav.Link>
             </Nav>

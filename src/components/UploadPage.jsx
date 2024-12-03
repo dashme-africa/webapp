@@ -442,8 +442,9 @@ const UploadPage = () => {
                 </option>
                 {activeTab === 'sell' ? (
                   <>
-                    <option value="500-25000">N500 - N25,000</option>
-                    <option value="25000-50000">N25,000 - N50,000</option>
+                    <option value="500-15000">N500 - N15,000</option>
+                    <option value="15000-25000">N15,000 - N25,000</option>
+                    <option value="25000-50000">N25,000 - N50,000</option>
                   </>
                 ) : (
                   <>
