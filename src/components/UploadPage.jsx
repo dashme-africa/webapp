@@ -242,45 +242,6 @@ const UploadPage = () => {
     }));
   };
 
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   setIsSubmitting(true);
-
-  //   try {
-  //     const uploadData = new FormData();
-  //     uploadData.append('title', formData.title);
-  //     uploadData.append('description', formData.description);
-  //     uploadData.append('category', formData.category);
-  //     uploadData.append('price', formData.price);
-  //     uploadData.append('priceCategory', formData.priceCategory);
-  //     uploadData.append('location', formData.location);
-  //     uploadData.append('image', formData.image);
-
-  //     {console.log(uploadData, formData.title, formData.description)}
-
-  //     const endpoint = activeTab === 'sell' ? 'http://localhost:5000/api/products' : '/api/donate';
-
-  //     const response = await axios.post(endpoint, uploadData, {
-  //       headers: { 'Content-Type': 'multipart/form-data' },
-  //     });
-
-  //     alert(`Success: ${response.data.message}`);
-  //     setFormData({
-  //       title: '',
-  //       description: '',
-  //       category: '',
-  //       price: '',
-  //       priceCategory: '',
-  //       location: '',
-  //       image: null,
-  //     });
-  //   } catch (error) {
-  //     console.error('Error uploading data:', error);
-  //     alert('Failed to submit. Please try again.');
-  //   } finally {
-  //     setIsSubmitting(false);
-  //   }
-  // };
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -435,9 +396,10 @@ const UploadPage = () => {
                 </option>
                 {activeTab === 'sell' ? (
                   <>
-                    <option value="electronics">Electronics</option>
                     <option value="clothes">Clothes</option>
-                    <option value="furniture">Furniture</option>
+                    <option value="electronics">Electronics</option>
+                    <option value="accessories">Accessories</option>
+                    <option value="household-items">Household Items</option>
                   </>
                 ) : (
                   <>
@@ -480,9 +442,8 @@ const UploadPage = () => {
                 </option>
                 {activeTab === 'sell' ? (
                   <>
-                    <option value="electronics">Electronics</option>
-                    <option value="clothes">Clothes</option>
-                    <option value="furniture">Furniture</option>
+                    <option value="500-25000">N500 - N25,000</option>
+                    <option value="25000-50000">N25,000 - N50,000</option>
                   </>
                 ) : (
                   <>
