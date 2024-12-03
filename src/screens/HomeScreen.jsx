@@ -11,7 +11,9 @@ const HomeScreen = () => {
     const fetchProducts = async () => {
       try {
         const { data } = await axios.get('https://dashmeafrica-backend.vercel.app/api/products'); // Make a GET request to your backend
-        setProducts(data); // Store fetched products in state
+        // Sort products by createdAt in descending order
+        const sortedProducts = data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        setProducts(sortedProducts); // Store sorted products in state
       } catch (error) {
         console.error('Error fetching products:', error);
       }

@@ -1,9 +1,6 @@
 import { Card } from 'react-bootstrap';
 
 const Product = ({ product }) => {
-  // Base URL for image (adjust based on your server's actual URL)
-  // const imageUrl = `http://localhost:5000/${product.image}`;
-  // Directly use the Cloudinary URL stored in the product object
   const imageUrl = product.image;  // This should be the Cloudinary URL now
 
   console.log(imageUrl)
