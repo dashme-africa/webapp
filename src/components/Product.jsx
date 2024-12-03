@@ -1,4 +1,4 @@
-import { Card } from 'react-bootstrap';
+import { Card, Button } from 'react-bootstrap';
 
 const Product = ({ product }) => {
   const imageUrl = product.image;  // This should be the Cloudinary URL now
@@ -28,7 +28,10 @@ const Product = ({ product }) => {
           )}
           <Card.Text as="div" className="product-location">
             <p>{`${product.location}`}</p>
-            <span className="text-success text-end">{`${product.tag}`}</span>
+            <Button variant="success" className="text-white text-end">
+              {`${product.tag}`}
+            </Button>
+
           </Card.Text>
         </a>
       </Card.Body>
