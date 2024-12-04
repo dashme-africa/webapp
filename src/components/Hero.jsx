@@ -33,21 +33,21 @@ const HeroPage = () => {
         <nav className="d-flex justify-content-start justify-content-md-center">
           <a
             href="#clothes"
-            className="mx-4 mb-3 text-dark fs-6"
+            className="mx-2 mb-3 text-dark fs-6"
             style={{ textDecoration: "none" }}
           >
             Clothes
           </a>
           <a
             href="#household-items"
-            className="mx-4 mb-3 text-dark fs-6"
+            className="mx-2 mb-3 text-dark fs-6"
             style={{ textDecoration: "none" }}
           >
             Household Items
           </a>
           <a
             href="#accessories"
-            className="mx-4 mb-3 text-dark fs-6"
+            className="mx-2 mb-3 text-dark fs-6"
             style={{ textDecoration: "none" }}
           >
             Accessories

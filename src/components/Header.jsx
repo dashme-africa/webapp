@@ -30,9 +30,9 @@ const Header = () => {
           <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
             {/* Icons and Links */}
             <Nav className="d-flex flex-row align-items-center justify-content-space-between">
-              <Nav.Link href="/messages" className="me-3">
+              {/* <Nav.Link href="/messages" className="me-3">
                 <FaEnvelope size={30} />
-              </Nav.Link>
+              </Nav.Link> */}
               <Nav.Link href="/notifications" className="me-3">
                 <FaBell size={30} />
               </Nav.Link>
