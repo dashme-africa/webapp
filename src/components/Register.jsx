@@ -45,6 +45,7 @@ const Register = () => {
 
   return (
     <div className="container mt-5">
+    <p className='text-center fs-4 mb-5'>Already registered? <a className='text-decoration-none text-success' href="/login">Log In</a></p>
       <h2 className="text-center mb-4">Register with email</h2>
       {error && <div className="alert alert-danger">{error}</div>}
       <form onSubmit={handleSubmit}>

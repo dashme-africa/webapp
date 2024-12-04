@@ -35,6 +35,7 @@ const Login = () => {
 
   return (
     <div className="container mt-5">
+    <p className='text-center fs-4 mb-5'>Don't have an account? <a className='text-decoration-none text-success' href="/register">Sign Up</a></p>
       <h2 className="text-center mb-4">Login</h2>
       {error && <div className="alert alert-danger">{error}</div>}
       <form onSubmit={handleSubmit}>
