@@ -57,7 +57,7 @@ const Register = () => {
             className="form-control"
             value={formData.fullName}
             onChange={handleChange}
-            placeholder="Full name"
+            placeholder="Full name eg. Felix Ekong…"
             required
           />
         </div>
@@ -69,7 +69,7 @@ const Register = () => {
             className="form-control"
             value={formData.username}
             onChange={handleChange}
-            placeholder="Username"
+            placeholder="Username eg. Fel24…"
             required
           />
         </div>
@@ -81,7 +81,7 @@ const Register = () => {
             className="form-control"
             value={formData.email}
             onChange={handleChange}
-            placeholder="Email"
+            placeholder="Email eg. felixek..@gmail.com"
             required
           />
         </div>
