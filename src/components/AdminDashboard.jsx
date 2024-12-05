@@ -11,7 +11,7 @@ const AdminDashboard = () => {
     const fetchProducts = async () => {
       const token = localStorage.getItem('adminToken');
       if (!token) {
-        navigate('/admin/login');
+        navigate('/adminLogin');
         return;
       }
 

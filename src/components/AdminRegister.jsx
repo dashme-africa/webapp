@@ -28,7 +28,7 @@ const AdminRegister = () => {
         setEmail('');
         setPassword('');
         setConfirmPassword('');
-        navigate('/admin/login'); // Redirect to login page after success
+        navigate('/adminLogin'); // Redirect to login page after success
       }
     } catch (error) {
       setMessage(error.response?.data?.message || 'An error occurred');

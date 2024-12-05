@@ -14,7 +14,7 @@ const EditProduct = () => {
     const fetchProduct = async () => {
       const token = localStorage.getItem('adminToken');
       if (!token) {
-        navigate('/admin/login');
+        navigate('/adminLogin');
         return;
       }
 
