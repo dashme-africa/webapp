@@ -12,6 +12,12 @@ import HomeScreen from './screens/HomeScreen';
 import Register from './components/Register';
 import Login from './components/Login';
 import Profile from './components/Profile';
+import AdminLogin from './components/AdminLogin';
+import AdminRegister from './components/AdminRegister';
+import AdminDashboard from './components/AdminDashboard';
+import EditProduct from './components/EditProduct';
+
+
 // import Home from './components/Home';
 
 
@@ -29,11 +35,15 @@ const App = () => {
       <Router>
         <main>
           <Routes>
-            <Route path="/" element={ <> <Header /> <Hero /> <HomeScreen /> </> } />
+            <Route path="/" element={<> <Header /> <Hero /> <HomeScreen /> </>} />
             <Route path="/upload" element={<><Header /> <UploadPage /></>} />
             <Route path="/profile" element={<><Header /> <Profile /></>} />
             <Route path="/register" element={<><Formhead /> <Register /></>} />
             <Route path="/login" element={<><Formhead /><Login /></>} />
+            <Route path="/adminLogin" element={<AdminLogin />} />
+            <Route path="/adminRegister" element={<AdminRegister />} />
+            <Route path="/admin/dashboard" element={<AdminDashboard />} />
+            <Route path="/admin/products/edit/:id" element={<EditProduct />} />
           </Routes>
         </main>
         <Footer />

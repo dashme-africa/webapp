@@ -23,6 +23,9 @@ const Login = () => {
 
       // Save token to local storage
       localStorage.setItem('token', response.data.token);
+      {console.log(data)}
+      // localStorage.setItem('username', user.username);
+
 
       alert('Login Successful');
       // Navigate to home page
