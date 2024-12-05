@@ -16,6 +16,7 @@ import AdminLogin from './components/AdminLogin';
 import AdminRegister from './components/AdminRegister';
 import AdminDashboard from './components/AdminDashboard';
 import EditProduct from './components/EditProduct';
+import ProductDetails from './screens/ProductDetails';
 
 
 // import Home from './components/Home';
@@ -44,6 +45,7 @@ const App = () => {
             <Route path="/adminRegister" element={<AdminRegister />} />
             <Route path="/adminDashboard" element={<AdminDashboard />} />
             <Route path="/admin/products/edit/:id" element={<EditProduct />} />
+            <Route path="/product/:id" element={<><Header /> <ProductDetails /></>} />
           </Routes>
         </main>
         <Footer />

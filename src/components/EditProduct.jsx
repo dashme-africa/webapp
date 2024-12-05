@@ -63,6 +63,11 @@ const EditProduct = () => {
         formData.append('image', image);
       }
 
+      // Log the FormData content for debugging
+      formData.forEach((value, key) => {
+        console.log(key, value);  // Debugging the FormData
+      });
+
       const config = {
         headers: {
           'Content-Type': 'multipart/form-data',
@@ -70,11 +75,13 @@ const EditProduct = () => {
         },
       };
       const { data } = await axios.put(
-        `https://dashmeafrica-backend.vercel.app/api/adminProduct/${id}`,
+        // `https://dashmeafrica-backend.vercel.app/api/adminProduct/${id}`,
+        `http://localhost:5000/api/adminProduct/${id}`,
         formData,
         config
       );
       console.log(data); // Log the response
+
       // Set success message after successful update
       setSuccessMessage('Product updated successfully!');
       setError(''); // Clear any previous errors

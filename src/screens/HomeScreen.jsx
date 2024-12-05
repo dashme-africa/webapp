@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Row, Col } from 'react-bootstrap';
 import Product from '../components/Product';
 import axios from 'axios';
+import { Link } from 'react-router-dom'; // Import Link for navigation
 
 const HomeScreen = () => {
   const [products, setProducts] = useState([]); // State to store products
@@ -29,9 +30,9 @@ const HomeScreen = () => {
           <h4 className="mb-0">Recommended for You</h4>
         </Col>
         <Col className="text-end">
-          <a href="/products" className="text-success fs-5 text-decoration-none">
+          <Link to="/products" className="text-success fs-5 text-decoration-none">
             See All
-          </a>
+          </Link>
         </Col>
       </Row>
 
