@@ -14,6 +14,7 @@ import Login from './components/Login';
 import Profile from './components/Profile';
 import AdminLogin from './components/AdminLogin';
 import AdminRegister from './components/AdminRegister';
+import ForgotPwd from './components/ForgotPwd';
 import AdminDashboard from './components/AdminDashboard';
 import EditProduct from './components/EditProduct';
 import ProductDetails from './screens/ProductDetails';
@@ -46,6 +47,7 @@ const App = () => {
             <Route path="/adminDashboard" element={<AdminDashboard />} />
             <Route path="/admin/products/edit/:id" element={<EditProduct />} />
             <Route path="/product/:id" element={<><Header /> <ProductDetails /></>} />
+            <Route path="/forgot-password" element={<><Formhead /> <ForgotPwd /></>} />
           </Routes>
         </main>
         <Footer />
