@@ -16,7 +16,7 @@ const AdminLogin = () => {
     try {
       const { data } = await axios.post('https://dashmeafrica-backend.vercel.app/api/admin/login', { email, password });
       localStorage.setItem('adminToken', data.token); // Save token
-      navigate('/admin/dashboard'); // Redirect to dashboard
+      navigate('/adminDashboard'); // Redirect to dashboard
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed');
     }

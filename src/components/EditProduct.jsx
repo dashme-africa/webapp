@@ -79,7 +79,7 @@ const EditProduct = () => {
       setSuccessMessage('Product updated successfully!');
       setError(''); // Clear any previous errors
       setTimeout(() => {
-        navigate('/admin/dashboard');
+        navigate('/adminDashboard');
       }, 2000); // Redirect after 2 seconds
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to update product');
