@@ -86,7 +86,11 @@ const ProductDetails = () => {
               <Button variant="outline-success" className="me-2">X-Large</Button>
             </p>
 
-            <h4 className="text-success">N{product.price}</h4>
+            {product.tag === 'sell' ? (
+              <h4 className="text-success">N {product.price}</h4>
+            ) : (
+              <h4 className="text-primary">Donate</h4>
+            )}
 
             <div className="d-flex mt-4">
               <Button variant="primary" className="me-2">
