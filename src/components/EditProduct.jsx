@@ -75,8 +75,8 @@ const EditProduct = () => {
         },
       };
       const { data } = await axios.put(
-        // `https://dashmeafrica-backend.vercel.app/api/adminProduct/${id}`,
-        `http://localhost:5000/api/adminProduct/${id}`,
+        `https://dashmeafrica-backend.vercel.app/api/adminProduct/${id}`,
+        // `http://localhost:5000/api/adminProduct/${id}`,
         formData,
         config
       );

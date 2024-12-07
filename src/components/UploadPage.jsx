@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useNavigate } from 'react-router-dom';
-
 
 
 const UploadPage = () => {
@@ -18,6 +17,27 @@ const UploadPage = () => {
     image: null, // Change to single image URL
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [uploader, setUploader] = useState(null); // Store uploader info
+
+
+  // Fetch uploader info on component mount
+  useEffect(() => {
+    const fetchUploader = async () => {
+      const token = localStorage.getItem('token');
+      if (token) {
+        try {
+          const response = await axios.get('https://dashmeafrica-backend.vercel.app/api/userProfile/profile', {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          setUploader(response.data); // Set uploader info
+        } catch (error) {
+          console.error('Failed to fetch uploader info:', error);
+        }
+      }
+    };
+
+    fetchUploader();
+  }, []);
 
 
   const handleTabChange = (tab) => {
@@ -64,19 +84,25 @@ const UploadPage = () => {
       updatedData.append('priceCategory', formData.priceCategory);
       updatedData.append('location', formData.location);
   
+
+      if (uploader) {
+        updatedData.append('uploader', uploader._id); // Assuming _id is the user ID
+      }
+
       // Append the image only if it exists
       if (formData.image) {
         updatedData.append('image', formData.image);
       }
   
       // Log the FormData content for debugging
-      updatedData.forEach((value, key) => {
-        console.log(key, value);  // Debugging the FormData
-      });
+      // updatedData.forEach((value, key) => {
+      //   console.log(key, value);
+      // });
   
-      // Determine the endpoint based on activeTab
+//       // Determine the endpoint based on activeTab
       const endpoint = activeTab === 'sell'  
         ? 'https://dashmeafrica-backend.vercel.app/api/products' 
+        // ? 'http://localhost:5000/api/products' 
         : 'https://dashmeafrica-backend.vercel.app/api/products/donate';
   
       // Send the data to the server
