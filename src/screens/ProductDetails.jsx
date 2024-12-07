@@ -4,12 +4,15 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { Card, Button, Spinner, Alert, Badge } from 'react-bootstrap';
+import { useCart } from "../context/CartContext";
+
 
 const ProductDetails = () => {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { addToCart } = useCart(); // Get the addToCart function from context
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -24,6 +27,13 @@ const ProductDetails = () => {
     };
     fetchProduct();
   }, [id]);
+
+  const addToCartHandler = () => {
+    console.log("Adding to cart:", product); // Confirm the product data
+    addToCart(product);
+    alert("Item added to cart!");
+ };
+ 
 
   if (loading) {
     return <Spinner animation="border" variant="primary" className="d-block mx-auto my-5" />;
@@ -97,13 +107,14 @@ const ProductDetails = () => {
                 Message Profile
               </Button>
               <Button variant="outline-secondary">Add to Saved Items</Button>
+              <Button variant="success" onClick={addToCartHandler}> Add to Cart </Button>
             </div>
           </div>
         </div>
 
         {/* Related Products Section */}
         <div className="related-products mt-5">
-          <h4>Other Items from {product.userProfile || 'this user'}</h4>
+          <h4>Other Items from {product.uploader.username || 'this user'}</h4>
           <div className="d-flex overflow-auto">
             {product.relatedProducts?.map((item, index) => (
               <Card key={index} className="me-3" style={{ width: '150px' }}>

@@ -17,7 +17,9 @@ import AdminRegister from './components/AdminRegister';
 import ForgotPwd from './components/ForgotPwd';
 import AdminDashboard from './components/AdminDashboard';
 import EditProduct from './components/EditProduct';
+import MonnifyPayment from './components/MonnifyPayment';
 import ProductDetails from './screens/ProductDetails';
+import CartScreen from './screens/CartScreen';
 
 
 // import Home from './components/Home';
@@ -48,6 +50,9 @@ const App = () => {
             <Route path="/admin/products/edit/:id" element={<EditProduct />} />
             <Route path="/product/:id" element={<><Header /> <ProductDetails /></>} />
             <Route path="/forgot-password" element={<><Formhead /> <ForgotPwd /></>} />
+            <Route path="/forgot-password" element={<><Formhead /> <ForgotPwd /></>} />
+            <Route path="/checkout" element={<><Formhead /> <MonnifyPayment /></>} />
+            <Route path="/cart" element={<><Header /> <CartScreen /></>} />
           </Routes>
         </main>
         <Footer />
