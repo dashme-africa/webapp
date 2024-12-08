@@ -20,6 +20,8 @@ import EditProduct from './components/EditProduct';
 import MonnifyPayment from './components/MonnifyPayment';
 import ProductDetails from './screens/ProductDetails';
 import CartScreen from './screens/CartScreen';
+import ReservedAccountForm from './components/ReservedAccountForm';
+import DisbursementForm from './components/DisbursementForm';
 
 
 // import Home from './components/Home';
@@ -53,6 +55,8 @@ const App = () => {
             <Route path="/forgot-password" element={<><Formhead /> <ForgotPwd /></>} />
             <Route path="/checkout" element={<><Formhead /> <MonnifyPayment /></>} />
             <Route path="/cart" element={<><Header /> <CartScreen /></>} />
+            <Route path="/wallet" element={<><Header /> <ReservedAccountForm /></>} />
+            <Route path="/disburse" element={<><Header /> <DisbursementForm /></>} />
           </Routes>
         </main>
         <Footer />
