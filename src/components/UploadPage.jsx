@@ -101,8 +101,8 @@ const UploadPage = () => {
   
 //       // Determine the endpoint based on activeTab
       const endpoint = activeTab === 'sell'  
-        ? 'https://dashmeafrica-backend.vercel.app/api/products' 
-        // ? 'http://localhost:5000/api/products' 
+        // ? 'https://dashmeafrica-backend.vercel.app/api/products' 
+        ? 'http://localhost:5000/api/products' 
         : 'https://dashmeafrica-backend.vercel.app/api/products/donate';
   
       // Send the data to the server

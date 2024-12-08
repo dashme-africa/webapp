@@ -13,7 +13,8 @@ const MonnifyPayment = () => {
 
         try {
             setLoading(true);
-            const response = await fetch('http://localhost:5000/api/payment', {
+
+            const response = await fetch('https://dashmeafrica-backend.vercel.app/api/payment', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

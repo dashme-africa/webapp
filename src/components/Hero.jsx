@@ -9,7 +9,8 @@ const HeroPage = () => {
       {/* Background Image */}
       <div
         style={{
-          backgroundImage: "url('https://res.cloudinary.com/df2q6gyuq/image/upload/v1733150204/hero_z088oi.png')",
+          backgroundImage: "url('https://res.cloudinary.com/df2q6gyuq/image/upload/v1733633789/_TGP5752_ucloci.jpg')",
+          // backgroundImage: "url('https://res.cloudinary.com/df2q6gyuq/image/upload/v1733150204/hero_z088oi.png')",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
           // backgroundSize: "cover",
