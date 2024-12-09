@@ -101,10 +101,10 @@ const Checkout = () => {
       return;
     }
 
-    if (!sellerAccount.accountNumber) {
-      alert("Unable to retrieve seller's account details. Please try again.");
-      return;
-    }
+    // if (!sellerAccount.accountNumber) {
+    //   alert("Unable to retrieve seller's account details. Please try again.");
+    //   return;
+    // }
 
     if (!user.fullName || !user.username || !user.email) {
       alert("User data is incomplete. Please log in again.");

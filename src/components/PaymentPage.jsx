@@ -13,7 +13,8 @@ const PaymentPage = () => {
 
     if (paymentReference) {
       // Call backend to verify payment
-      fetch('http://localhost:5000/api/payment/verify-payment', {
+    //   fetch('http://localhost:5000/api/payment/verify-payment', {
+      fetch('https://dashmeafrica-backend.vercel.app/api/payment/verify-payment', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

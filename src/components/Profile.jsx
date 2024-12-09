@@ -76,7 +76,7 @@ const Profile = () => {
                   <input
                     type="text"
                     className="form-control"
-                    defaultValue={user.firstName || 'Chinomso'}
+                    defaultValue={user.fullName || ''}
                   />
                 </div>
                 <div className="col-md-6">
@@ -84,7 +84,7 @@ const Profile = () => {
                   <input
                     type="text"
                     className="form-control"
-                    defaultValue={user.lastName || 'Nduoma'}
+                    defaultValue={user.lastname || ''}
                   />
                 </div>
               </div>
@@ -94,7 +94,7 @@ const Profile = () => {
                   <input
                     type="text"
                     className="form-control"
-                    defaultValue={user.username || 'Buzz Brain'}
+                    defaultValue={user.username || ''}
                   />
                 </div>
                 <div className="col-md-6">
@@ -102,7 +102,7 @@ const Profile = () => {
                   <input
                     type="email"
                     className="form-control"
-                    defaultValue={user.email || 'chinomsnduoma@gmail.com'}
+                    defaultValue={user.email || ''}
                   />
                 </div>
               </div>
