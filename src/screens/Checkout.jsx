@@ -210,7 +210,7 @@ const Checkout = () => {
                 />
                 <div className="ms-3">
                   <h6>{product.title}</h6>
-                  <p>Price: ${product.price}</p>
+                  <p>Price: N{product.price}</p>
                 </div>
                 <div className="d-flex align-items-center">
                   <Button
@@ -235,7 +235,7 @@ const Checkout = () => {
           <hr />
           <div className="d-flex justify-content-between">
             <p>Subtotal:</p>
-            <p>${total}</p>
+            <p>N{total}</p>
           </div>
           <div className="d-flex justify-content-between">
             <p>Shipping:</p>
@@ -244,7 +244,7 @@ const Checkout = () => {
           <hr />
           <div className="d-flex justify-content-between">
             <h6>Total:</h6>
-            <h6>${total}</h6>
+            <h6>N{total}</h6>
           </div>
           <Button
             variant="success"
