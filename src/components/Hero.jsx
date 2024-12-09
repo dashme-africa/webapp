@@ -9,11 +9,10 @@ const HeroPage = () => {
       {/* Background Image */}
       <div
         style={{
-          backgroundImage: "url('https://res.cloudinary.com/df2q6gyuq/image/upload/v1733633789/_TGP5752_ucloci.jpg')",
-          // backgroundImage: "url('https://res.cloudinary.com/df2q6gyuq/image/upload/v1733150204/hero_z088oi.png')",
+          backgroundImage: "url('https://res.cloudinary.com/df2q6gyuq/image/upload/b_rgb:C2C9D6/c_pad,ar_16:9,e_improve,e_sharpen/v1733764826/lauretta_kgqyaq.png')",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
-          // backgroundSize: "cover",
+          backgroundSize: "cover",
           width: "100%",
           height: "100%",
         }}

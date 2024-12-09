@@ -147,7 +147,7 @@ const Checkout = () => {
     <div className="container my-5 d-flex justify-content-between">
       {/* Billing Details */}
       <div className="w-50">
-      <p className="bg-danger bg-opacity-50 p-3 rounded">Make sure you are logged in to fill billing details</p>
+      <p className="bg-danger bg-opacity-50 p-3 rounded">Make sure you are logged in to fill billing details  &nbsp; &nbsp;<a href="/login"> Login now</a> </p> 
         <h3 className="mb-4 text-success">Billing Details</h3>
         <Form>
           <Form.Group className="mb-3">
