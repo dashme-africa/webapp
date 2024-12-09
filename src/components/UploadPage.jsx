@@ -10,9 +10,9 @@ const UploadPage = () => {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
-    category: 'Electronics',
+    category: '',
     price: '',
-    priceCategory: '$0-50',
+    priceCategory: '',
     location: '',
     image: null, // Change to single image URL
   });
@@ -45,9 +45,9 @@ const UploadPage = () => {
     setFormData({
       title: '',
       description: '',
-      category: 'Electronics',
+      category: '',
       price: '',
-      priceCategory: '$0-50',
+      priceCategory: '',
       location: '',
       image: null, // Change to single image URL
     });
@@ -231,17 +231,17 @@ const UploadPage = () => {
                 </option>
                 {activeTab === 'sell' ? (
                   <>
-                    <option value="clothes">Clothes</option>
-                    <option value="electronics">Electronics</option>
-                    <option value="accessories">Accessories</option>
-                    <option value="household-items">Household Items</option>
+                    <option value="Clothes">Clothes</option>
+                    <option value="Electronics">Electronics</option>
+                    <option value="Accessories">Accessories</option>
+                    <option value="Household-Items">Household Items</option>
                   </>
                 ) : (
                   <>
-                    <option value="clothes">Clothes</option>
-                    <option value="electronics">Electronics</option>
-                    <option value="accessories">Accessories</option>
-                    <option value="household-items">Household Items</option>
+                    <option value="Clothes">Clothes</option>
+                    <option value="Electronics">Electronics</option>
+                    <option value="Accessories">Accessories</option>
+                    <option value="Household-Items">Household Items</option>
                   </>
                 )}
               </select>

@@ -17,11 +17,13 @@ import AdminRegister from './components/AdminRegister';
 import ForgotPwd from './components/ForgotPwd';
 import AdminDashboard from './components/AdminDashboard';
 import EditProduct from './components/EditProduct';
-import MonnifyPayment from './components/MonnifyPayment';
+// import MonnifyPayment from './components/MonnifyPayment';
 import ProductDetails from './screens/ProductDetails';
 import CartScreen from './screens/CartScreen';
-import ReservedAccountForm from './components/ReservedAccountForm';
 import DisbursementForm from './components/DisbursementForm';
+import PaymentPage from './components/PaymentPage';
+import AccountDetails from './components/AccountDetails';
+import Checkout from './screens/Checkout';
 
 
 // import Home from './components/Home';
@@ -53,10 +55,12 @@ const App = () => {
             <Route path="/product/:id" element={<><Header /> <ProductDetails /></>} />
             <Route path="/forgot-password" element={<><Formhead /> <ForgotPwd /></>} />
             <Route path="/forgot-password" element={<><Formhead /> <ForgotPwd /></>} />
-            <Route path="/checkout" element={<><Formhead /> <MonnifyPayment /></>} />
+            <Route path="/payment-page" element={<><Formhead /> <PaymentPage /></>} />
+            {/* <Route path="/checkout" element={<><Formhead /> <MonnifyPayment /></>} /> */}
             <Route path="/cart" element={<><Header /> <CartScreen /></>} />
-            <Route path="/wallet" element={<><Header /> <ReservedAccountForm /></>} />
             <Route path="/disburse" element={<><Header /> <DisbursementForm /></>} />
+            <Route path="/checkout" element={<><Header /> <Checkout /></>} />
+            <Route path="/accountdetails" element={<><Header /> <AccountDetails /></>} />
           </Routes>
         </main>
         <Footer />

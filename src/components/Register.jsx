@@ -153,6 +153,7 @@ const Register = () => {
     try {
       const response = await axios.post(
         "https://dashmeafrica-backend.vercel.app/api/users/register",
+        // "http://localhost:5000/api/users/register",
         formData
       );
       alert("Registration Successful");

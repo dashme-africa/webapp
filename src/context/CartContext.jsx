@@ -61,7 +61,7 @@ export const CartProvider = ({ children }) => {
     dispatch({ type: "ADD_TO_CART", payload: product });
   };
 
-  console.log("Cart state in provider:", cart);
+  // console.log("Cart state in provider:", cart);
 
   return (
     <CartContext.Provider value={{ cart, addToCart }}>
