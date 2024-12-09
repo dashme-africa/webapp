@@ -5,14 +5,14 @@ import { Link } from 'react-router-dom';
 
 const HeroPage = () => {
   return (
-    <div style={{ position: "relative", height: "100vh", overflow: "hidden" }}>
+    <div style={{ position: "relative", height: "100vh", overflow: "hidden", backgroundColor: "#333B4C" }}>
       {/* Background Image */}
       <div
         style={{
-          backgroundImage: "url('https://res.cloudinary.com/df2q6gyuq/image/upload/b_rgb:C2C9D6/c_pad,ar_16:9,e_improve,e_sharpen/v1733764826/lauretta_kgqyaq.png')",
+          backgroundImage: "url('https://res.cloudinary.com/df2q6gyuq/image/upload/b_rgb:333B4C/c_pad,ar_16:9,e_improve,e_sharpen/v1733764826/lauretta_kgqyaq.png')",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
-          backgroundSize: "cover",
+          // backgroundSize: "cover",
           width: "100%",
           height: "100%",
         }}
