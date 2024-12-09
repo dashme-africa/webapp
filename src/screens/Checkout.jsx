@@ -106,8 +106,8 @@ const Checkout = () => {
 
     try {
       const response = await axios.post(
-        "https://dashmeafrica-backend.vercel.app/api/payment/initiate-payment",
-        // "http://localhost:5000/api/payment/initiate-payment",
+        // "https://dashmeafrica-backend.vercel.app/api/payment/initiate-payment",
+        "http://localhost:5000/api/payment/initiate-payment",
         paymentData,
         {
           headers: { Authorization: `Bearer ${token}` },
