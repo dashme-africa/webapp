@@ -36,11 +36,11 @@ const ProductDetails = () => {
     fetchProduct();
   }, [id]);
 
-  const addToCartHandler = () => {
-    console.log("Adding to cart:", product); // Confirm the product data
-    addToCart(product);
-    alert("Item added to cart!");
-  };
+  // const addToCartHandler = () => {
+  //   console.log("Adding to cart:", product); // Confirm the product data
+  //   addToCart(product);
+  //   alert("Item added to cart!");
+  // };
 
 
   if (loading) {

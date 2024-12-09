@@ -6,7 +6,6 @@ import axios from "axios";
 const Checkout = () => {
   const { state } = useLocation();
   const { product, seller } = state || {};
-  // const product = state?.product; // Get product details from navigation state
 
   const [quantity, setQuantity] = useState(1);
   const [billingDetails, setBillingDetails] = useState({
@@ -20,8 +19,11 @@ const Checkout = () => {
     username: "",
     email: "",
   });
-
-  const [sellerAccountNumber, setSellerAccountNumber] = useState(null);
+  const [sellerAccount, setSellerAccount] = useState({
+    accountNumber: "",
+    accountName: "",
+    accountCode: "",
+  });
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -30,7 +32,6 @@ const Checkout = () => {
         try {
           const { data } = await axios.get(
             "https://dashmeafrica-backend.vercel.app/api/userProfile/profile",
-            // "http://localhost:5000/api/userProfile/profile",
             {
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -38,9 +39,9 @@ const Checkout = () => {
             }
           );
           setUser({
-            fullName: data.fullName, // Assumes "fullName" exists in the response
-            username: data.username, // Assumes "username" exists in the response
-            email: data.email, // Assumes "email" exists in the response
+            fullName: data.fullName,
+            username: data.username,
+            email: data.email,
           });
         } catch (error) {
           console.error("Error fetching user data:", error.response?.data.message || error.message);
@@ -52,7 +53,6 @@ const Checkout = () => {
       if (seller) {
         try {
           const { data } = await axios.get(
-            // `http://localhost:5000/api/userProfile/seller/${seller}/account`,
             `https://dashmeafrica-backend.vercel.app/api/userProfile/seller/${seller}/account`,
             {
               headers: {
@@ -60,8 +60,11 @@ const Checkout = () => {
               },
             }
           );
-          console.log(data)
-          setSellerAccountNumber(data.sellerAcctNumber);
+          setSellerAccount({
+            accountNumber: data.sellerAcctNumber,
+            accountName: data.sellerAcctName,
+            accountCode: data.sellerAcctCode,
+          });
         } catch (error) {
           console.error("Error fetching seller account:", error.response?.data.message || error.message);
         }
@@ -90,8 +93,21 @@ const Checkout = () => {
       return;
     }
 
-    if (!sellerAccountNumber) {
+    const requiredBillingFields = ["streetAddress", "apartment", "town", "phoneNumber"];
+    const missingBillingFields = requiredBillingFields.filter((field) => !billingDetails[field]);
+
+    if (missingBillingFields.length > 0) {
+      alert(`Please fill in all billing details: ${missingBillingFields.join(", ")}`);
+      return;
+    }
+
+    if (!sellerAccount.accountNumber) {
       alert("Unable to retrieve seller's account details. Please try again.");
+      return;
+    }
+
+    if (!user.fullName || !user.username || !user.email) {
+      alert("User data is incomplete. Please log in again.");
       return;
     }
 
@@ -99,15 +115,15 @@ const Checkout = () => {
       amount: total,
       email: user.email,
       phoneNumber: billingDetails.phoneNumber,
-      paymentReference: `${Date.now()}`,
-      // paymentReference: `REF-${Date.now()}`, // Generate unique reference
-      sellerAccountNumber,
+      paymentReference: `REF-${Date.now()}`,
+      sellerAccountNumber: sellerAccount.accountNumber,
+      sellerAccountName: sellerAccount.accountName,
+      sellerAccountCode: sellerAccount.accountCode,
     };
 
     try {
       const response = await axios.post(
         "https://dashmeafrica-backend.vercel.app/api/payment/initiate-payment",
-        // "http://localhost:5000/api/payment/initiate-payment",
         paymentData,
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -115,12 +131,9 @@ const Checkout = () => {
       );
 
       if (response.data.success) {
-        // Use both transactionReference and paymentReference
-        const { checkoutUrl } = response.data.responseBody;
-
-        // Redirect to monnify checkout
-        window.location.href = checkoutUrl;
-        console.log("weldone")
+        const { transactionReference, paymentLink } = response.data;
+        localStorage.setItem("transactionReference", transactionReference);
+        window.location.href = paymentLink;
       } else {
         alert(response.data.message || "Failed to initiate payment.");
       }
@@ -130,12 +143,11 @@ const Checkout = () => {
     }
   };
 
-
-
   return (
     <div className="container my-5 d-flex justify-content-between">
       {/* Billing Details */}
       <div className="w-50">
+      <p className="bg-danger bg-opacity-50 p-3 rounded">Make sure you are logged in to fill billing details</p>
         <h3 className="mb-4 text-success">Billing Details</h3>
         <Form>
           <Form.Group className="mb-3">
@@ -232,26 +244,16 @@ const Checkout = () => {
               </div>
             </div>
           )}
-          <hr />
           <div className="d-flex justify-content-between">
-            <p>Subtotal:</p>
+            <p>Total</p>
             <p>N{total}</p>
-          </div>
-          <div className="d-flex justify-content-between">
-            <p>Shipping:</p>
-            <p>Free</p>
-          </div>
-          <hr />
-          <div className="d-flex justify-content-between">
-            <h6>Total:</h6>
-            <h6>N{total}</h6>
           </div>
           <Button
             variant="success"
-            className="w-100 mt-3"
+            className="w-100"
             onClick={placeOrderHandler}
           >
-            Place Order
+            Proceed to Payment
           </Button>
         </Card>
       </div>
