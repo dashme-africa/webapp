@@ -18,7 +18,7 @@ const MyProductsPage = () => {
       if (token) {
         try {
           const { data } = await axios.get(
-            'http://localhost:5000/api/userProfile/profile',
+            'https://dashmeafrica-backend.vercel.app/api/userProfile/profile',
             // "https://dashmeafrica-backend.vercel.app/api/userProfile/profile",
             {
               headers: {
@@ -42,7 +42,7 @@ const MyProductsPage = () => {
     if (uploaderId) {
       const fetchMyProducts = async () => {
         try {
-          const response = await axios.get(`http://localhost:5000/api/myProducts?uploader=${uploaderId}`);
+          const response = await axios.get(`https://dashmeafrica-backend.vercel.app/api/myProducts?uploader=${uploaderId}`);
           setProducts(response.data);
           console.log(response)
           setLoading(false);
@@ -58,7 +58,7 @@ const MyProductsPage = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/myProducts/delete/${id}`);
+      await axios.delete(`https://dashmeafrica-backend.vercel.app/api/myProducts/delete/${id}`);
       setProducts(products.filter((product) => product._id !== id));
     } catch (err) {
       alert('Failed to delete product. Please try again.');
@@ -78,7 +78,7 @@ const MyProductsPage = () => {
   const handleModalSave = async () => {
     try {
       const { _id, ...updatedProduct } = editingProduct;
-      const response = await axios.put(`http://localhost:5000/api/myProducts/${_id}`, updatedProduct);
+      const response = await axios.put(`https://dashmeafrica-backend.vercel.app/api/myProducts/${_id}`, updatedProduct);
       setProducts(products.map((prod) => (prod._id === _id ? response.data : prod)));
       handleModalClose();
     } catch (err) {
