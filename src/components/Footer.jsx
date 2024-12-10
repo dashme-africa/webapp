@@ -60,24 +60,15 @@ const Footer = () => {
           {/* Nigeria Address */}
           <Col md={3} className="mb-4 mb-md-0">
             <h6 className="fw-bold">Nigeria</h6>
-            <address className="text-muted">
-              No. 48 Worlu Crescent<br />
-              By Stadium Road, Port Harcourt.<br />
               <a href="tel:+2347008675984" className="text-dark">+234 700 867 5984</a><br />
-              <a href="mailto:help@dashme.africa" className="text-dark">help@dashme.africa</a>
-            </address>
+              <a href="mailto:talktous@dashmeafrica.com " className="text-dark">talktous@dashmeafrica.com </a>
           </Col>
 
           {/* UK Address */}
           <Col md={3}>
             <h6 className="fw-bold">UK</h6>
-            <address className="text-muted">
-              Andreas Global Logistics,<br />
-              8 Bruntborough Avenue, West Liverpool,<br />
-              CH42 7BW.<br />
               <a href="tel:+447297178713" className="text-dark">+447 297 178 713</a><br />
-              <a href="mailto:help@dashme.africa" className="text-dark">help@dashme.africa</a>
-            </address>
+              <a href="mailto:talktous@dashmeafrica.com " className="text-dark">talktous@dashmeafrica.com </a>
           </Col>
         </Row>
 
