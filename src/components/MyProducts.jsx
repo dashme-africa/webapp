@@ -47,7 +47,7 @@ const MyProductsPage = () => {
           console.log(response)
           setLoading(false);
         } catch (err) {
-          setError('Failed to load products. Please try again.');
+          setError('You have not uploaded any product');
           setLoading(false);
         }
       };
