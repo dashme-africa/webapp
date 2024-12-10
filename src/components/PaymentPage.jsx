@@ -4,8 +4,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 const PaymentPage = () => {
   const [status, setStatus] = useState('Processing...');
   const [isSuccess, setIsSuccess] = useState(null); // Tracks success or failure
-  const [customerBankCode, setCustomerBankCode] = useState('');
-  const [customerAccountNumber, setCustomerAccountNumber] = useState('');
 
   useEffect(() => {
     const queryParams = new URLSearchParams(window.location.search);
@@ -13,17 +11,12 @@ const PaymentPage = () => {
 
     if (paymentReference) {
       // Call backend to verify payment
-    //   fetch('http://localhost:5000/api/payment/verify-payment', {
-      fetch('https://dashmeafrica-backend.vercel.app/api/payment/verify-payment', {
+      fetch('http://localhost:5000/api/payment/verify-payment', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          paymentReference,
-          customerBankCode,
-          customerAccountNumber,
-        }),
+        body: JSON.stringify({ paymentReference }),
       })
         .then((res) => res.json())
         .then((data) => {
@@ -44,7 +37,7 @@ const PaymentPage = () => {
       setStatus('Invalid payment reference.');
       setIsSuccess(false);
     }
-  }, [customerBankCode, customerAccountNumber]);
+  }, []);
 
   return (
     <div className="container text-center mt-5">

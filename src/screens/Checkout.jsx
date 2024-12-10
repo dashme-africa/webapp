@@ -116,14 +116,15 @@ const Checkout = () => {
       email: user.email,
       phoneNumber: billingDetails.phoneNumber,
       paymentReference: `REF-${Date.now()}`,
-      sellerAccountNumber: sellerAccount.accountNumber,
-      sellerAccountName: sellerAccount.accountName,
-      sellerAccountCode: sellerAccount.accountCode,
+      customerAccountNumber: sellerAccount.accountNumber,
+      customerAccountName: sellerAccount.accountName,
+      customerAccountCode: sellerAccount.accountCode,
     };
 
     try {
       const response = await axios.post(
-        "https://dashmeafrica-backend.vercel.app/api/payment/initiate-payment",
+        // "https://dashmeafrica-backend.vercel.app/api/payment/initiate-payment",
+        "http://localhost:5000/api/payment/initiate-payment",
         paymentData,
         {
           headers: { Authorization: `Bearer ${token}` },
