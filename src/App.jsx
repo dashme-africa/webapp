@@ -24,6 +24,9 @@ import DisbursementForm from './components/DisbursementForm';
 import PaymentPage from './components/PaymentPage';
 import AccountDetails from './components/AccountDetails';
 import Checkout from './screens/Checkout';
+import GoShiip from "./components/GoShiip";
+import MyProducts from "./components/MyProducts";
+import RateComponent from "./components/RateComponent";
 
 
 // import Home from './components/Home';
@@ -61,6 +64,8 @@ const App = () => {
             <Route path="/disburse" element={<><Header /> <DisbursementForm /></>} />
             <Route path="/checkout" element={<><Header /> <Checkout /></>} />
             <Route path="/accountdetails" element={<><Header /> <AccountDetails /></>} />
+            <Route path="/goshiip" element={<><Header /> <GoShiip /> <RateComponent/> </>} />
+            <Route path="/my-products" element={<><Header /> <MyProducts /></>} />
           </Routes>
         </main>
         <Footer />

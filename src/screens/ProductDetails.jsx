@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { Card, Button, Spinner, Alert, Badge } from 'react-bootstrap';
-import { useCart } from "../context/CartContext";
+// import { useCart } from "../context/CartContext";
 import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
 
 
@@ -13,7 +13,7 @@ const ProductDetails = () => {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { addToCart } = useCart(); // Get the addToCart function from context
+  // const { addToCart } = useCart(); // Get the addToCart function from context
 
   const navigate = useNavigate();
 

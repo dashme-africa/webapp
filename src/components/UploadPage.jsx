@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 
 
@@ -135,11 +136,15 @@ const UploadPage = () => {
     }
   };
   
+  const myProducts = () => {
+    navigate('/my-products'); // Navigate to checkout with product details
+  };
   
   
   
   return (
     <div className="container mt-5">
+          <Button variant="primary" className="ms-2" onClick={myProducts}>My Products</Button>
       {/* Tabs */}
       <div className="d-flex justify-content-center mb-4">
         <button

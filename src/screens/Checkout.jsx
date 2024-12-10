@@ -60,6 +60,8 @@ const Checkout = () => {
               },
             }
           );
+    // console.log(data.sellerAcctNumber, data.sellerAcctName, data.sellerAcctCode)
+
           setSellerAccount({
             accountNumber: data.sellerAcctNumber,
             accountName: data.sellerAcctName,
@@ -101,15 +103,18 @@ const Checkout = () => {
       return;
     }
 
-    // if (!sellerAccount.accountNumber) {
-    //   alert("Unable to retrieve seller's account details. Please try again.");
-    //   return;
-    // }
+    if (!sellerAccount.accountNumber) {
+      alert("Unable to retrieve seller's account details. Please try again.");
+      return;
+    }
 
     if (!user.fullName || !user.username || !user.email) {
       alert("User data is incomplete. Please log in again.");
       return;
     }
+
+      // Store the seller ID in local storage
+  localStorage.setItem("sellerId", seller);
 
     const paymentData = {
       amount: total,
@@ -121,10 +126,12 @@ const Checkout = () => {
       customerAccountCode: sellerAccount.accountCode,
     };
 
+    {console.log(paymentData)}
+
     try {
       const response = await axios.post(
-        // "https://dashmeafrica-backend.vercel.app/api/payment/initiate-payment",
-        "http://localhost:5000/api/payment/initiate-payment",
+        "https://dashmeafrica-backend.vercel.app/api/payment/initiate-payment",
+        // "http://localhost:5000/api/payment/initiate-payment",
         paymentData,
         {
           headers: { Authorization: `Bearer ${token}` },
