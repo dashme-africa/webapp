@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 
 const Profile = () => {
   const [user, setUser] = useState(null);
   const [image, setImage] = useState(null);
+  const [sellerAccount, setSellerAccount] = useState(null);
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
+    fullName: '',
     username: '',
     email: '',
     address: '',
@@ -15,34 +15,59 @@ const Profile = () => {
 
   useEffect(() => {
     const fetchProfile = async () => {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem("token");
 
       if (token) {
         try {
-          const response = await axios.get(
-            'https://dashmeafrica-backend.vercel.app/api/userProfile/profile',
+          const { data } = await axios.get(
+            // 'http://localhost:5000/api/userProfile/profile',
+            "https://dashmeafrica-backend.vercel.app/api/userProfile/profile",
             {
               headers: {
                 Authorization: `Bearer ${token}`,
               },
             }
           );
-          setUser(response.data);
+          setUser(data);
           setFormData({
-            firstName: response.data.fullName || '',
-            lastName: response.data.lastname || '',
-            username: response.data.username || '',
-            email: response.data.email || '',
-            address: response.data.address || '',
-            bio: response.data.bio || '',
+            fullName: data.fullName || '',
+            username: data.username || '',
+            email: data.email || '',
+            address: data.address || '',
+            bio: data.bio || '',
           });
         } catch (error) {
-          console.error('Failed to fetch user profile', error);
+          console.error("Failed to fetch user profile", error);
+        }
+      }
+    };
+
+    const fetchSellerAccount = async () => {
+      if (user?._id) {
+
+        try {
+          const { data } = await axios.get(
+            // `http://localhost:5000/api/userProfile/seller/${user._id}/account`,
+            `https://dashmeafrica-backend.vercel.app/api/userProfile/seller/${user.id}/account`,
+            {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+              },
+            }
+          );
+          console.log(data)
+          setSellerAccount(data);
+
+        } catch (error) {
+          console.error("Failed to fetch seller account", error);
         }
       }
     };
 
     fetchProfile();
+    if (user) {
+      fetchSellerAccount();
+    }
   }, []);
 
   const handleImageChange = (e) => {
@@ -83,13 +108,14 @@ const Profile = () => {
   return (
     <div className="container mt-5">
       <div className="row g-0">
+        {/* Profile Section */}
         <div className="col-md-4 bg-light text-center p-4">
           <div className="mb-4">
             <img
-              src={image || user.profilePicture || 'https://via.placeholder.com/150'}
+              src={image || user.profilePicture || "https://via.placeholder.com/150"}
               alt="Profile"
               className="rounded-circle img-fluid"
-              style={{ width: '150px', height: '150px', objectFit: 'cover' }}
+              style={{ width: "150px", height: "150px", objectFit: "cover" }}
             />
           </div>
           <label className="btn btn-outline-primary btn-sm">
@@ -101,29 +127,34 @@ const Profile = () => {
               className="d-none"
             />
           </label>
-          <h3 className="fw-bold">{user.username || 'Buzz Brain'}</h3>
+          <h3 className="fw-bold mt-3">{user.username || "Buzz Brain"}</h3>
+          {sellerAccount && (
+            <div className="mt-3 text-start">
+              <p>
+                <strong>Account Name:</strong> {sellerAccount.sellerAcctName}
+              </p>
+              <p>
+                <strong>Account Number:</strong> {sellerAccount.sellerAcctNumber}
+              </p>
+              <p>
+                <strong>Bank Name:</strong> {sellerAccount.sellerAcctBank}
+              </p>
+            </div>
+          )}
         </div>
+
+        {/* Edit Profile Section */}
         <div className="col-md-8 p-4">
           <h4 className="fw-bold">Edit Your Profile</h4>
           <form onSubmit={handleSubmit} className="mt-4">
             <div className="row mb-3">
-              <div className="col-md-6">
-                <label className="form-label">First Name</label>
+              <div className="col-md-12">
+                <label className="form-label">Full Name</label>
                 <input
                   type="text"
-                  name="firstName"
+                  name="fullName"
                   className="form-control"
-                  value={formData.firstName}
-                  onChange={handleChange}
-                />
-              </div>
-              <div className="col-md-6">
-                <label className="form-label">Last Name</label>
-                <input
-                  type="text"
-                  name="lastName"
-                  className="form-control"
-                  value={formData.lastName}
+                  value={formData.fullName}
                   onChange={handleChange}
                 />
               </div>
