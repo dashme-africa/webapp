@@ -59,15 +59,13 @@ const Footer = () => {
 
           {/* Nigeria Address */}
           <Col md={3} className="mb-4 mb-md-0">
-            <h6 className="fw-bold">Nigeria</h6>
+            <h6 className="fw-bold">Phone number</h6>
               <a href="tel:+2347008675984" className="text-dark">+234 700 867 5984</a><br />
-              <a href="mailto:talktous@dashmeafrica.com " className="text-dark">talktous@dashmeafrica.com </a>
           </Col>
 
           {/* UK Address */}
           <Col md={3}>
-            <h6 className="fw-bold">UK</h6>
-              <a href="tel:+447297178713" className="text-dark">+447 297 178 713</a><br />
+            <h6 className="fw-bold">Email</h6>
               <a href="mailto:talktous@dashmeafrica.com " className="text-dark">talktous@dashmeafrica.com </a>
           </Col>
         </Row>
