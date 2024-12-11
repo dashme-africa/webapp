@@ -48,7 +48,7 @@ const Profile = () => {
         try {
           const { data } = await axios.get(
             // `http://localhost:5000/api/userProfile/seller/${user._id}/account`,
-            `https://dashmeafrica-backend.vercel.app/api/userProfile/seller/${user.id}/account`,
+            `https://dashmeafrica-backend.vercel.app/api/userProfile/seller/${user._id}/account`,
             {
               headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`,
