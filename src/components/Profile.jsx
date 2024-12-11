@@ -16,7 +16,7 @@ const Profile = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       const token = localStorage.getItem("token");
-  
+
       if (token) {
         try {
           const { data } = await axios.get(
@@ -40,10 +40,10 @@ const Profile = () => {
         }
       }
     };
-  
+
     fetchProfile();
   }, []); // Only runs on mount
-  
+
   useEffect(() => {
     const fetchSellerAccount = async () => {
       if (user?._id) {
@@ -62,14 +62,16 @@ const Profile = () => {
         }
       }
     };
-  
+
     fetchSellerAccount();
   }, [user]); // Runs whenever `user` changes
-  
+
 
   const handleImageChange = (e) => {
-    setImage(URL.createObjectURL(e.target.files[0]));
+    const file = e.target.files[0];
+    setImage(file); // Save file for submission.
   };
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -79,6 +81,21 @@ const Profile = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const token = localStorage.getItem('token');
+
+    const formData = new FormData();
+
+    // Append all form fields.
+    formData.append('fullName', formData.fullName);
+    formData.append('lastName', formData.lastName);
+    formData.append('username', formData.username);
+    formData.append('email', formData.email);
+    formData.append('address', formData.address);
+    formData.append('bio', formData.bio);
+
+    // Append the image file if selected.
+    if (image) {
+      formData.append('image', image);
+    }
 
     try {
       await axios.put(
@@ -115,6 +132,7 @@ const Profile = () => {
               style={{ width: "150px", height: "150px", objectFit: "cover" }}
             />
           </div>
+
           <label className="btn btn-outline-primary btn-sm">
             Upload Picture
             <input
@@ -124,6 +142,7 @@ const Profile = () => {
               className="d-none"
             />
           </label>
+
           <h3 className="fw-bold mt-3">{user.username || "Buzz Brain"}</h3>
           {sellerAccount && (
             <div className="mt-3 text-start">
