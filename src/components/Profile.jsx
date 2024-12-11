@@ -69,8 +69,17 @@ const Profile = () => {
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-    setImage(file); // Save file for submission.
+    setImage(file);
+
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        document.getElementById('profile-img').src = reader.result;
+      };
+      reader.readAsDataURL(file);
+    }
   };
+
 
 
   const handleChange = (e) => {
@@ -82,35 +91,40 @@ const Profile = () => {
     e.preventDefault();
     const token = localStorage.getItem('token');
 
-    const formData = new FormData();
+    const formDataToSubmit = new FormData();
 
-    // Append all form fields.
-    formData.append('fullName', formData.fullName);
-    formData.append('lastName', formData.lastName);
-    formData.append('username', formData.username);
-    formData.append('email', formData.email);
-    formData.append('address', formData.address);
-    formData.append('bio', formData.bio);
+    // Append all form fields from state to FormData
+    formDataToSubmit.append('fullName', formData.fullName);
+    formDataToSubmit.append('username', formData.username);
+    formDataToSubmit.append('email', formData.email);
+    formDataToSubmit.append('address', formData.address);
+    formDataToSubmit.append('bio', formData.bio);
 
     // Append the image file if selected.
     if (image) {
-      formData.append('image', image);
+      formDataToSubmit.append('image', image);
     }
 
     try {
-      await axios.put(
-        'https://dashmeafrica-backend.vercel.app/api/userProfile/profile',
-        // 'http://localhost:5000/api/userProfile/profile',
-        formData,
+      const response = await axios.put(
+        'http://localhost:5000/api/userProfile/profile', // Replace with your actual API URL.
+        formDataToSubmit,
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
-      alert('Profile updated successfully');
+
+      console.log('Response:', response);
+      if (response.data) {
+        setUser(response.data); // Update the user state.
+        alert('Profile updated successfully');
+      } else {
+        alert(response.data.message || "Failed to update profile.");
+      }
     } catch (error) {
-      console.error('Failed to update profile', error);
+      console.error('Failed to update profile:', error);
       alert('Failed to update profile');
     }
   };
@@ -125,12 +139,14 @@ const Profile = () => {
         {/* Profile Section */}
         <div className="col-md-4 bg-light text-center p-4">
           <div className="mb-4">
-            <img
-              src={image || user.profilePicture || "https://via.placeholder.com/150"}
-              alt="Profile"
-              className="rounded-circle img-fluid"
-              style={{ width: "150px", height: "150px", objectFit: "cover" }}
-            />
+<img
+  id="profile-img"
+  src={user.profilePicture || "https://via.placeholder.com/150"}
+  alt="Profile"
+  className="rounded-circle img-fluid"
+  style={{ width: "150px", height: "150px", objectFit: "cover" }}
+/>
+
           </div>
 
           <label className="btn btn-outline-primary btn-sm">
@@ -141,6 +157,7 @@ const Profile = () => {
               onChange={handleImageChange}
               className="d-none"
             />
+
           </label>
 
           <h3 className="fw-bold mt-3">{user.username || "Buzz Brain"}</h3>
