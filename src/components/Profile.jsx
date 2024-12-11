@@ -16,11 +16,10 @@ const Profile = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       const token = localStorage.getItem("token");
-
+  
       if (token) {
         try {
           const { data } = await axios.get(
-            // 'http://localhost:5000/api/userProfile/profile',
             "https://dashmeafrica-backend.vercel.app/api/userProfile/profile",
             {
               headers: {
@@ -30,23 +29,26 @@ const Profile = () => {
           );
           setUser(data);
           setFormData({
-            fullName: data.fullName || '',
-            username: data.username || '',
-            email: data.email || '',
-            address: data.address || '',
-            bio: data.bio || '',
+            fullName: data.fullName || "",
+            username: data.username || "",
+            email: data.email || "",
+            address: data.address || "",
+            bio: data.bio || "",
           });
         } catch (error) {
           console.error("Failed to fetch user profile", error);
         }
       }
     };
-
+  
+    fetchProfile();
+  }, []); // Only runs on mount
+  
+  useEffect(() => {
     const fetchSellerAccount = async () => {
       if (user?._id) {
         try {
           const { data } = await axios.get(
-            //`http://localhost:5000/api/userProfile/seller/${user._id}/account`,
             `https://dashmeafrica-backend.vercel.app/api/userProfile/seller/${user._id}/account`,
             {
               headers: {
@@ -60,11 +62,10 @@ const Profile = () => {
         }
       }
     };
-    fetchProfile();
-    if (user) {
-      fetchSellerAccount();
-    }
-  }, []);
+  
+    fetchSellerAccount();
+  }, [user]); // Runs whenever `user` changes
+  
 
   const handleImageChange = (e) => {
     setImage(URL.createObjectURL(e.target.files[0]));

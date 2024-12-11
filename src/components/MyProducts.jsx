@@ -38,13 +38,11 @@ const MyProductsPage = () => {
   }, []);  // Empty dependency array means this effect runs only once after the first render
 
   useEffect(() => {
-    console.log("Uploader ID:", uploaderId); // Add this line
     if (uploaderId) {
       const fetchMyProducts = async () => {
         try {
           const response = await axios.get(`https://dashmeafrica-backend.vercel.app/api/myProducts?uploader=${uploaderId}`);
           setProducts(response.data);
-          console.log(response)
           setLoading(false);
         } catch (err) {
           setError('You have not uploaded any product');
