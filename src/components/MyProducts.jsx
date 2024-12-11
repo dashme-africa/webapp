@@ -110,7 +110,7 @@ const MyProductsPage = () => {
                 <Card.Body>
                   <Card.Title>{product.title}</Card.Title>
                   <Card.Text>{product.description}</Card.Text>
-                  <Card.Text><strong>Price:</strong> ${product.price}</Card.Text>
+                  <Card.Text><strong>Price:</strong> N{product.price}</Card.Text>
                   <Button variant="primary" className="me-2" onClick={() => handleEdit(product)}>
                     Edit
                   </Button>

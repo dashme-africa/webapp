@@ -27,6 +27,7 @@ import Checkout from './screens/Checkout';
 import GoShiip from "./components/GoShiip";
 import MyProducts from "./components/MyProducts";
 import RateComponent from "./components/RateComponent";
+import OTP from "./components/oneTimePayment";
 
 
 // import Home from './components/Home';
@@ -66,6 +67,7 @@ const App = () => {
             <Route path="/accountdetails" element={<><Header /> <AccountDetails /></>} />
             <Route path="/goshiip" element={<><Header /> <GoShiip /> <RateComponent/> </>} />
             <Route path="/my-products" element={<><Header /> <MyProducts /></>} />
+            <Route path="/otp" element={<><Formhead /> <OTP /></>} />
           </Routes>
         </main>
         <Footer />

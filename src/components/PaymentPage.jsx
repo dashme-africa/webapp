@@ -13,7 +13,8 @@ const PaymentPage = () => {
         if (seller) {
             try {
                 const { data } = await axios.get(
-                    `https://dashmeafrica-backend.vercel.app/api/userProfile/seller/${seller}/account`,
+                    `http://localhost:5000/api/userProfile/seller/${seller}/account`,
+                    // `https://dashmeafrica-backend.vercel.app/api/userProfile/seller/${seller}/account`,
                     {
                         headers: {
                             Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -47,8 +48,8 @@ const PaymentPage = () => {
 
                 if (sellerData) {
                     // Call backend to verify payment
-                    // fetch('http://localhost:5000/api/payment/verify-payment', {
-                    fetch('https://dashmeafrica-backend.vercel.app/api/payment/verify-payment', {
+                    fetch('http://localhost:5000/api/payment/verify-payment', {
+                    // fetch('https://dashmeafrica-backend.vercel.app/api/payment/verify-payment', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',

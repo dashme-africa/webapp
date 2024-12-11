@@ -1,129 +1,253 @@
-import React, { useState } from "react";
-import axios from "axios";
-import { Form, Button, Alert, Table } from "react-bootstrap";
+import React, { useState } from 'react';
+import { Container, Form, Button, Alert, Row, Col } from 'react-bootstrap';
+import axios from 'axios';
 
-const GoShiip = () => {
+const App = () => {
   const [formData, setFormData] = useState({
-    type: "intrastate",
-    toAddress: { name: "", email: "", address: "", phone: "" },
-    fromAddress: { name: "", email: "", address: "", phone: "" },
-    parcels: { width: "", length: "", height: "", weight: "" },
+    type: 'intrastate',
+    toAddress: {
+      name: '',
+      email: '',
+      address: '',
+      phone: ''
+    },
+    fromAddress: {
+      name: '',
+      email: '',
+      address: '',
+      phone: ''
+    },
+    parcels: {
+      width: '',
+      length: '',
+      height: '',
+      weight: ''
+    },
     items: [
       {
-        name: "",
-        description: "",
-        weight: "",
-        category: "",
-        amount: "",
-        quantity: "",
-      },
-    ],
+        name: '',
+        description: '',
+        weight: '',
+        category: '',
+        amount: '',
+        quantity: ''
+      }
+    ]
   });
 
-  const [carrierName, setCarrierName] = useState("fedex"); // Default carrier
-  const [rates, setRates] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [shipmentRates, setShipmentRates] = useState(null);
   const [error, setError] = useState(null);
 
-  const handleInputChange = (e, section, field, index = null) => {
-    if (index !== null) {
-      const updatedItems = [...formData.items];
-      updatedItems[index][field] = e.target.value;
-      setFormData({ ...formData, items: updatedItems });
-    } else if (section) {
-      setFormData({
-        ...formData,
-        [section]: { ...formData[section], [field]: e.target.value },
-      });
-    } else {
-      setFormData({ ...formData, [field]: e.target.value });
-    }
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value
+    }));
   };
 
-  const fetchRates = async () => {
-    setLoading(true);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     setError(null);
     try {
-      const response = await axios.post(
-        `https://delivery-staging.apiideraos.com/api/v2/token/tariffs/getpricesingle/${carrierName}`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer YOUR_SECRET_KEY",
-          },
-        }
-      );
-      setRates(response.data);
-    } catch (err) {
-      setError(err.response?.data?.message || "Something went wrong.");
-    } finally {
-      setLoading(false);
+      const response = await axios.post('http://localhost:5000/api/get-shipment-rates', formData);
+      setShipmentRates(response.data);
+    } catch (error) {
+      setError('Failed to fetch shipment rates. Please try again.');
     }
   };
 
   return (
-    <div className="container mt-5">
-      <h2>Get Shipping Rates</h2>
-      <Form>
-        {/* Carrier Selection */}
-        <Form.Group className="mb-3">
-          <Form.Label>Select Carrier</Form.Label>
+    <Container>
+      <h1 className="my-4">Shipment Rates Calculator</h1>
+
+      <Form onSubmit={handleSubmit}>
+        {/* Shipment Type */}
+        <Form.Group controlId="shipmentType">
+          <Form.Label>Shipment Type</Form.Label>
           <Form.Control
             as="select"
-            value={carrierName}
-            onChange={(e) => setCarrierName(e.target.value)}
+            name="type"
+            value={formData.type}
+            onChange={handleChange}
           >
-            <option value="fedex">FedEx</option>
-            <option value="ups">UPS</option>
-            <option value="dhl">DHL</option>
+            <option value="intrastate">Intrastate</option>
+            <option value="interstate">Interstate</option>
+            <option value="international_us">International (US)</option>
+            <option value="international">International</option>
+            <option value="frozen-international">Frozen International</option>
           </Form.Control>
         </Form.Group>
 
         {/* To Address */}
-        <h4>To Address</h4>
-        <Form.Group className="mb-3">
-          <Form.Label>Name</Form.Label>
+        <h5>To Address</h5>
+        <Row>
+          <Col>
+            <Form.Group controlId="toName">
+              <Form.Label>Name</Form.Label>
+              <Form.Control
+                type="text"
+                name="toAddress.name"
+                value={formData.toAddress.name}
+                onChange={handleChange}
+                required
+              />
+            </Form.Group>
+          </Col>
+          <Col>
+            <Form.Group controlId="toPhone">
+              <Form.Label>Phone</Form.Label>
+              <Form.Control
+                type="text"
+                name="toAddress.phone"
+                value={formData.toAddress.phone}
+                onChange={handleChange}
+                required
+              />
+            </Form.Group>
+          </Col>
+        </Row>
+        <Form.Group controlId="toEmail">
+          <Form.Label>Email</Form.Label>
           <Form.Control
-            type="text"
-            placeholder="Recipient Name"
-            value={formData.toAddress.name}
-            onChange={(e) => handleInputChange(e, "toAddress", "name")}
+            type="email"
+            name="toAddress.email"
+            value={formData.toAddress.email}
+            onChange={handleChange}
+            required
           />
         </Form.Group>
-        {/* Repeat for email, address, and phone */}
-        {/* Similar sections for From Address, Parcels, and Items */}
+        <Form.Group controlId="toAddress">
+          <Form.Label>Address</Form.Label>
+          <Form.Control
+            type="text"
+            name="toAddress.address"
+            value={formData.toAddress.address}
+            onChange={handleChange}
+            required
+          />
+        </Form.Group>
+
+        {/* From Address */}
+        <h5>From Address</h5>
+        <Row>
+          <Col>
+            <Form.Group controlId="fromName">
+              <Form.Label>Name</Form.Label>
+              <Form.Control
+                type="text"
+                name="fromAddress.name"
+                value={formData.fromAddress.name}
+                onChange={handleChange}
+                required
+              />
+            </Form.Group>
+          </Col>
+          <Col>
+            <Form.Group controlId="fromPhone">
+              <Form.Label>Phone</Form.Label>
+              <Form.Control
+                type="text"
+                name="fromAddress.phone"
+                value={formData.fromAddress.phone}
+                onChange={handleChange}
+                required
+              />
+            </Form.Group>
+          </Col>
+        </Row>
+        <Form.Group controlId="fromEmail">
+          <Form.Label>Email</Form.Label>
+          <Form.Control
+            type="email"
+            name="fromAddress.email"
+            value={formData.fromAddress.email}
+            onChange={handleChange}
+            required
+          />
+        </Form.Group>
+        <Form.Group controlId="fromAddress">
+          <Form.Label>Address</Form.Label>
+          <Form.Control
+            type="text"
+            name="fromAddress.address"
+            value={formData.fromAddress.address}
+            onChange={handleChange}
+            required
+          />
+        </Form.Group>
+
+        {/* Parcel Dimensions */}
+        <h5>Parcel Details</h5>
+        <Row>
+          <Col>
+            <Form.Group controlId="parcelWidth">
+              <Form.Label>Width</Form.Label>
+              <Form.Control
+                type="number"
+                name="parcels.width"
+                value={formData.parcels.width}
+                onChange={handleChange}
+                required
+              />
+            </Form.Group>
+          </Col>
+          <Col>
+            <Form.Group controlId="parcelLength">
+              <Form.Label>Length</Form.Label>
+              <Form.Control
+                type="number"
+                name="parcels.length"
+                value={formData.parcels.length}
+                onChange={handleChange}
+                required
+              />
+            </Form.Group>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <Form.Group controlId="parcelHeight">
+              <Form.Label>Height</Form.Label>
+              <Form.Control
+                type="number"
+                name="parcels.height"
+                value={formData.parcels.height}
+                onChange={handleChange}
+                required
+              />
+            </Form.Group>
+          </Col>
+          <Col>
+            <Form.Group controlId="parcelWeight">
+              <Form.Label>Weight</Form.Label>
+              <Form.Control
+                type="number"
+                name="parcels.weight"
+                value={formData.parcels.weight}
+                onChange={handleChange}
+                required
+              />
+            </Form.Group>
+          </Col>
+        </Row>
 
         {/* Submit Button */}
-        <Button variant="primary" onClick={fetchRates} disabled={loading}>
-          {loading ? "Fetching Rates..." : "Get Rates"}
+        <Button variant="primary" type="submit" className="mt-4">
+          Get Shipment Rates
         </Button>
       </Form>
 
-      {/* Display Rates */}
-      {error && <Alert variant="danger" className="mt-3">{error}</Alert>}
-      {rates.length > 0 && (
-        <Table striped bordered hover className="mt-3">
-          <thead>
-            <tr>
-              <th>Carrier</th>
-              <th>Price</th>
-              <th>Estimated Delivery</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rates.map((rate, index) => (
-              <tr key={index}>
-                <td>{rate.carrier}</td>
-                <td>{rate.price}</td>
-                <td>{rate.estimatedDelivery}</td>
-              </tr>
-            ))}
-          </tbody>
-        </Table>
+      {/* Error or Shipment Rates Display */}
+      {error && <Alert variant="danger" className="mt-4">{error}</Alert>}
+      {shipmentRates && (
+        <div className="mt-4">
+          <h3>Shipment Rates</h3>
+          <pre>{JSON.stringify(shipmentRates, null, 2)}</pre>
+        </div>
       )}
-    </div>
+    </Container>
   );
 };
 
-export default GoShiip;
+export default App;
