@@ -17,7 +17,8 @@ const AdminRegister = () => {
     }
 
     try {
-      const response = await axios.post('https://dashmeafrica-backend.vercel.app/api/admin/register', {
+      // const response = await axios.post('https://dashmeafrica-backend.vercel.app/api/admin/register', {
+      const response = await axios.post('http://localhost:5000/api/admin/register', {
         email,
         password,
       });

@@ -127,6 +127,7 @@ const Header = () => {
             }
           );
           setUserData(data);
+          console.log(data)
         } catch (error) {
           console.error('Error fetching user and account details:', error.response?.data?.message || error.message);
         } finally {
@@ -193,19 +194,21 @@ const Header = () => {
                 <FaHeart size={30} />
               </Nav.Link>
               <Nav.Link href="/profile" className="me-5 d-flex align-items-center">
-                <FaUser size={30} className="me-2" />
-                {userData?.user?.username ? (
-                  <>
-                    <span>{userData?.user?.username}</span>
-                    {userData?.reservedAccount?.balance !== null ? (
-                      <span className="ms-3 fw-bold">₦ {userData?.reservedAccount?.balance || 0}</span>
-                    ) : (
-                      <span className="ms-3">Loading balance...</span>
-                    )}
-                  </>
-                ) : (
+
+                {loading ? (
                   <span>Loading...</span>
+                ) : userData?.user?.profilePicture ? (
+                  <img
+                    src={userData.user.profilePicture}
+                    alt="Profile"
+                    className="rounded-circle"
+                    style={{ width: '50px', height: '50px', objectFit: 'cover' }}
+                  />
+                ) : (
+                  <FaUser size={30} />
                 )}
+                <span>&nbsp;{userData?.user?.username}</span>
+
               </Nav.Link>
               <Nav.Link href="/upload" className="me-4 fs-6 text-dark">
                 Upload
