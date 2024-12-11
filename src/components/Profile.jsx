@@ -20,7 +20,8 @@ const Profile = () => {
       if (token) {
         try {
           const { data } = await axios.get(
-            "http://localhost:5000/api/userProfile/profile",
+            // "http://localhost:5000/api/userProfile/profile",
+            "https://dashmeafrica-backend.vercel.app/api/userProfile/profile",
             {
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -28,8 +29,6 @@ const Profile = () => {
             }
           );
           setUser(data);
-          console.log("data", data)
-
           setFormData({
             fullName: data.fullName || "",
             username: data.username || "",
@@ -58,7 +57,6 @@ const Profile = () => {
               },
             }
           );
-          console.log(data)
           setSellerAccount(data);
         } catch (error) {
           console.error("Failed to fetch seller account", error);
