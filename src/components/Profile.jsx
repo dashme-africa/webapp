@@ -29,7 +29,6 @@ const Profile = () => {
             }
           );
           setUser(data);
-          console.log(data)
           setFormData({
             fullName: data.fullName || '',
             username: data.username || '',
@@ -45,8 +44,6 @@ const Profile = () => {
 
     const fetchSellerAccount = async () => {
       if (user?._id) {
-        console.log(user)
-
         try {
           const { data } = await axios.get(
             //`http://localhost:5000/api/userProfile/seller/${user._id}/account`,
@@ -57,15 +54,12 @@ const Profile = () => {
               },
             }
           );
-          console.log(data)
           setSellerAccount(data);
-
         } catch (error) {
           console.error("Failed to fetch seller account", error);
         }
       }
     };
-
     fetchProfile();
     if (user) {
       fetchSellerAccount();
