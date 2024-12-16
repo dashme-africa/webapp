@@ -9,10 +9,13 @@ const HeroPage = () => {
       {/* Background Image */}
       <div
         style={{
-          backgroundImage: "url('https://res.cloudinary.com/df2q6gyuq/image/upload/b_rgb:333B4C/c_pad,ar_16:9,e_improve,e_sharpen/v1733764826/lauretta_kgqyaq.png')",
+          // backgroundImage: "url('https://res.cloudinary.com/df2q6gyuq/image/upload/b_rgb:333B4C/c_pad,ar_16:9,e_improve,e_sharpen/v1733764826/lauretta_kgqyaq.png')",
+          backgroundImage: "url('https://res.cloudinary.com/df2q6gyuq/image/upload/v1734389465/Gulf_Blue_Simple_Professional_How_To_Improve_Your_SEO_Rankings_Blog_Banner_zqeyog.png')",
+          // backgroundImage: "url('https://res.cloudinary.com/df2q6gyuq/image/upload/v1734389465/DMA_HERO_BANNER_2_xmxmyj.png')",
+          // backgroundImage: "url('https://res.cloudinary.com/df2q6gyuq/image/upload/v1734389464/DMA_HERO_BANNER_c19vyt.png')",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
-          // backgroundSize: "cover",
+          backgroundSize: "cover",
           width: "100%",
           height: "100%",
         }}
@@ -56,7 +59,7 @@ const HeroPage = () => {
       </div>
 
       {/* Bottom Left Section */}
-      <div
+      {/* <div
         className="position-absolute"
         style={{
           left: "4%",
@@ -97,7 +100,7 @@ const HeroPage = () => {
           </Link>
 
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

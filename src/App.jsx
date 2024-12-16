@@ -67,7 +67,7 @@ const App = () => {
             <Route path="/accountdetails" element={<><Header /> <AccountDetails /></>} />
             <Route path="/goshiip" element={<><Header /> <GoShiip /> <RateComponent/> </>} />
             <Route path="/my-products" element={<><Header /> <MyProducts /></>} />
-            <Route path="/otp" element={<><Formhead /> <OTP /></>} />
+            <Route path="/otp" element={<><Header /> <OTP /></>} />
           </Routes>
         </main>
         <Footer />

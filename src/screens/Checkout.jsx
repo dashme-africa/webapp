@@ -120,7 +120,7 @@ const Checkout = () => {
       amount: total,
       email: user.email,
       phoneNumber: billingDetails.phoneNumber,
-      paymentReference: `REF-${Date.now()}`,
+      paymentReference: `${Date.now()}`,
       customerAccountNumber: sellerAccount.accountNumber,
       customerAccountName: sellerAccount.accountName,
       customerAccountCode: sellerAccount.accountCode,

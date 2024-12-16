@@ -9,11 +9,10 @@ import App from './App.jsx'; // Your main app component
 
 // Render the app with all providers in the correct order
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
+  // <StrictMode>
     <Provider store={store}> {/* Redux provider for the global state */}
       <CartProvider> {/* Cart context provider */}
         <App />
       </CartProvider>
     </Provider>
-  </StrictMode>
 );
