@@ -59,7 +59,7 @@ const HeroPage = () => {
       </div>
 
       {/* Bottom Left Section */}
-      {/* <div
+      <div
         className="position-absolute"
         style={{
           left: "4%",
@@ -100,7 +100,7 @@ const HeroPage = () => {
           </Link>
 
         </div>
-      </div> */}
+      </div>
     </div>
   );
 };
