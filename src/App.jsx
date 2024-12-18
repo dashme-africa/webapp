@@ -65,7 +65,7 @@ const App = () => {
             <Route path="/disburse" element={<><Header /> <DisbursementForm /></>} />
             <Route path="/checkout" element={<><Header /> <Checkout /></>} />
             <Route path="/accountdetails" element={<><Header /> <AccountDetails /></>} />
-            <Route path="/goshiip" element={<><Header /> <GoShiip /> <RateComponent/> </>} />
+            <Route path="/goshiip" element={<><Header /> <GoShiip /></>} />
             <Route path="/my-products" element={<><Header /> <MyProducts /></>} />
             <Route path="/otp" element={<><Header /> <OTP /></>} />
           </Routes>
