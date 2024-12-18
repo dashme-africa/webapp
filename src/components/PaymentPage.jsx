@@ -189,7 +189,7 @@ const PaymentPage = () => {
     if (seller) {
       try {
         const { data } = await axios.get(
-          `http://localhost:5000/api/userProfile/seller/${seller}/account`,
+          `https://dashmeafrica-backend.vercel.app/api/userProfile/seller/${seller}/account`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -222,7 +222,7 @@ const PaymentPage = () => {
         if (sellerData) {
           try {
             const { data } = await axios.post(
-              'http://localhost:5000/api/payment/verify-payment',
+              'https://dashmeafrica-backend.vercel.app/api/payment/verify-payment',
               {
                 paymentReference,
                 sellerAccount: {
@@ -264,7 +264,7 @@ const PaymentPage = () => {
     setMessage('');
 
     try {
-      const response = await axios.post('http://localhost:5000/api/payment/authorize-transfer', {
+      const response = await axios.post('https://dashmeafrica-backend.vercel.app/api/payment/authorize-transfer', {
         reference,
         otp,
       });
