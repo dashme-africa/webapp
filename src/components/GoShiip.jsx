@@ -19,7 +19,7 @@ const CourierForm = () => {
   const handleFetchCouriers = async () => {
     try {
       setError(null);
-      const response = await axios.get("http://localhost:5000/api/couriers", { params: { type } });
+      const response = await axios.get("https://dashmeafrica-backend.vercel.app/api/couriers", { params: { type } });
       setCouriers(response.data.data || []);
     } catch (error) {
       console.error("Error fetching couriers:", error.response?.data || error.message);
@@ -96,7 +96,7 @@ const CourierForm = () => {
       };
 
       const response = await axios.post(
-        `http://localhost:5000/api/rates`,
+        `https://dashmeafrica-backend.vercel.app/api/rates`,
         payload,
         {
           headers: { Authorization: "Bearer Secret Key", "Content-Type": "application/json" }
@@ -245,19 +245,19 @@ const CourierForm = () => {
             Get Rate
           </button>
         </div>
-    )}
+      )}
 
-{rateDetails && (
-            <div className="mt-4">
-              <h4>Rate Details:</h4>
-              <p>Courier: {rateDetails.courier.name}</p>
-              <p>Amount: {rateDetails.amount} {rateDetails.currency}</p>
-              <p>Estimated Delivery: {rateDetails.estimated_days}</p>
-              <p>Pickup Info: {rateDetails.pickup}</p>
-            </div>
-          )}
+      {rateDetails && (
+        <div className="mt-4">
+          <h4>Rate Details:</h4>
+          <p>Courier: {rateDetails.courier.name}</p>
+          <p>Amount: {rateDetails.amount} {rateDetails.currency}</p>
+          <p>Estimated Delivery: {rateDetails.estimated_days}</p>
+          <p>Pickup Info: {rateDetails.pickup}</p>
         </div>
+      )}
+    </div>
   );
 };
 
-      export default CourierForm;
+export default CourierForm;
