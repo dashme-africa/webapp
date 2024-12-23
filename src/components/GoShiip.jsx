@@ -39,7 +39,7 @@ const CourierForm = () => {
         {
           params: {
             input: encodeURIComponent(input),
-            key: "Your_GoMaps_API_Key", // Replace with your actual key
+            key: "AlzaSy0XONEOOhGloShSf_9uN8Qhx8wWrVodlYb", // Replace with your actual key
           },
         }
       );
