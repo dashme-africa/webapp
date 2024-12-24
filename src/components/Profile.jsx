@@ -225,6 +225,7 @@ const Profile = () => {
                   name="accountName"
                   id="accountName"
                   className="form-control"
+                  placeholder="Will display after acc. no and bank name is verified"
                   value={formData.accountName}
                   onChange={handleChange}
                   disabled={isVerified} // Disable input after verification
