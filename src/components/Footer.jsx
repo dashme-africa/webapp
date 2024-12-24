@@ -15,8 +15,8 @@ const Footer = () => {
         </Row>
         <Row className="text-center mt-3">
           <Col>
-            <Button variant="success" className="mx-2 px-4">Sell</Button>
-            <Button variant="outline-success" className="mx-2 px-4">Donate</Button>
+            <a href="/upload"><Button variant="success" className="mx-2 px-4">Sell</Button></a>
+            <a href="/upload"><Button variant="outline-success" className="mx-2 px-4">Donate</Button></a>
           </Col>
         </Row>
         <Row className="text-center mt-3">
@@ -33,7 +33,6 @@ const Footer = () => {
           <Col md={3} className="mb-4 mb-md-0">
             <img
               src="https://res.cloudinary.com/df2q6gyuq/image/upload/v1733432001/Frame_5_2_1_iomywh.png" // Replace with your logo URL
-              // src="https://via.placeholder.com/120" // Replace with your logo URL
               alt="DashMeAfrica Logo"
               className="mb-3"
             />

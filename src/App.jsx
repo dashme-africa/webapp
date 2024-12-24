@@ -26,7 +26,6 @@ import AccountDetails from './components/AccountDetails';
 import Checkout from './screens/Checkout';
 import GoShiip from "./components/GoShiip";
 import MyProducts from "./components/MyProducts";
-import RateComponent from "./components/RateComponent";
 import OTP from "./components/oneTimePayment";
 
 
@@ -59,7 +58,7 @@ const App = () => {
             <Route path="/product/:id" element={<><Header /> <ProductDetails /></>} />
             <Route path="/forgot-password" element={<><Formhead /> <ForgotPwd /></>} />
             <Route path="/forgot-password" element={<><Formhead /> <ForgotPwd /></>} />
-            <Route path="/payment-page" element={<><Formhead /> <PaymentPage /></>} />
+            <Route path="/verify-payment-page" element={<><Formhead /> <PaymentPage /></>} />
             {/* <Route path="/checkout" element={<><Formhead /> <MonnifyPayment /></>} /> */}
             <Route path="/cart" element={<><Header /> <CartScreen /></>} />
             <Route path="/disburse" element={<><Header /> <DisbursementForm /></>} />

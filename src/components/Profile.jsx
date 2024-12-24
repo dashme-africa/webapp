@@ -4,38 +4,48 @@ import axios from "axios";
 const Profile = () => {
   const [user, setUser] = useState(null);
   const [image, setImage] = useState(null);
-  const [sellerAccount, setSellerAccount] = useState(null);
+  const [banks, setBanks] = useState([]); // State to hold the list of banks
+  const [filteredBanks, setFilteredBanks] = useState([]); // Filtered banks for autocomplete
   const [formData, setFormData] = useState({
-    fullName: '',
-    username: '',
-    email: '',
-    address: '',
-    bio: '',
+    fullName: "",
+    username: "",
+    email: "",
+    address: "",
+    bio: "",
+    accountName: "",
+    accountNumber: "",
+    bankName: "",
   });
+  const [isVerified, setIsVerified] = useState(false); // Flag to track if bank details are verified
 
   useEffect(() => {
+    // Fetch user profile
     const fetchProfile = async () => {
       const token = localStorage.getItem("token");
 
       if (token) {
         try {
           const { data } = await axios.get(
-            // "http://localhost:5000/api/userProfile/profile",
             "https://dashmeafrica-backend.vercel.app/api/userProfile/profile",
+            // "http://localhost:5000/api/userProfile/profile",
             {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
+              headers: { Authorization: `Bearer ${token}` },
             }
           );
           setUser(data);
-          setFormData({
+          setFormData((prevData) => ({
+            ...prevData,
             fullName: data.fullName || "",
             username: data.username || "",
             email: data.email || "",
             address: data.address || "",
             bio: data.bio || "",
-          });
+            accountName: data.accountName || "",
+            accountNumber: data.accountNumber || "",
+            bankName: data.bankName || "",
+          }));
+
+          setIsVerified(data.isVerified || false);
         } catch (error) {
           console.error("Failed to fetch user profile", error);
         }
@@ -43,30 +53,21 @@ const Profile = () => {
     };
 
     fetchProfile();
-  }, []); // Only runs on mount
 
-  useEffect(() => {
-    const fetchSellerAccount = async () => {
-      if (user?._id) {
-        try {
-          const { data } = await axios.get(
-            `https://dashmeafrica-backend.vercel.app/api/userProfile/seller/${user._id}/account`,
-            {
-              headers: {
-                Authorization: `Bearer ${localStorage.getItem("token")}`,
-              },
-            }
-          );
-          setSellerAccount(data);
-        } catch (error) {
-          console.error("Failed to fetch seller account", error);
-        }
+    // Fetch list of banks
+    const fetchBanks = async () => {
+      try {
+        const { data } = await axios.get("https://api.paystack.co/bank", {
+          headers: { Authorization: `Bearer YOUR_SECRET_KEY` },
+        });
+        setBanks(data.data || []);
+      } catch (error) {
+        console.error("Failed to fetch bank list", error);
       }
     };
 
-    fetchSellerAccount();
-  }, [user]); // Runs whenever `user` changes
-
+    fetchBanks();
+  }, []);
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -75,41 +76,55 @@ const Profile = () => {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        document.getElementById('profile-img').src = reader.result;
+        document.getElementById("profile-img").src = reader.result;
       };
       reader.readAsDataURL(file);
     }
   };
 
-
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
+
+    if (name === "bankName") {
+      const filtered = banks.filter((bank) =>
+        bank.name.toLowerCase().includes(value.toLowerCase())
+      );
+      setFilteredBanks(filtered);
+    }
+  };
+
+  const handleSelectBank = (bankName) => {
+    setFormData((prevData) => ({ ...prevData, bankName }));
+    setFilteredBanks([]);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const token = localStorage.getItem('token');
+
+    if (formData.accountNumber && !isVerified) {
+      alert("Please verify your bank details before saving.");
+      return;
+    }
+
+    const token = localStorage.getItem("token");
 
     const formDataToSubmit = new FormData();
+    Object.keys(formData).forEach((key) => {
+      formDataToSubmit.append(key, formData[key]);
+    });
 
-    // Append all form fields from state to FormData
-    formDataToSubmit.append('fullName', formData.fullName);
-    formDataToSubmit.append('username', formData.username);
-    formDataToSubmit.append('email', formData.email);
-    formDataToSubmit.append('address', formData.address);
-    formDataToSubmit.append('bio', formData.bio);
+    // Add isVerified to formData
+    formDataToSubmit.append("isVerified", isVerified);
 
-    // Append the image file if selected.
     if (image) {
-      formDataToSubmit.append('image', image);
+      formDataToSubmit.append("image", image);
     }
 
     try {
       const response = await axios.put(
-        // 'http://localhost:5000/api/userProfile/profile', // Replace with your actual API URL.
-        'https://dashmeafrica-backend.vercel.app/api/userProfile/profile', // Replace with your actual API URL.
+        "https://dashmeafrica-backend.vercel.app/api/userProfile/profile",
+        // "http://localhost:5000/api/userProfile/profile",
         formDataToSubmit,
         {
           headers: {
@@ -118,18 +133,57 @@ const Profile = () => {
         }
       );
 
-      console.log('Response:', response);
       if (response.data) {
-        setUser(response.data); // Update the user state.
-        alert('Profile updated successfully');
+        setUser(response.data);
+        alert("Profile updated successfully");
       } else {
         alert(response.data.message || "Failed to update profile.");
       }
     } catch (error) {
-      console.error('Failed to update profile:', error);
-      alert('Failed to update profile');
+      console.error("Failed to update profile:", error);
+      alert("Failed to update profile");
     }
   };
+
+
+  const verifyBankDetails = async () => {
+    try {
+      const { accountNumber, bankName } = formData;
+      if (!accountNumber || !bankName) {
+        alert("Please fill in the account number and bank name to verify.");
+        return;
+      }
+
+      const response = await axios.get("https://dashmeafrica-backend.vercel.app/api/userProfile/resolve-account", {
+      // const response = await axios.get("http://localhost:5000/api/userProfile/resolve-account", {
+        params: {
+          account_number: accountNumber,
+          bank_name: bankName, // Ensure bankName corresponds name in the backend
+        },
+      },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      if (response.data.data?.account_name) {
+        setFormData((prevData) => ({
+          ...prevData,
+          accountName: response.data.data.account_name,
+        }));
+        setIsVerified(true); // Set bank details as verified
+        alert("Bank details verified successfully.");
+      } else {
+        alert("Failed to verify bank details.");
+      }
+    } catch (error) {
+      console.error("Bank verification error:", error);
+      alert("Error verifying bank details. Try again later.");
+    }
+  };
+
 
   if (!user) {
     return <div className="text-center py-5">Loading...</div>;
@@ -138,95 +192,125 @@ const Profile = () => {
   return (
     <div className="container mt-5">
       <div className="row g-0">
-        {/* Profile Section */}
         <div className="col-md-4 bg-light text-center p-4">
-          <div className="mb-4">
-<img
-  id="profile-img"
-  src={user.profilePicture || "https://via.placeholder.com/150"}
-  alt="Profile"
-  className="rounded-circle img-fluid"
-  style={{ width: "150px", height: "150px", objectFit: "cover" }}
-/>
+          <img
+            id="profile-img"
+            src={user.profilePicture || "https://via.placeholder.com/150"}
+            alt="Profile"
+            className="rounded-circle img-fluid"
+            style={{ width: "150px", height: "150px", objectFit: "cover" }}
+          />
+          <div>
 
+            <label className="btn btn-outline-success btn-sm mt-3">
+              Upload Picture
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                className="d-none"
+              />
+            </label>
+            <h3 className="fw-bold mt-3">{user.username || "Buzz Brain"}</h3>
           </div>
 
-          <label className="btn btn-outline-primary btn-sm">
-            Upload Picture
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleImageChange}
-              className="d-none"
-            />
-
-          </label>
-
-          <h3 className="fw-bold mt-3">{user.username || "Buzz Brain"}</h3>
-          {sellerAccount && (
-            <div className="mt-3 text-start">
-              <p>
-                <strong>Account Name:</strong> {sellerAccount.sellerAcctName}
-              </p>
-              <p>
-                <strong>Account Number:</strong> {sellerAccount.sellerAcctNumber}
-              </p>
-              <p>
-                <strong>Bank Name:</strong> {sellerAccount.sellerAcctBank}
-              </p>
-            </div>
-          )}
+          {/* Bank Details Section */}
+          <div className="mt-5 text-start">
+            <h5 className="fw-bold mt-4 mb-4">Bank Details</h5>
+            <form onSubmit={handleSubmit}>
+              <div className="mb-3">
+                <label className="form-label">Account Name</label>
+                <input
+                  type="text"
+                  name="accountName"
+                  id="accountName"
+                  className="form-control"
+                  value={formData.accountName}
+                  onChange={handleChange}
+                  disabled={isVerified} // Disable input after verification
+                  readOnly
+                />
+              </div>
+              <div className="mb-3">
+                <label htmlFor="accountNumber">Account Number</label>
+                <input
+                  type="text"
+                  name="accountNumber"
+                  id="accountNumber"
+                  className="form-control"
+                  value={formData.accountNumber}
+                  onChange={handleChange}
+                  disabled={isVerified} // Disable input after verification
+                />
+              </div>
+              <div className="mb-3">
+                <label htmlFor="bankName">Bank Name</label>
+                <input
+                  type="text"
+                  name="bankName"
+                  id="bankName"
+                  className="form-control"
+                  value={formData.bankName}
+                  onChange={handleChange}
+                  disabled={isVerified} // Disable input after verification
+                />
+                {filteredBanks.length > 0 && (
+                  <ul className="list-group mt-1">
+                    {filteredBanks.map((bank) => (
+                      <li
+                        key={bank.code}
+                        className="list-group-item"
+                        onClick={() => handleSelectBank(bank.name)}
+                        style={{ cursor: "pointer" }}
+                      >
+                        {bank.name}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+              <button type="button" onClick={verifyBankDetails} className="btn btn-success" disabled={isVerified}>
+                {isVerified ? 'Verified' : 'Verify'}
+              </button>
+            </form>
+          </div>
         </div>
 
         {/* Edit Profile Section */}
         <div className="col-md-8 p-4">
           <h4 className="fw-bold">Edit Your Profile</h4>
-          <form onSubmit={handleSubmit} className="mt-4">
-            <div className="row mb-3">
-              <div className="col-md-12">
-                <label className="form-label">Full Name</label>
-                <input
-                  type="text"
-                  name="fullName"
-                  className="form-control"
-                  value={formData.fullName}
-                  onChange={handleChange}
-                />
-              </div>
-            </div>
-            <div className="row mb-3">
-              <div className="col-md-6">
-                <label className="form-label">Username</label>
-                <input
-                  type="text"
-                  name="username"
-                  className="form-control"
-                  value={formData.username}
-                  onChange={handleChange}
-                />
-              </div>
-              <div className="col-md-6">
-                <label className="form-label">Email</label>
-                <input
-                  type="email"
-                  name="email"
-                  className="form-control"
-                  value={formData.email}
-                  onChange={handleChange}
-                />
-              </div>
-            </div>
+          <form onSubmit={handleSubmit} className="mt-3">
             <div className="mb-3">
-              <label className="form-label">Address</label>
+              <label className="form-label">Full Name</label>
               <input
                 type="text"
-                name="address"
+                name="fullName"
                 className="form-control"
-                value={formData.address}
+                value={formData.fullName}
                 onChange={handleChange}
               />
             </div>
-            <div className="mb-4">
+            <div className="mb-3">
+              <label className="form-label">Email</label>
+              <input
+                type="email"
+                name="email"
+                className="form-control"
+                value={formData.email}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="mb-3">
+              <label className="form-label">Address</label>
+              <textarea
+                name="address"
+                className="form-control"
+                rows="3"
+                value={formData.address}
+                onChange={handleChange}
+              ></textarea>
+            </div>
+            <div className="mb-3">
               <label className="form-label">Bio</label>
               <textarea
                 name="bio"
@@ -247,3 +331,7 @@ const Profile = () => {
 };
 
 export default Profile;
+
+
+
+

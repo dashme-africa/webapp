@@ -1,10 +1,7 @@
-// src/screens/ProductDetails.jsx
-
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { Card, Button, Spinner, Alert, Badge } from 'react-bootstrap';
-// import { useCart } from "../context/CartContext";
 import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
 
 
@@ -13,13 +10,12 @@ const ProductDetails = () => {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  // const { addToCart } = useCart(); // Get the addToCart function from context
 
   const navigate = useNavigate();
 
   const buyNowHandler = () => {
-    if (!product) return; // Ensure product data exists
-    navigate('/checkout', { state: { product, seller: product.uploader._id } }); // Navigate to checkout with product details
+    if (!product) return; 
+    navigate('/checkout', { state: { product, sellerId: product.uploader._id } }); // Navigate to checkout with product details
   };
 
   useEffect(() => {
@@ -35,13 +31,6 @@ const ProductDetails = () => {
     };
     fetchProduct();
   }, [id]);
-
-  // const addToCartHandler = () => {
-  //   console.log("Adding to cart:", product); // Confirm the product data
-  //   addToCart(product);
-  //   alert("Item added to cart!");
-  // };
-
 
   if (loading) {
     return <Spinner animation="border" variant="primary" className="d-block mx-auto my-5" />;
@@ -114,8 +103,6 @@ const ProductDetails = () => {
               <Button variant="primary" className="me-2">
                 Message Profile
               </Button>
-              {/* <Button variant="outline-secondary">Add to Saved Items</Button> */}
-              {/* <Button variant="success" onClick={addToCartHandler}>Add to Cart</Button> */}
               <Button variant="success" className="ms-2" onClick={buyNowHandler}>Buy Now</Button>
             </div>
           </div>
