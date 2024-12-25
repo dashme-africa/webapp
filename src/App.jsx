@@ -19,14 +19,9 @@ import AdminDashboard from './components/AdminDashboard';
 import EditProduct from './components/EditProduct';
 // import MonnifyPayment from './components/MonnifyPayment';
 import ProductDetails from './screens/ProductDetails';
-import CartScreen from './screens/CartScreen';
-import DisbursementForm from './components/DisbursementForm';
-import PaymentPage from './components/PaymentPage';
-import AccountDetails from './components/AccountDetails';
 import Checkout from './screens/Checkout';
 import GoShiip from "./components/GoShiip";
 import MyProducts from "./components/MyProducts";
-import OTP from "./components/oneTimePayment";
 
 const App = () => {
   const dispatch = useDispatch();
