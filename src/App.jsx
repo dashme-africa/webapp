@@ -17,7 +17,6 @@ import AdminRegister from './components/AdminRegister';
 import ForgotPwd from './components/ForgotPwd';
 import AdminDashboard from './components/AdminDashboard';
 import EditProduct from './components/EditProduct';
-// import MonnifyPayment from './components/MonnifyPayment';
 import ProductDetails from './screens/ProductDetails';
 import Checkout from './screens/Checkout';
 import GoShiip from "./components/GoShiip";
