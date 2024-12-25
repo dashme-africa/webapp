@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-const apiURL = import.meta.env.VITE_API_URL; s
+const apiURL = import.meta.env.VITE_API_URL; 
 
 const Register = () => {
   const [formData, setFormData] = useState({

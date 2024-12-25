@@ -75,6 +75,12 @@ const UploadPage = () => {
     setIsSubmitting(true);
 
     try {
+      if (uploader && !uploader.isVerified) {
+        alert('Your bank details are not verified. Please verify your bank details in your profile page.');
+        setIsSubmitting(false);
+        return;
+        // Redirect to the home page
+      }
       // Create a FormData object
       const updatedData = new FormData();
 
@@ -101,28 +107,38 @@ const UploadPage = () => {
         ? `${apiURL}/products`
         : `${apiURL}/products/donate`;
 
-      // Send the data to the server
-      const response = await axios.post(endpoint, updatedData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
+      try {
+        // Send the data to the server
+        const response = await axios.post(endpoint, updatedData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+        console.log('Success:', response.data);
+        alert(`Product Successfully Uploaded`);
 
-      alert(`Product Successfully Uploaded`);
+        // Reset the form
+        setFormData({
+          title: '',
+          description: '',
+          category: '',
+          price: '',
+          priceCategory: '',
+          location: '',
+          image: null,
+        });
 
-      // Reset the form
-      setFormData({
-        title: '',
-        description: '',
-        category: '',
-        price: '',
-        priceCategory: '',
-        location: '',
-        image: null,
-      });
-
-      // Redirect to the home page
-      navigate('/');
+        // Redirect to the home page
+        navigate('/');
+      } catch (error) {
+        if (error.response) {
+          console.error('Error uploading data:', error.response.data.message);
+          alert(`Error: ${error.response.data.message}`);
+        } else {
+          console.error('Unexpected error:', error.message);
+          alert('An unexpected error occurred.');
+        }
+      }
     } catch (error) {
       console.error('Error uploading data:', error);
       alert('Failed to submit. Please try again.');

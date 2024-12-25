@@ -15,7 +15,7 @@ const Header = () => {
       if (token) {
         try {
           const { data } = await axios.get(
-            `${apiURL}/userProfile/userAccountDetails`,
+            `${apiURL}/userProfile/profile`,
             {
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -23,7 +23,7 @@ const Header = () => {
             }
           );
           setUserData(data);
-          console.log(data)
+          // console.log(data)
         } catch (error) {
           console.error('Error fetching user and account details:', error.response?.data?.message || error.message);
         } finally {
@@ -93,9 +93,9 @@ const Header = () => {
 
                 {loading ? (
                   <span>Loading...</span>
-                ) : userData?.user?.profilePicture ? (
+                ) : userData?.profilePicture ? (
                   <img
-                    src={userData.user.profilePicture}
+                    src={userData.profilePicture}
                     alt="Profile"
                     className="rounded-circle"
                     style={{ width: '50px', height: '50px', objectFit: 'cover' }}
@@ -103,7 +103,7 @@ const Header = () => {
                 ) : (
                   <FaUser size={30} />
                 )}
-                <span>&nbsp;{userData?.user?.username}</span>
+                <span>&nbsp;{userData?.username}</span>
 
               </Nav.Link>
               <Nav.Link href="/upload" className="me-4 fs-6 text-dark">
