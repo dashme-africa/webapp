@@ -51,7 +51,7 @@ const MyProductsPage = () => {
 
       fetchMyProducts();
     }
-  }, [uploaderId]);  // This effect will run every time uploaderId is updated
+  }, [uploaderId]);  
 
   const handleDelete = async (id) => {
     try {
