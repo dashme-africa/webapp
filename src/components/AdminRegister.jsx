@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+const apiURL = import.meta.env.VITE_API_URL;
 
 const AdminRegister = () => {
   const [email, setEmail] = useState('');
@@ -17,7 +18,7 @@ const AdminRegister = () => {
     }
 
     try {
-      const response = await axios.post('https://dashmeafrica-backend.vercel.app/api/admin/register', {
+      const response = await axios.post(`${apiURL}/admin/register`, {
         email,
         password,
       });

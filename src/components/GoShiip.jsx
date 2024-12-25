@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import axios from "axios";
 import 'bootstrap/dist/css/bootstrap.min.css';
+const apiURL = import.meta.env.VITE_API_URL;
 
 const CourierForm = () => {
   const [type, setType] = useState("");
   const [couriers, setCouriers] = useState([]);
-  const [selectedCourier, setSelectedCourier] = useState(""); // Updated to track carrier name
+  const [selectedCourier, setSelectedCourier] = useState("");
   const [deliveryDetails, setDeliveryDetails] = useState({
     toAddress: { name: "", email: "", address: "", phone: "" },
     fromAddress: { name: "", email: "", address: "", phone: "" },
@@ -19,7 +20,7 @@ const CourierForm = () => {
   const handleFetchCouriers = async () => {
     try {
       setError(null);
-      const response = await axios.get("https://dashmeafrica-backend.vercel.app/api/couriers", { params: { type } });
+      const response = await axios.get(`${apiURL}/couriers`, { params: { type } });
       setCouriers(response.data.data || []);
     } catch (error) {
       console.error("Error fetching couriers:", error.response?.data || error.message);
@@ -39,7 +40,7 @@ const CourierForm = () => {
         {
           params: {
             input: encodeURIComponent(input),
-            key: "AlzaSy0XONEOOhGloShSf_9uN8Qhx8wWrVodlYb", // Replace with your actual key
+            key: "AlzaSy0XONEOOhGloShSf_9uN8Qhx8wWrVodlYb",
           },
         }
       );
@@ -91,12 +92,12 @@ const CourierForm = () => {
 
       const payload = {
         type,
-        carrierName: selectedCourier, // Include the selected courier name
+        carrierName: selectedCourier,
         ...deliveryDetails,
       };
 
       const response = await axios.post(
-        `https://dashmeafrica-backend.vercel.app/api/rates`,
+        `${apiURL}/rates`,
         payload,
         {
           headers: { Authorization: "Bearer Secret Key", "Content-Type": "application/json" }

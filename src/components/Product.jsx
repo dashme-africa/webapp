@@ -1,8 +1,8 @@
 import { Card, Button } from 'react-bootstrap';
-import { Link } from 'react-router-dom'; // Import Link
+import { Link } from 'react-router-dom';
 
 const Product = ({ product }) => {
-  const imageUrl = product.image; // This should be the Cloudinary URL now
+  const imageUrl = product.image;
 
   return (
     <Card className="my-4 border-0">

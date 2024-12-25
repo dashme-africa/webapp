@@ -2,10 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { Navbar, Nav, Container, Form, FormControl, Button } from 'react-bootstrap';
 import { FaUser, FaBell, FaHeart, FaSearch } from 'react-icons/fa';
 import axios from 'axios';
+const apiURL = import.meta.env.VITE_API_URL;
 
 const Header = () => {
-  // const [username, setUsername] = useState('');
-  // const [accountBalance, setAccountBalance] = useState(null);
 
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -16,8 +15,7 @@ const Header = () => {
       if (token) {
         try {
           const { data } = await axios.get(
-            // 'http://localhost:5000/api/userProfile/userAccountDetails',
-            'https://dashmeafrica-backend.vercel.app/api/userProfile/userAccountDetails',
+            `${apiURL}/userProfile/userAccountDetails`,
             {
               headers: {
                 Authorization: `Bearer ${token}`,

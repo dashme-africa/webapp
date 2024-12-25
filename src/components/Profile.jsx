@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+const apiURL = import.meta.env.VITE_API_URL;
 
 const Profile = () => {
   const [user, setUser] = useState(null);
   const [image, setImage] = useState(null);
-  const [banks, setBanks] = useState([]); // State to hold the list of banks
-  const [filteredBanks, setFilteredBanks] = useState([]); // Filtered banks for autocomplete
+  const [banks, setBanks] = useState([]);
+  const [filteredBanks, setFilteredBanks] = useState([]);
   const [formData, setFormData] = useState({
     fullName: "",
     username: "",
@@ -16,7 +17,7 @@ const Profile = () => {
     accountNumber: "",
     bankName: "",
   });
-  const [isVerified, setIsVerified] = useState(false); // Flag to track if bank details are verified
+  const [isVerified, setIsVerified] = useState(false);
 
   useEffect(() => {
     // Fetch user profile
@@ -26,8 +27,7 @@ const Profile = () => {
       if (token) {
         try {
           const { data } = await axios.get(
-            "https://dashmeafrica-backend.vercel.app/api/userProfile/profile",
-            // "http://localhost:5000/api/userProfile/profile",
+            `${apiURL}/userProfile/profile`,
             {
               headers: { Authorization: `Bearer ${token}` },
             }
@@ -123,8 +123,7 @@ const Profile = () => {
 
     try {
       const response = await axios.put(
-        "https://dashmeafrica-backend.vercel.app/api/userProfile/profile",
-        // "http://localhost:5000/api/userProfile/profile",
+        `${apiURL}/userProfile/profile`,
         formDataToSubmit,
         {
           headers: {
@@ -154,11 +153,10 @@ const Profile = () => {
         return;
       }
 
-      const response = await axios.get("https://dashmeafrica-backend.vercel.app/api/userProfile/resolve-account", {
-      // const response = await axios.get("http://localhost:5000/api/userProfile/resolve-account", {
+      const response = await axios.get(`${apiURL}/userProfile/resolve-account`, {
         params: {
           account_number: accountNumber,
-          bank_name: bankName, // Ensure bankName corresponds name in the backend
+          bank_name: bankName,
         },
       },
         {
@@ -173,7 +171,7 @@ const Profile = () => {
           ...prevData,
           accountName: response.data.data.account_name,
         }));
-        setIsVerified(true); // Set bank details as verified
+        setIsVerified(true);
         alert("Bank details verified successfully.");
       } else {
         alert("Failed to verify bank details.");
@@ -228,7 +226,7 @@ const Profile = () => {
                   placeholder="Will display after acc. no is verified"
                   value={formData.accountName}
                   onChange={handleChange}
-                  disabled={isVerified} // Disable input after verification
+                  disabled={isVerified}
                   readOnly
                 />
               </div>
@@ -241,7 +239,7 @@ const Profile = () => {
                   className="form-control"
                   value={formData.accountNumber}
                   onChange={handleChange}
-                  disabled={isVerified} // Disable input after verification
+                  disabled={isVerified}
                 />
               </div>
               <div className="mb-3">
@@ -253,7 +251,7 @@ const Profile = () => {
                   className="form-control"
                   value={formData.bankName}
                   onChange={handleChange}
-                  disabled={isVerified} // Disable input after verification
+                  disabled={isVerified}
                 />
                 {filteredBanks.length > 0 && (
                   <ul className="list-group mt-1">

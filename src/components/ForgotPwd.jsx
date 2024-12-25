@@ -65,7 +65,7 @@ const ForgotPassword = () => {
           {/* Help Text */}
           <p className="text-center mt-3">
             <a href="/help" className="text-success text-decoration-none">
-              Having trouble? 
+              Having trouble?
             </a> &nbsp;
             <a href="/login" className="text-success text-decoration-none">
               Go back
@@ -76,8 +76,10 @@ const ForgotPassword = () => {
         {/* Right Column: Image/Logo */}
         <div
           className="col-md-6 text-center d-flex justify-content-center align-items-center rounded-lg"
-          style={{ backgroundColor: "#000000", 
-            borderRadius: "20px"  }}
+          style={{
+            backgroundColor: "#000000",
+            borderRadius: "20px"
+          }}
         >
           <img
             src="https://res.cloudinary.com/df2q6gyuq/image/upload/v1733432339/Frame_4_1_2_ooduat.png" // Replace with your logo/image URL

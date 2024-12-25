@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Form, Button, Container, Alert } from 'react-bootstrap';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+const apiURL = import.meta.env.VITE_API_URL;
 
 const AdminLogin = () => {
   const [email, setEmail] = useState('');
@@ -14,10 +15,10 @@ const AdminLogin = () => {
     setError('');
 
     try {
-      const { data } = await axios.post('https://dashmeafrica-backend.vercel.app/api/admin/login', { email, password });
-      localStorage.setItem('adminToken', data.token); // Save token
+      const { data } = await axios.post(`${apiURL}/admin/login`, { email, password });
+      localStorage.setItem('adminToken', data.token);
       alert("Login Successful")
-      navigate('/adminDashboard'); // Redirect to dashboard
+      navigate('/adminDashboard');
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed');
     }

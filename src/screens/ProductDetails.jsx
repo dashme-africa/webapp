@@ -10,18 +10,19 @@ const ProductDetails = () => {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const apiURL = import.meta.env.VITE_API_URL;
 
   const navigate = useNavigate();
 
   const buyNowHandler = () => {
-    if (!product) return; 
-    navigate('/checkout', { state: { product, sellerId: product.uploader._id } }); // Navigate to checkout with product details
+    if (!product) return;
+    navigate('/checkout', { state: { product, sellerId: product.uploader._id } });
   };
 
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const { data } = await axios.get(`https://dashmeafrica-backend.vercel.app/api/products/${id}`);
+        const { data } = await axios.get(`${apiURL}/products/${id}`);
         setProduct(data);
       } catch (err) {
         setError('Failed to fetch product details. Please try again.');

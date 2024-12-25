@@ -1,6 +1,4 @@
 import React from 'react';
-import { Navbar, Nav, Container, Form, FormControl, Button } from 'react-bootstrap';
-import { FaUser, FaBell, FaEnvelope, FaHeart, FaSearch } from 'react-icons/fa';
 
 const Formhead = () => {
     return (

@@ -28,10 +28,6 @@ import GoShiip from "./components/GoShiip";
 import MyProducts from "./components/MyProducts";
 import OTP from "./components/oneTimePayment";
 
-
-// import Home from './components/Home';
-
-
 const App = () => {
   const dispatch = useDispatch();
 
@@ -46,27 +42,21 @@ const App = () => {
       <Router>
         <main>
           <Routes>
+            <Route path="/adminLogin" element={<AdminLogin />} />
+            <Route path="/adminRegister" element={<AdminRegister />} />
+            <Route path="/adminDashboard" element={<AdminDashboard />} />
+            <Route path="/admin/products/edit/:id" element={<EditProduct />} />
+
             <Route path="/" element={<> <Header /> <Hero /> <HomeScreen /> </>} />
             <Route path="/upload" element={<><Header /> <UploadPage /></>} />
             <Route path="/profile" element={<><Header /> <Profile /></>} />
             <Route path="/register" element={<><Formhead /> <Register /></>} />
             <Route path="/login" element={<><Formhead /><Login /></>} />
-            <Route path="/adminLogin" element={<AdminLogin />} />
-            <Route path="/adminRegister" element={<AdminRegister />} />
-            <Route path="/adminDashboard" element={<AdminDashboard />} />
-            <Route path="/admin/products/edit/:id" element={<EditProduct />} />
             <Route path="/product/:id" element={<><Header /> <ProductDetails /></>} />
             <Route path="/forgot-password" element={<><Formhead /> <ForgotPwd /></>} />
-            <Route path="/forgot-password" element={<><Formhead /> <ForgotPwd /></>} />
-            <Route path="/verify-payment-page" element={<><Formhead /> <PaymentPage /></>} />
-            {/* <Route path="/checkout" element={<><Formhead /> <MonnifyPayment /></>} /> */}
-            <Route path="/cart" element={<><Header /> <CartScreen /></>} />
-            <Route path="/disburse" element={<><Header /> <DisbursementForm /></>} />
             <Route path="/checkout" element={<><Header /> <Checkout /></>} />
-            <Route path="/accountdetails" element={<><Header /> <AccountDetails /></>} />
             <Route path="/goshiip" element={<><Header /> <GoShiip /></>} />
             <Route path="/my-products" element={<><Header /> <MyProducts /></>} />
-            <Route path="/otp" element={<><Header /> <OTP /></>} />
           </Routes>
         </main>
         <Footer />

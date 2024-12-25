@@ -3,10 +3,11 @@ import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+const apiURL = import.meta.env.VITE_API_URL;
 
 
 const UploadPage = () => {
-  const navigate = useNavigate(); // Initialize the useNavigate hook
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('sell');
   const [formData, setFormData] = useState({
     title: '',
@@ -15,10 +16,10 @@ const UploadPage = () => {
     price: '',
     priceCategory: '',
     location: '',
-    image: null, // Change to single image URL
+    image: null,
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [uploader, setUploader] = useState(null); // Store uploader info
+  const [uploader, setUploader] = useState(null);
 
 
   // Fetch uploader info on component mount
@@ -27,10 +28,10 @@ const UploadPage = () => {
       const token = localStorage.getItem('token');
       if (token) {
         try {
-          const response = await axios.get('https://dashmeafrica-backend.vercel.app/api/userProfile/profile', {
+          const response = await axios.get(`${apiURL}/userProfile/profile`, {
             headers: { Authorization: `Bearer ${token}` },
           });
-          setUploader(response.data); // Set uploader info
+          setUploader(response.data);
         } catch (error) {
           console.error('Failed to fetch uploader info:', error);
         }
@@ -50,7 +51,7 @@ const UploadPage = () => {
       price: '',
       priceCategory: '',
       location: '',
-      image: null, // Change to single image URL
+      image: null,
     });
   };
 
@@ -72,11 +73,11 @@ const UploadPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-  
+
     try {
       // Create a FormData object
       const updatedData = new FormData();
-  
+
       // Append form fields
       updatedData.append('title', formData.title);
       updatedData.append('description', formData.description);
@@ -84,37 +85,31 @@ const UploadPage = () => {
       updatedData.append('price', formData.price);
       updatedData.append('priceCategory', formData.priceCategory);
       updatedData.append('location', formData.location);
-  
+
 
       if (uploader) {
-        updatedData.append('uploader', uploader._id); // Assuming _id is the user ID
+        updatedData.append('uploader', uploader._id);
       }
 
       // Append the image only if it exists
       if (formData.image) {
         updatedData.append('image', formData.image);
       }
-  
-      // Log the FormData content for debugging
-      // updatedData.forEach((value, key) => {
-      //   console.log(key, value);
-      // });
-  
-//       // Determine the endpoint based on activeTab
-      const endpoint = activeTab === 'sell'  
-        ? 'https://dashmeafrica-backend.vercel.app/api/products' 
-        // ? 'http://localhost:5000/api/products' 
-        : 'https://dashmeafrica-backend.vercel.app/api/products/donate';
-  
+
+      // Determine the endpoint based on activeTab
+      const endpoint = activeTab === 'sell'
+        ? `${apiURL}/products`
+        : `${apiURL}/products/donate`;
+
       // Send the data to the server
       const response = await axios.post(endpoint, updatedData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
-  
+
       alert(`Product Successfully Uploaded`);
-  
+
       // Reset the form
       setFormData({
         title: '',
@@ -127,7 +122,7 @@ const UploadPage = () => {
       });
 
       // Redirect to the home page
-      navigate('/'); // Replace '/' with the route to your home page if different
+      navigate('/');
     } catch (error) {
       console.error('Error uploading data:', error);
       alert('Failed to submit. Please try again.');
@@ -135,16 +130,14 @@ const UploadPage = () => {
       setIsSubmitting(false);
     }
   };
-  
+
   const myProducts = () => {
-    navigate('/my-products'); // Navigate to checkout with product details
+    navigate('/my-products');
   };
-  
-  
-  
+
   return (
     <div className="container mt-5">
-          <Button variant="primary" className="ms-2" onClick={myProducts}>My Products</Button>
+      <Button variant="primary" className="ms-2" onClick={myProducts}>My Products</Button>
       {/* Tabs */}
       <div className="d-flex justify-content-center mb-4">
         <button
@@ -270,26 +263,26 @@ const UploadPage = () => {
 
             {/* Price Category */}
             {activeTab === 'sell' && (
-            <div className="mb-3">
-              <label className="form-label">Price Category</label>
-              <select
-                className="form-select"
-                name="priceCategory"
-                value={formData.priceCategory}
-                onChange={handleInputChange}
-                required
-              >
-                <option value="" disabled>
-                  Select category
-                </option>
+              <div className="mb-3">
+                <label className="form-label">Price Category</label>
+                <select
+                  className="form-select"
+                  name="priceCategory"
+                  value={formData.priceCategory}
+                  onChange={handleInputChange}
+                  required
+                >
+                  <option value="" disabled>
+                    Select category
+                  </option>
                   <>
                     <option value="500-15000">N500 - N15,000</option>
                     <option value="15000-25000">N15,000 - N25,000</option>
                     <option value="25000-50000">N25,000 - N50,000</option>
                   </>
-                
-              </select>
-            </div>
+
+                </select>
+              </div>
             )}
 
             {/* Location */}

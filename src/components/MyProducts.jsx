@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Button, Card, Container, Row, Col, Modal, Form } from 'react-bootstrap';
+const apiURL = import.meta.env.VITE_API_URL;
 
 const MyProductsPage = () => {
   const [products, setProducts] = useState([]);
@@ -8,7 +9,7 @@ const MyProductsPage = () => {
   const [error, setError] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
-  const [uploaderId, setUploaderId] = useState(null);  // State for the current user ID
+  const [uploaderId, setUploaderId] = useState(null);
 
   useEffect(() => {
     // Function to fetch the current user data (from localStorage or API)
@@ -18,16 +19,15 @@ const MyProductsPage = () => {
       if (token) {
         try {
           const { data } = await axios.get(
-            'https://dashmeafrica-backend.vercel.app/api/userProfile/profile',
-            // "https://dashmeafrica-backend.vercel.app/api/userProfile/profile",
+            `${apiURL}/userProfile/profile`,
             {
               headers: {
                 Authorization: `Bearer ${token}`,
               },
             }
           );
-          const currentUserId = data._id;  // Assuming the user ID is in response.data.user._id
-          setUploaderId(currentUserId);  // Set the uploader ID for fetching products
+          const currentUserId = data._id;
+          setUploaderId(currentUserId);
         } catch (err) {
           setError('Failed to fetch user data. Please try again.');
         }
@@ -35,13 +35,12 @@ const MyProductsPage = () => {
     };
 
     fetchUserData();
-  }, []);  // Empty dependency array means this effect runs only once after the first render
-
+  }, []);
   useEffect(() => {
     if (uploaderId) {
       const fetchMyProducts = async () => {
         try {
-          const response = await axios.get(`https://dashmeafrica-backend.vercel.app/api/myProducts?uploader=${uploaderId}`);
+          const response = await axios.get(`${apiURL}/myProducts?uploader=${uploaderId}`);
           setProducts(response.data);
           setLoading(false);
         } catch (err) {
@@ -56,7 +55,7 @@ const MyProductsPage = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`https://dashmeafrica-backend.vercel.app/api/myProducts/delete/${id}`);
+      await axios.delete(`${apiURL}/myProducts/delete/${id}`);
       setProducts(products.filter((product) => product._id !== id));
     } catch (err) {
       alert('Failed to delete product. Please try again.');
@@ -76,7 +75,7 @@ const MyProductsPage = () => {
   const handleModalSave = async () => {
     try {
       const { _id, ...updatedProduct } = editingProduct;
-      const response = await axios.put(`https://dashmeafrica-backend.vercel.app/api/myProducts/${_id}`, updatedProduct);
+      const response = await axios.put(`${apiURL}/myProducts/${_id}`, updatedProduct);
       setProducts(products.map((prod) => (prod._id === _id ? response.data : prod)));
       handleModalClose();
     } catch (err) {
@@ -121,7 +120,7 @@ const MyProductsPage = () => {
           ))}
         </Row>
       )}
-  
+
       {/* Modal for editing product */}
       <Modal show={showModal} onHide={handleModalClose}>
         <Modal.Header closeButton>

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { Form, Button, Card, Alert } from "react-bootstrap";
 import axios from "axios";
+const apiURL = import.meta.env.VITE_API_URL;
 
 const Checkout = () => {
   const { state } = useLocation();
@@ -28,8 +29,7 @@ const Checkout = () => {
       if (token) {
         try {
           const { data } = await axios.get(
-            // "http://localhost:5000/api/userProfile/profile",
-            "https://dashmeafrica-backend.vercel.app/api/userProfile/profile",
+            `${apiURL}/userProfile/profile`,
             {
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -51,8 +51,7 @@ const Checkout = () => {
       console.log(sellerId)
       try {
         const { data } = await axios.get(
-          // `http://localhost:5000/api/payment/seller/${sellerId}/bank-details`
-          `https://dashmeafrica-backend.vercel.app/api/payment/seller/${sellerId}/bank-details`
+          `${apiURL}/payment/seller/${sellerId}/bank-details`
         );
         setSellerBankDetails(data);
         console.log(data)
@@ -85,21 +84,19 @@ const Checkout = () => {
 
     try {
       // Initiating subaccount creation for the seller
-      // const subaccountResponse = await axios.post('http://localhost:5000/api/payment/subaccount', {
-      const subaccountResponse = await axios.post('https://dashmeafrica-backend.vercel.app/api/payment/subaccount', {
+      const subaccountResponse = await axios.post(`${apiURL}/payment/subaccount`, {
         businessName: sellerBankDetails.accountName,
-        bankName: sellerBankDetails.bankName, // Ensure you have this mapped correctly
+        bankName: sellerBankDetails.bankName,
         accountNumber: sellerBankDetails.accountNumber,
-        percentageCharge: 30, // Adjust percentage as needed
+        percentageCharge: 30,
       });
 
       const subaccountCode = subaccountResponse.data.data.subaccount_code;
 
       // Initializing the transaction
-      // const transactionResponse = await axios.post('http://localhost:5000/api/payment/initialize-transaction', {
-      const transactionResponse = await axios.post('https://dashmeafrica-backend.vercel.app/api/payment/initialize-transaction', {
+      const transactionResponse = await axios.post(`${apiURL}/payment/initialize-transaction`, {
         email: user.email,
-        amount: total * 100, // Paystack expects amount in kobo
+        amount: total * 100,
         subaccount: subaccountCode,
         transactionCharge: 10000, // Optional: Flat fee for main account
         bearer: 'subaccount', // Optional: Who bears the charge

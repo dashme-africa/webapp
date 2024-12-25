@@ -2,25 +2,26 @@ import React, { useEffect, useState } from 'react';
 import { Row, Col } from 'react-bootstrap';
 import Product from '../components/Product';
 import axios from 'axios';
-import { Link } from 'react-router-dom'; // Import Link for navigation
+import { Link } from 'react-router-dom';
+const apiURL = import.meta.env.VITE_API_URL;
 
 const HomeScreen = () => {
-  const [products, setProducts] = useState([]); // State to store products
+  const [products, setProducts] = useState([]);
 
   // Fetch products when the component mounts
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const { data } = await axios.get('https://dashmeafrica-backend.vercel.app/api/products'); // Make a GET request to your backend
+        const { data } = await axios.get(`${apiURL}/products`);
         // Sort products by createdAt in descending order
         const sortedProducts = data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-        setProducts(sortedProducts); // Store sorted products in state
+        setProducts(sortedProducts);
       } catch (error) {
         console.error('Error fetching products:', error);
       }
     };
     fetchProducts();
-  }, []); // Empty array ensures this runs only once when the component mounts
+  }, []);
 
   return (
     <>

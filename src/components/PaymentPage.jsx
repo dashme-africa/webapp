@@ -2,11 +2,11 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useNavigate } from 'react-router-dom';
+const apiURL = import.meta.env.VITE_API_URL;
 
 const PaymentPage = () => {
   const [status, setStatus] = useState('Processing...');
-  const [isSuccess, setIsSuccess] = useState(null); // Tracks success or failure
-  const [sellerAccount, setSellerAccount] = useState(null); // Stores seller account details
+  const [isSuccess, setIsSuccess] = useState(null);
   const [otp, setOtp] = useState('');
   const [reference, setReference] = useState('');
   const [message, setMessage] = useState('');
@@ -19,7 +19,7 @@ const PaymentPage = () => {
     if (seller) {
       try {
         const { data } = await axios.get(
-          `https://dashmeafrica-backend.vercel.app/api/userProfile/seller/${seller}/account`,
+          `${apiURL}/userProfile/seller/${seller}/account`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -52,7 +52,7 @@ const PaymentPage = () => {
         if (sellerData) {
           try {
             const { data } = await axios.post(
-              'https://dashmeafrica-backend.vercel.app/api/payment/verify-payment',
+              `${apiURL}/payment/verify-payment`,
               {
                 paymentReference,
                 sellerAccount: {
@@ -64,7 +64,7 @@ const PaymentPage = () => {
             );
 
             if (data.success) {
-              setReference(paymentReference); // Set reference for OTP authorization
+              setReference(paymentReference);
               setIsSuccess(true);
             } else {
               setStatus('Payment failed or incomplete. Please try again.');
@@ -94,7 +94,7 @@ const PaymentPage = () => {
     setMessage('');
 
     try {
-      const response = await axios.post('https://dashmeafrica-backend.vercel.app/api/payment/authorize-transfer', {
+      const response = await axios.post(`${apiURL}/payment/authorize-transfer`, {
         reference,
         otp,
       });

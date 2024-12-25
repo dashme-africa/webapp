@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
+const apiURL = import.meta.env.VITE_API_URL;
 
 const EditProduct = () => {
   const { id } = useParams();
   const [product, setProduct] = useState({});
-  const [image, setImage] = useState(null); // For holding the selected image
+  const [image, setImage] = useState(null);
   const [error, setError] = useState('');
-  const [successMessage, setSuccessMessage] = useState(''); // Success message state
+  const [successMessage, setSuccessMessage] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -24,7 +25,7 @@ const EditProduct = () => {
             Authorization: `Bearer ${token}`,
           },
         };
-        const { data } = await axios.get(`https://dashmeafrica-backend.vercel.app/api/adminProduct/${id}`, config);
+        const { data } = await axios.get(`${apiURL}/adminProduct/${id}`, config);
         setProduct(data);
       } catch (err) {
         setError(err.response?.data?.message || 'Failed to fetch product');
@@ -36,7 +37,7 @@ const EditProduct = () => {
 
   // Handle image file change
   const handleImageChange = (e) => {
-    setImage(e.target.files[0]); // Store the selected image file
+    setImage(e.target.files[0]);
   };
 
   // Handle input changes
@@ -55,8 +56,8 @@ const EditProduct = () => {
       formData.append('price', product.price);
       formData.append('category', product.category);
       formData.append('location', product.location);
-      formData.append('tag', product.tag); // Include the tag (donate/sell)
-      formData.append('priceCategory', product.priceCategory); // Include priceCategory
+      formData.append('tag', product.tag);
+      formData.append('priceCategory', product.priceCategory);
 
       // If there's an image, append it to the form data
       if (image) {
@@ -65,7 +66,7 @@ const EditProduct = () => {
 
       // Log the FormData content for debugging
       formData.forEach((value, key) => {
-        console.log(key, value);  // Debugging the FormData
+        console.log(key, value);
       });
 
       const config = {
@@ -75,22 +76,21 @@ const EditProduct = () => {
         },
       };
       const { data } = await axios.put(
-        `https://dashmeafrica-backend.vercel.app/api/adminProduct/${id}`,
-        // `http://localhost:5000/api/adminProduct/${id}`,
+        `${apiURL}/adminProduct/${id}`,
         formData,
         config
       );
-      console.log(data); // Log the response
+      console.log(data);
 
       // Set success message after successful update
       setSuccessMessage('Product updated successfully!');
-      setError(''); // Clear any previous errors
+      setError('');
       setTimeout(() => {
         navigate('/adminDashboard');
-      }, 2000); // Redirect after 2 seconds
+      }, 2000);
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to update product');
-      setSuccessMessage(''); // Clear success message on error
+      setSuccessMessage('');
     }
   };
 
@@ -105,7 +105,7 @@ const EditProduct = () => {
           <input
             type="text"
             className="form-control"
-            name="title"  // Fix the name to match the backend field
+            name="title"
             value={product.title || ''}
             onChange={handleChange}
           />
@@ -127,7 +127,7 @@ const EditProduct = () => {
             name="price"
             value={product.price || ''}
             onChange={handleChange}
-            disabled={product.tag === 'donate'} // Disable price if tag is 'donate'
+            disabled={product.tag === 'donate'}
           />
         </div>
         <div className="mb-3">
@@ -138,7 +138,7 @@ const EditProduct = () => {
             name="priceCategory"
             value={product.priceCategory || ''}
             onChange={handleChange}
-            disabled={product.tag === 'donate'} // Disable price category if tag is 'donate'
+            disabled={product.tag === 'donate'}
           />
         </div>
         <div className="mb-3">

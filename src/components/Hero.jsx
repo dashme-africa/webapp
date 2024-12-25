@@ -9,11 +9,6 @@ const HeroPage = () => {
       {/* Background Image */}
       <div
         style={{
-          // backgroundImage: "url('https://res.cloudinary.com/df2q6gyuq/image/upload/b_rgb:333B4C/c_pad,ar_16:9,e_improve,e_sharpen/v1733764826/lauretta_kgqyaq.png')",
-          // backgroundImage: "url('https://res.cloudinary.com/df2q6gyuq/image/upload/v1734389465/Gulf_Blue_Simple_Professional_How_To_Improve_Your_SEO_Rankings_Blog_Banner_zqeyog.png')",
-          // backgroundImage: "url('https://res.cloudinary.com/df2q6gyuq/image/upload/v1734389465/DMA_HERO_BANNER_2_xmxmyj.png')",
-          // backgroundImage: "url('https://res.cloudinary.com/df2q6gyuq/image/upload/v1734389464/DMA_HERO_BANNER_c19vyt.png')",
-          // backgroundImage: "url('https://res.cloudinary.com/df2q6gyuq/image/upload/v1734395736/bann_rxzt2f.png')",
           backgroundImage: "url('https://res.cloudinary.com/df2q6gyuq/image/upload/v1734502295/hero-banner_tvastc.jpg')",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
@@ -66,23 +61,12 @@ const HeroPage = () => {
         style={{
           left: "7%",
           bottom: "30%",
-          // backgroundColor: "white",
-          // padding: "30px 10px",
           borderRadius: "15px",
           boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
           zIndex: 3,
           width: "300px",
         }}
       >
-        {/* <h2 className="mb-3 text-center " style={{ fontSize: "28px" }}>
-          Sell It!
-        </h2> */}
-        {/* <h2 className="mb-3 text-center " style={{ fontSize: "28px" }}>
-          Donate It!
-        </h2> */}
-        {/* <h2 className="mb-4 text-center " style={{ fontSize: "28px" }}>
-          Don't Trash It!
-        </h2> */}
         <div className="text-center">
           <Link to="/upload">
             <Button
@@ -100,7 +84,6 @@ const HeroPage = () => {
               Upload
             </Button>
           </Link>
-
         </div>
       </div>
     </div>

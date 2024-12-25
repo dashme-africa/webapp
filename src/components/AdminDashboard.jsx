@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+const apiURL = import.meta.env.VITE_API_URL;
 
 const AdminDashboard = () => {
   const [products, setProducts] = useState([]);
@@ -22,7 +23,7 @@ const AdminDashboard = () => {
           },
         };
         const { data } = await axios.get(
-          'https://dashmeafrica-backend.vercel.app/api/adminProduct',
+          `${apiURL}/adminProduct`,
           config
         );
         setProducts(data);
@@ -44,20 +45,20 @@ const AdminDashboard = () => {
           },
         };
         await axios.delete(
-          `https://dashmeafrica-backend.vercel.app/api/adminProduct/${id}`,
+          `${apiURL}/adminProduct/${id}`,
           config
         );
         setProducts(products.filter((product) => product._id !== id));
       } catch (err) {
         // Add better error logging
-        console.error('Error:', err);  // Log the complete error for debugging
+        console.error('Error:', err);
         setError(
           err.response?.data?.message || 'Failed to delete product. Please try again later.'
         );
       }
     }
   };
-  
+
 
   const editProduct = (id) => {
     navigate(`/admin/products/edit/${id}`);
@@ -84,7 +85,7 @@ const AdminDashboard = () => {
             <tr key={product._id}>
               <td>
                 <img
-                  src={product.image || '/placeholder.png'} // Provide a placeholder image URL for missing images
+                  src={product.image || '/placeholder.png'}
                   alt={product.title}
                   style={{ width: '80px', height: '80px', objectFit: 'cover' }}
                 />
