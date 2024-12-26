@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-const apiURL = import.meta.env.VITE_API_URL; 
+import { Alert } from "react-bootstrap";
+const apiURL = import.meta.env.VITE_API_URL;
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -11,9 +12,18 @@ const Register = () => {
     password: "",
     confirmPassword: "",
   });
-
-  const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
+  const [alertVariant, setAlertVariant] = useState('success');
+  const displayAlert = (message, variant = 'success', duration = 5000) => {
+    setAlertMessage(message);
+    setAlertVariant(variant);
+    setShowAlert(true);
+    setTimeout(() => {
+      setShowAlert(false);
+    }, duration);
+  };
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -23,23 +33,32 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
-    if (formData.password !== formData.confirmPassword) {
-      return setError("Passwords do not match");
+
+    if (!formData.password || !formData.confirmPassword || !formData.fullName || !formData.username || !formData.email) {
+      displayAlert('All fields are required', 'danger');
+      return
     }
 
+    if (formData.password !== formData.confirmPassword) {
+      displayAlert('Passwords do not match.', 'danger');
+      return
+    }
+
+    console.log(formData)
     setIsSubmitting(true);
     try {
       const response = await axios.post(
         `${apiURL}/users/register`,
         formData
       );
-      alert("Registration Successful");
-      navigate("/login");
+
+      displayAlert('Registration Successful.');
+      setTimeout(() => {
+        navigate('/login');
+      }, 2000);
     } catch (error) {
-      setError(
-        error.response?.data?.message || "Something went wrong. Please try again."
-      );
+      const errorMessage = error.response?.data?.message || "Something went wrong. Please try again.";
+      displayAlert(errorMessage, "danger");
     } finally {
       setIsSubmitting(false);
     }
@@ -51,7 +70,9 @@ const Register = () => {
         {/* Left Column: Form */}
         <div className="col-md-6 p-5 bg-light">
           <h2 className="mb-4">Register with email</h2>
-          {error && <div className="alert alert-danger">{error}</div>}
+          <Alert variant={alertVariant} show={showAlert}>
+            {alertMessage}
+          </Alert>
           <form onSubmit={handleSubmit}>
             {/* Full Name */}
             <div className="mb-3">

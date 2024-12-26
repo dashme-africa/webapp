@@ -24,9 +24,9 @@ const Checkout = () => {
       },
     ],
   });
-
   const [user, setUser] = useState({ fullName: "", email: "" });
   const [couriers, setCouriers] = useState([]);
+  const [suggestions, setSuggestions] = useState({ toAddress: [], fromAddress: [] });
   const [type, setType] = useState("");
   const [selectedCourier, setSelectedCourier] = useState("");
   const [rateDetails, setRateDetails] = useState(null);
@@ -34,8 +34,6 @@ const Checkout = () => {
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
   const [alertVariant, setAlertVariant] = useState('success');
-
-
   const displayAlert = (message, variant = 'success', duration = 5000) => {
     setAlertMessage(message);
     setAlertVariant(variant);
@@ -44,7 +42,6 @@ const Checkout = () => {
       setShowAlert(false);
     }, duration);
   };
-
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -195,6 +192,59 @@ const Checkout = () => {
     }
   };
 
+  const fetchAddressSuggestions = async (input, addressType) => {
+    if (!input) {
+      setSuggestions((prev) => ({ ...prev, [addressType]: [] }));
+      return;
+    }
+
+    try {
+      const response = await axios.get(
+        "https://maps.gomaps.pro/maps/api/place/queryautocomplete/json",
+        {
+          params: {
+            input: encodeURIComponent(input),
+            key: "AlzaSy0XONEOOhGloShSf_9uN8Qhx8wWrVodlYb",
+          },
+        }
+      );
+
+      const fetchedSuggestions = response.data.predictions.map((prediction) => ({
+        displayName: prediction.description,
+        placeId: prediction.place_id,
+      }));
+
+      setSuggestions((prev) => ({ ...prev, [addressType]: fetchedSuggestions }));
+    } catch (error) {
+      console.error("Error fetching address suggestions:", error.response?.data || error.message);
+      setSuggestions((prev) => ({ ...prev, [addressType]: [] }));
+    }
+  };
+
+  const handleAddressSelection = (addressType, suggestion) => {
+    setDeliveryDetails((prev) => ({
+      ...prev,
+      [addressType]: { ...prev[addressType], address: suggestion.displayName },
+    }));
+    setSuggestions((prev) => ({ ...prev, [addressType]: [] }));
+  };
+
+  const handleInputChange = (section, field, value, index = null) => {
+    setDeliveryDetails((prevDetails) => {
+      const updatedDetails = { ...prevDetails };
+      if (index !== null) {
+        updatedDetails[section][index][field] = value;
+      } else {
+        updatedDetails[section][field] = value;
+      }
+      return updatedDetails;
+    });
+
+    if (field === "address" && (section === "toAddress" || section === "fromAddress")) {
+      fetchAddressSuggestions(value, section);
+    }
+  };
+
   const total = product?.price * quantity + (rateDetails?.amount || 0);
 
   return (
@@ -215,7 +265,7 @@ const Checkout = () => {
               <Form.Label>Email</Form.Label>
               <Form.Control value={deliveryDetails.toAddress.email} readOnly />
             </Form.Group>
-            <Form.Group className="mb-2">
+            {/* <Form.Group className="mb-2">
               <Form.Label>Address</Form.Label>
               <Form.Control
                 value={deliveryDetails.toAddress.address}
@@ -226,7 +276,30 @@ const Checkout = () => {
                   }))
                 }
               />
+            </Form.Group> */}
+            <Form.Group className="mb-2 position-relative">
+              <Form.Label>Address</Form.Label>
+              <Form.Control
+                value={deliveryDetails.toAddress.address}
+                onChange={(e) => handleInputChange("toAddress", "address", e.target.value)}
+                placeholder="Enter your address"
+              />
+              {suggestions.toAddress.length > 0 && (
+                <ul className="list-group position-absolute w-100" style={{ zIndex: 1000 }}>
+                  {suggestions.toAddress.map((suggestion, index) => (
+                    <li
+                      key={index}
+                      className="list-group-item list-group-item-action"
+                      onClick={() => handleAddressSelection("toAddress", suggestion)}
+                      style={{ cursor: "pointer" }}
+                    >
+                      {suggestion.displayName}
+                    </li>
+                  ))}
+                </ul>
+              )}
             </Form.Group>
+
             <Form.Group className="mb-2">
               <Form.Label>Phone</Form.Label>
               <Form.Control

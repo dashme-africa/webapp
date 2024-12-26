@@ -26,7 +26,7 @@ const HomeScreen = () => {
   return (
     <>
       {/* Header Row with "Recommended for You" and "See All" */}
-      <Row className="align-items-center mb-1 px-5">
+      <Row className="align-items-center mb-1 mt-5 px-5">
         <Col>
           <h4 className="mb-0">Recommended for You</h4>
         </Col>

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { Alert } from "react-bootstrap";
 const apiURL = import.meta.env.VITE_API_URL;
 
 const Login = () => {
@@ -8,6 +9,17 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
+  const [alertVariant, setAlertVariant] = useState('success');
+  const displayAlert = (message, variant = 'success', duration = 5000) => {
+    setAlertMessage(message);
+    setAlertVariant(variant);
+    setShowAlert(true);
+    setTimeout(() => {
+      setShowAlert(false);
+    }, duration);
+  };
 
   const navigate = useNavigate();
 
@@ -27,12 +39,14 @@ const Login = () => {
 
       // Save token to local storage
       localStorage.setItem("token", response.data.token);
-      alert("Login Successful");
 
-      // Navigate to home page
-      navigate("/");
+      displayAlert('Login Successful');
+      setTimeout(() => {
+        // Navigate to home page
+        navigate('/');
+      }, 2000);
     } catch (error) {
-      setError(error.response?.data?.message || "Invalid credentials");
+      displayAlert(error.response?.data?.message || "Invalid credentials", 'danger');
     } finally {
       setIsSubmitting(false);
     }
@@ -44,7 +58,9 @@ const Login = () => {
         {/* Left Column: Form */}
         <div className="col-md-6 p-5 bg-light">
           <h2 className="mb-4 text-center">Welcome Back!</h2>
-          {error && <div className="alert alert-danger">{error}</div>}
+          <Alert variant={alertVariant} show={showAlert}>
+            {alertMessage}
+          </Alert>
           <form onSubmit={handleSubmit}>
             {/* Email */}
             <div className="mb-3">

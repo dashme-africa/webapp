@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Button } from 'react-bootstrap';
+import { Button, Alert } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 const apiURL = import.meta.env.VITE_API_URL;
 
@@ -20,7 +20,17 @@ const UploadPage = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [uploader, setUploader] = useState(null);
-
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
+  const [alertVariant, setAlertVariant] = useState('success');
+  const displayAlert = (message, variant = 'success', duration = 5000) => {
+    setAlertMessage(message);
+    setAlertVariant(variant);
+    setShowAlert(true);
+    setTimeout(() => {
+      setShowAlert(false);
+    }, duration);
+  };
 
   // Fetch uploader info on component mount
   useEffect(() => {
@@ -37,7 +47,6 @@ const UploadPage = () => {
         }
       }
     };
-
     fetchUploader();
   }, []);
 
@@ -76,7 +85,7 @@ const UploadPage = () => {
 
     try {
       if (uploader && !uploader.isVerified) {
-        alert('Your bank details are not verified. Please verify your bank details in your profile page.');
+        displayAlert('Your bank details are not verified. Please verify your bank details in your profile page.', 'danger');
         setIsSubmitting(false);
         return;
         // Redirect to the home page
@@ -92,7 +101,6 @@ const UploadPage = () => {
       updatedData.append('priceCategory', formData.priceCategory);
       updatedData.append('location', formData.location);
 
-
       if (uploader) {
         updatedData.append('uploader', uploader._id);
       }
@@ -100,6 +108,8 @@ const UploadPage = () => {
       // Append the image only if it exists
       if (formData.image) {
         updatedData.append('image', formData.image);
+      } else {
+        displayAlert('Please add the product image', 'danger');
       }
 
       // Determine the endpoint based on activeTab
@@ -114,8 +124,7 @@ const UploadPage = () => {
             'Content-Type': 'multipart/form-data',
           },
         });
-        console.log('Success:', response.data);
-        alert(`Product Successfully Uploaded`);
+
 
         // Reset the form
         setFormData({
@@ -128,20 +137,26 @@ const UploadPage = () => {
           image: null,
         });
 
-        // Redirect to the home page
-        navigate('/');
+        // console.log('Success:', response.data);
+        displayAlert('Product Successfully Uploaded');
+
+        setTimeout(() => {
+          // Redirect to the home page
+          navigate('/');
+        }, 3000); // Navigate after 3 seconds
+
       } catch (error) {
         if (error.response) {
-          console.error('Error uploading data:', error.response.data.message);
-          alert(`Error: ${error.response.data.message}`);
+          // console.error('Error uploading data:', error.response.data.message);
+          displayAlert(`${error.response.data.message}`, 'danger');
         } else {
-          console.error('Unexpected error:', error.message);
-          alert('An unexpected error occurred.');
+          // console.error('Unexpected error:', error.message);
+          displayAlert('An unexpected error occurred.', 'danger');
         }
       }
     } catch (error) {
-      console.error('Error uploading data:', error);
-      alert('Failed to submit. Please try again.');
+      // console.error('Error uploading data:', error);
+      displayAlert('Failed to submit. Please try again.', 'danger');
     } finally {
       setIsSubmitting(false);
     }
@@ -175,7 +190,9 @@ const UploadPage = () => {
         <div className="card-body">
           <form onSubmit={handleSubmit}>
             <h3 className="text-center mb-4">{activeTab === 'sell' ? 'Sell' : 'Donate'}</h3>
-
+            <Alert variant={alertVariant} show={showAlert}>
+              {alertMessage}
+            </Alert>
             {/* Image Upload */}
             <div className="mb-3 text-center">
               <label

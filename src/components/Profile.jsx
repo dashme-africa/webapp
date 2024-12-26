@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 const apiURL = import.meta.env.VITE_API_URL;
+import { Alert } from "react-bootstrap";
 
 const Profile = () => {
   const [user, setUser] = useState(null);
@@ -18,6 +19,18 @@ const Profile = () => {
     bankName: "",
   });
   const [isVerified, setIsVerified] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
+  const [alertVariant, setAlertVariant] = useState('success');
+  const [suggestions, setSuggestions] = useState({ toAddress: [], fromAddress: [] });
+  const displayAlert = (message, variant = 'success', duration = 5000) => {
+    setAlertMessage(message);
+    setAlertVariant(variant);
+    setShowAlert(true);
+    setTimeout(() => {
+      setShowAlert(false);
+    }, duration);
+  };
 
   useEffect(() => {
     // Fetch user profile
@@ -103,7 +116,7 @@ const Profile = () => {
     e.preventDefault();
 
     if (formData.accountNumber && !isVerified) {
-      alert("Please verify your bank details before saving.");
+      displayAlert('Please verify your bank details before saving.', 'danger');
       return;
     }
 
@@ -134,22 +147,21 @@ const Profile = () => {
 
       if (response.data) {
         setUser(response.data);
-        alert("Profile updated successfully");
+        displayAlert('Profile updated successfully.');
       } else {
         alert(response.data.message || "Failed to update profile.");
       }
     } catch (error) {
-      console.error("Failed to update profile:", error);
-      alert("Failed to update profile");
+      // console.error("Failed to update profile:", error);
+      displayAlert('Failed to update profile.', 'danger');
     }
   };
-
 
   const verifyBankDetails = async () => {
     try {
       const { accountNumber, bankName } = formData;
       if (!accountNumber || !bankName) {
-        alert("Please fill in the account number and bank name to verify.");
+        displayAlert('Please fill in the account number and bank name to verify.', 'danger');
         return;
       }
 
@@ -172,13 +184,66 @@ const Profile = () => {
           accountName: response.data.data.account_name,
         }));
         setIsVerified(true);
-        alert("Bank details verified successfully.");
+        displayAlert('Bank details verified successfully.');
       } else {
-        alert("Failed to verify bank details.");
+        displayAlert('Failed to verify bank details.', 'danger');
       }
     } catch (error) {
-      console.error("Bank verification error:", error);
-      alert("Error verifying bank details. Try again later.");
+      // console.error("Bank verification error:", error);
+      displayAlert('Error verifying bank details. Try again later.', 'danger');
+    }
+  };
+
+  const fetchAddressSuggestions = async (input, addressType) => {
+    if (!input) {
+      setSuggestions((prev) => ({ ...prev, [addressType]: [] }));
+      return;
+    }
+
+    try {
+      const response = await axios.get(
+        "https://maps.gomaps.pro/maps/api/place/queryautocomplete/json",
+        {
+          params: {
+            input: encodeURIComponent(input),
+            key: "AlzaSy0XONEOOhGloShSf_9uN8Qhx8wWrVodlYb",
+          },
+        }
+      );
+
+      const fetchedSuggestions = response.data.predictions.map((prediction) => ({
+        displayName: prediction.description,
+        placeId: prediction.place_id,
+      }));
+
+      setSuggestions((prev) => ({ ...prev, [addressType]: fetchedSuggestions }));
+    } catch (error) {
+      console.error("Error fetching address suggestions:", error.response?.data || error.message);
+      setSuggestions((prev) => ({ ...prev, [addressType]: [] }));
+    }
+  };
+
+  const handleAddressSelection = (addressType, suggestion) => {
+    setDeliveryDetails((prev) => ({
+      ...prev,
+      [addressType]: { ...prev[addressType], address: suggestion.displayName },
+    }));
+    setSuggestions((prev) => ({ ...prev, [addressType]: [] }));
+  };
+
+  const handleInputChange = (section, field, value, index = null) => {
+    setDeliveryDetails((prevDetails) => {
+      const updatedDetails = { ...prevDetails };
+      if (index !== null) {
+        updatedDetails[section][index][field] = value;
+      } else {
+        updatedDetails[section][field] = value;
+      }
+      return updatedDetails;
+    });
+
+    if (field === "address" && (section === "toAddress" || section === "fromAddress")) {
+      fetchAddressSuggestions(value, section);
     }
   };
 
@@ -278,6 +343,9 @@ const Profile = () => {
         {/* Edit Profile Section */}
         <div className="col-md-8 p-4">
           <h4 className="fw-bold">Edit Your Profile</h4>
+          <Alert variant={alertVariant} show={showAlert}>
+            {alertMessage}
+          </Alert>
           <form onSubmit={handleSubmit} className="mt-3">
             <div className="mb-3">
               <label className="form-label">Full Name</label>
@@ -299,16 +367,39 @@ const Profile = () => {
                 onChange={handleChange}
               />
             </div>
-            <div className="mb-3">
+            <div className="mb-3 position-relative">
               <label className="form-label">Address</label>
               <textarea
                 name="address"
                 className="form-control"
                 rows="3"
                 value={formData.address}
-                onChange={handleChange}
+                onChange={(e) => {
+                  handleChange(e);
+                  fetchAddressSuggestions(e.target.value, "address");
+                }}
               ></textarea>
+              {suggestions.address && suggestions.address.length > 0 && (
+                <ul className="list-group position-absolute w-100 mt-1" style={{ zIndex: 1050 }}>
+                  {suggestions.address.map((suggestion, index) => (
+                    <li
+                      key={index}
+                      className="list-group-item list-group-item-action"
+                      onClick={() => {
+                        setFormData((prevData) => ({
+                          ...prevData,
+                          address: suggestion.displayName,
+                        }));
+                        setSuggestions((prev) => ({ ...prev, address: [] }));
+                      }}
+                    >
+                      {suggestion.displayName}
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
+
             <div className="mb-3">
               <label className="form-label">Bio</label>
               <textarea
