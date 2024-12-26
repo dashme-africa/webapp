@@ -1,13 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import { Navbar, Nav, Container, Form, FormControl, Button } from 'react-bootstrap';
+import { Navbar, Nav, Container, Form, FormControl, Button, Dropdown } from 'react-bootstrap';
 import { FaUser, FaBell, FaHeart, FaSearch } from 'react-icons/fa';
+import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 const apiURL = import.meta.env.VITE_API_URL;
 
 const Header = () => {
-
+  const { t, i18n } = useTranslation();
+  const [currentLanguage, setCurrentLanguage] = useState('EN');
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  const handleLanguageChange = (lang, label) => {
+    i18n.changeLanguage(lang);
+    setCurrentLanguage(label);
+  };
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -55,7 +62,7 @@ const Header = () => {
             <div className="input-group">
               <FormControl
                 type="search"
-                placeholder="Search for items"
+                placeholder={t('searchPlaceholder')}
                 aria-label="Search"
                 className="rounded-start"
                 style={{
@@ -107,14 +114,22 @@ const Header = () => {
 
               </Nav.Link>
               <Nav.Link href="/upload" className="me-4 fs-6 text-dark">
-                Upload
+                {t('upload')}
               </Nav.Link>
               <Nav.Link href="/register" className="me-3 fs-6 text-dark">
-                Sign Up
+                {t('signUp')}
               </Nav.Link>
-              <Nav.Link href="/language" className="fs-6 text-dark">
-                EN <span className="fw-light">&#x25BC;</span>
-              </Nav.Link>
+
+              <Dropdown>
+                <Dropdown.Toggle variant="light" className="fs-6 text-dark">
+                  {currentLanguage}
+                </Dropdown.Toggle>
+                <Dropdown.Menu>
+                  <Dropdown.Item onClick={() => handleLanguageChange('en', 'EN')}>EN</Dropdown.Item>
+                  <Dropdown.Item onClick={() => handleLanguageChange('fr', 'FR')}>FR</Dropdown.Item>
+                  <Dropdown.Item onClick={() => handleLanguageChange('es', 'ES')}>ES</Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
             </Nav>
           </Navbar.Collapse>
         </Container>

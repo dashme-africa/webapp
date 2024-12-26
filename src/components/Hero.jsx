@@ -1,9 +1,12 @@
 import React from "react";
 import { Button } from "react-bootstrap";
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 
 const HeroPage = () => {
+  const { t } = useTranslation();
+
   return (
     <div style={{ position: "relative", height: "100vh", overflow: "hidden", backgroundColor: "#333B4C" }}>
       {/* Background Image */}
@@ -36,21 +39,21 @@ const HeroPage = () => {
             className="mx-2 mb-3 text-dark fs-6"
             style={{ textDecoration: "none" }}
           >
-            Clothes
+            {t('clothes')}
           </a>
           <a
             href="#household-items"
             className="mx-2 mb-3 text-dark fs-6"
             style={{ textDecoration: "none" }}
           >
-            Household Items
+            {t('householdItems')}
           </a>
           <a
             href="#accessories"
             className="mx-2 mb-3 text-dark fs-6"
             style={{ textDecoration: "none" }}
           >
-            Accessories
+            {t('accessories')}
           </a>
         </nav>
       </div>
@@ -81,7 +84,7 @@ const HeroPage = () => {
                 maxWidth: "80%",
               }}
             >
-              Upload
+              {t('upload')}
             </Button>
           </Link>
         </div>

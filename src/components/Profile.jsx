@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 const apiURL = import.meta.env.VITE_API_URL;
+import { useTranslation } from 'react-i18next';
 import { Alert } from "react-bootstrap";
 
 const Profile = () => {
+  const { t } = useTranslation();
   const [user, setUser] = useState(null);
   const [image, setImage] = useState(null);
   const [banks, setBanks] = useState([]);
@@ -116,7 +118,7 @@ const Profile = () => {
     e.preventDefault();
 
     if (formData.accountNumber && !isVerified) {
-      displayAlert('Please verify your bank details before saving.', 'danger');
+      displayAlert(`${t("profile.verifyBankDetails")}`, 'danger');
       return;
     }
 
@@ -147,9 +149,9 @@ const Profile = () => {
 
       if (response.data) {
         setUser(response.data);
-        displayAlert('Profile updated successfully.');
+        displayAlert(t("profile.profileUpdated"));
       } else {
-        alert(response.data.message || "Failed to update profile.");
+        alert(response.data.message || t("profile.failedToUpdate"));
       }
     } catch (error) {
       // console.error("Failed to update profile:", error);
@@ -184,9 +186,9 @@ const Profile = () => {
           accountName: response.data.data.account_name,
         }));
         setIsVerified(true);
-        displayAlert('Bank details verified successfully.');
+        displayAlert(t("profile.bankVerified"));
       } else {
-        displayAlert('Failed to verify bank details.', 'danger');
+        displayAlert(t("profile.bankVerificationFailed"), 'danger');
       }
     } catch (error) {
       // console.error("Bank verification error:", error);
@@ -249,7 +251,7 @@ const Profile = () => {
 
 
   if (!user) {
-    return <div className="text-center py-5">Loading...</div>;
+    return <div className="text-center py-5">{t("profile.loading")}</div>;
   }
 
   return (
@@ -266,7 +268,7 @@ const Profile = () => {
           <div>
 
             <label className="btn btn-outline-success btn-sm mt-3">
-              Upload Picture
+            {t("profile.uploadPicture")}
               <input
                 type="file"
                 accept="image/*"
@@ -279,10 +281,10 @@ const Profile = () => {
 
           {/* Bank Details Section */}
           <div className="mt-5 text-start">
-            <h5 className="fw-bold mt-4 mb-4">Bank Details</h5>
+            <h5 className="fw-bold mt-4 mb-4">{t("profile.bankDetails")}</h5>
             <form onSubmit={handleSubmit}>
               <div className="mb-3">
-                <label className="form-label">Account Name</label>
+                <label className="form-label">{t("profile.accountName")}</label>
                 <input
                   type="text"
                   name="accountName"
@@ -296,7 +298,7 @@ const Profile = () => {
                 />
               </div>
               <div className="mb-3">
-                <label htmlFor="accountNumber">Account Number</label>
+                <label htmlFor="accountNumber">{t("profile.accountNumber")}</label>
                 <input
                   type="text"
                   name="accountNumber"
@@ -308,7 +310,7 @@ const Profile = () => {
                 />
               </div>
               <div className="mb-3">
-                <label htmlFor="bankName">Bank Name</label>
+                <label htmlFor="bankName">{t("profile.bankName")}</label>
                 <input
                   type="text"
                   name="bankName"
@@ -334,7 +336,7 @@ const Profile = () => {
                 )}
               </div>
               <button type="button" onClick={verifyBankDetails} className="btn btn-success" disabled={isVerified}>
-                {isVerified ? 'Verified' : 'Verify'}
+                {isVerified ? `${t("profile.verified")}` : `${t("profile.verify")}`}
               </button>
             </form>
           </div>
@@ -342,13 +344,13 @@ const Profile = () => {
 
         {/* Edit Profile Section */}
         <div className="col-md-8 p-4">
-          <h4 className="fw-bold">Edit Your Profile</h4>
+          <h4 className="fw-bold">{t("profile.editProfile")}</h4>
           <Alert variant={alertVariant} show={showAlert}>
             {alertMessage}
           </Alert>
           <form onSubmit={handleSubmit} className="mt-3">
             <div className="mb-3">
-              <label className="form-label">Full Name</label>
+              <label className="form-label">{t("profile.fullName")}</label>
               <input
                 type="text"
                 name="fullName"
@@ -358,7 +360,7 @@ const Profile = () => {
               />
             </div>
             <div className="mb-3">
-              <label className="form-label">Email</label>
+              <label className="form-label">{t("profile.email")}</label>
               <input
                 type="email"
                 name="email"
@@ -368,7 +370,7 @@ const Profile = () => {
               />
             </div>
             <div className="mb-3 position-relative">
-              <label className="form-label">Address</label>
+              <label className="form-label">{t("profile.address")}</label>
               <textarea
                 name="address"
                 className="form-control"
@@ -401,7 +403,7 @@ const Profile = () => {
             </div>
 
             <div className="mb-3">
-              <label className="form-label">Bio</label>
+              <label className="form-label">{t("profile.bio")}</label>
               <textarea
                 name="bio"
                 className="form-control"
@@ -411,7 +413,7 @@ const Profile = () => {
               ></textarea>
             </div>
             <button type="submit" className="btn btn-success w-100">
-              Save Changes
+            {t("profile.saveChanges")}
             </button>
           </form>
         </div>

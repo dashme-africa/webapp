@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Row, Col } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 import Product from '../components/Product';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
@@ -7,6 +8,7 @@ const apiURL = import.meta.env.VITE_API_URL;
 
 const HomeScreen = () => {
   const [products, setProducts] = useState([]);
+  const { t } = useTranslation();
 
   // Fetch products when the component mounts
   useEffect(() => {
@@ -28,11 +30,11 @@ const HomeScreen = () => {
       {/* Header Row with "Recommended for You" and "See All" */}
       <Row className="align-items-center mb-1 mt-5 px-5">
         <Col>
-          <h4 className="mb-0">Recommended for You</h4>
+          <h4 className="mb-0">{t('home.recommended')}</h4>
         </Col>
         <Col className="text-end">
           <Link to="/products" className="text-success fs-5 text-decoration-none">
-            See All
+          {t('home.seeAll')}
           </Link>
         </Col>
       </Row>
