@@ -1,93 +1,177 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { Form, Button, Card, Alert } from "react-bootstrap";
+import { Form, Button, Alert, Card } from "react-bootstrap";
 import axios from "axios";
+
 const apiURL = import.meta.env.VITE_API_URL;
 
 const Checkout = () => {
   const { state } = useLocation();
   const { product, sellerId } = state || {};
-
   const [quantity, setQuantity] = useState(1);
-  const [billingDetails, setBillingDetails] = useState({
-    streetAddress: "",
-    apartment: "",
-    town: "",
-    phoneNumber: "",
+  const [deliveryDetails, setDeliveryDetails] = useState({
+    fromAddress: { name: "", email: "", address: "", phone: "" },
+    toAddress: { name: "", email: "", address: "", phone: "" },
+    parcels: { width: "10", length: "10", height: "5", weight: "2" },
+    items: [
+      {
+        name: product?.title || "",
+        description: product?.description || "",
+        weight: "2",
+        category: product?.category || "",
+        amount: product?.price || 0,
+        quantity: quantity,
+      },
+    ],
   });
-  const [user, setUser] = useState({
-    fullName: "",
-    username: "",
-    email: "",
-  });
+
+  const [user, setUser] = useState({ fullName: "", email: "" });
+  const [couriers, setCouriers] = useState([]);
+  const [type, setType] = useState("");
+  const [selectedCourier, setSelectedCourier] = useState("");
+  const [rateDetails, setRateDetails] = useState(null);
   const [sellerBankDetails, setSellerBankDetails] = useState(null);
-  const [error, setError] = useState(null);
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
+  const [alertVariant, setAlertVariant] = useState('success');
+
+
+  const displayAlert = (message, variant = 'success', duration = 5000) => {
+    setAlertMessage(message);
+    setAlertVariant(variant);
+    setShowAlert(true);
+    setTimeout(() => {
+      setShowAlert(false);
+    }, duration);
+  };
+
 
   useEffect(() => {
     const fetchUser = async () => {
       const token = localStorage.getItem("token");
       if (token) {
         try {
-          const { data } = await axios.get(
-            `${apiURL}/userProfile/profile`,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
-          setUser({
-            fullName: data.fullName,
-            username: data.username,
-            email: data.email,
+          const { data } = await axios.get(`${apiURL}/userProfile/profile`, {
+            headers: { Authorization: `Bearer ${token}` },
           });
+          setUser({ fullName: data.fullName, email: data.email, address: data.address });
+          setDeliveryDetails((prev) => ({
+            ...prev,
+            toAddress: { ...prev.toAddress, name: data.fullName, email: data.email, address: data.address },
+          }));
         } catch (error) {
-          console.error("Error fetching user data:", error.response?.data.message || error.message);
+          console.error("Error fetching user data:", error);
         }
       }
     };
 
-    const fetchSellerBankDetails = async () => {
-      console.log(sellerId)
-      try {
-        const { data } = await axios.get(
-          `${apiURL}/payment/seller/${sellerId}/bank-details`
-        );
-        setSellerBankDetails(data);
-        console.log(data)
-      } catch (error) {
-        setError("Failed to fetch seller's bank details. Please try again.");
-        console.error("Error fetching seller's bank details:", error);
+    const fetchSellerDetails = async () => {
+      if (sellerId) {
+        try {
+          const { data } = await axios.get(`${apiURL}/payment/seller/${sellerId}`);
+          setDeliveryDetails((prev) => ({
+            ...prev,
+            fromAddress: {
+              name: data.seller.fullName,
+              email: data.seller.email,
+              address: data.seller.address,
+              phone: "09155802922",
+            },
+          }));
+          setSellerBankDetails(data)
+        } catch (error) {
+          console.error("Error fetching seller details:", error);
+        }
       }
     };
 
     fetchUser();
-    if (sellerId) fetchSellerBankDetails();
+    fetchSellerDetails();
   }, [sellerId]);
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setBillingDetails({ ...billingDetails, [name]: value });
+  const handleFetchCouriers = async () => {
+    if (!type) {
+      displayAlert('Please select type and fetch couriers.', 'danger');
+      return;
+    }
+    try {
+      const response = await axios.get(`${apiURL}/couriers`, { params: { type } });
+      setCouriers(response.data.data || []);
+      displayAlert('Couriers fetched successfully! You can now choose a courier.');
+    } catch (error) {
+      console.error("Error fetching couriers:", error);
+      displayAlert('Failed to fetch couriers.', 'danger');
+    }
+  };
+
+  const handleFetchRate = async () => {
+    if (!selectedCourier) {
+      displayAlert('Please select a courier to calculate rate', 'danger');
+      return;
+    }
+    const validatePayload = (payload) => {
+      const { toAddress } = payload;
+      if (!toAddress?.name) {
+        return "Name is required.";
+      }
+      if (!toAddress?.email) {
+        return "Email is required.";
+      }
+      if (!toAddress?.address) {
+        return "Address is required.";
+      }
+      if (!toAddress?.phone) {
+        return "Phone number is required.";
+      }
+      return null;
+    };
+
+    try {
+      const payload = {
+        type,
+        carrierName: selectedCourier,
+        ...deliveryDetails,
+      };
+
+      // Validate payload before making the request
+      const validationError = validatePayload(payload);
+      if (validationError) {
+        displayAlert(validationError, 'danger');
+        return;
+      }
+      const { data } = await axios.post(`${apiURL}/rates`, payload);
+      setRateDetails(data.data.rates);
+      displayAlert('Rate fetched successfully!. Proceed to payment');
+    } catch (error) {
+      console.error("Error fetching rates:", error.response?.data || error.message);
+      displayAlert('Failed to fetch rates.', 'danger');
+    }
   };
 
   const handleQuantityChange = (change) => {
     setQuantity((prev) => Math.max(1, prev + change));
+    setDeliveryDetails((prev) => ({
+      ...prev,
+      items: prev.items.map((item) => ({ ...item, quantity: quantity + change })),
+    }));
   };
-
-  const total = product?.price * quantity;
 
   const handlePayment = async () => {
     if (!sellerBankDetails) {
-      setError('Seller bank details are required for payment.');
+      displayAlert('Seller bank details are required for payment.', 'danger');
+      return;
+    }
+    if (!rateDetails) {
+      displayAlert('Calculate Rate before proceeding to checkout', 'danger');
       return;
     }
 
     try {
       // Initiating subaccount creation for the seller
       const subaccountResponse = await axios.post(`${apiURL}/payment/subaccount`, {
-        businessName: sellerBankDetails.accountName,
-        bankName: sellerBankDetails.bankName,
-        accountNumber: sellerBankDetails.accountNumber,
+        businessName: sellerBankDetails.seller.accountName,
+        bankName: sellerBankDetails.seller.bankName,
+        accountNumber: sellerBankDetails.seller.accountNumber,
         percentageCharge: 30,
       });
 
@@ -102,13 +186,16 @@ const Checkout = () => {
         bearer: 'subaccount', // Optional: Who bears the charge
       });
 
+      displayAlert('Payment initialization successful. Redirecting...');
       // Redirect to Paystack payment page
       window.location.href = transactionResponse.data.data.authorization_url;
     } catch (error) {
       console.error('Error during payment:', error.response?.data.message || error.message);
-      setError('Payment initialization failed. Please try again.');
+      displayAlert('Payment initialization failed. Please try again.', 'danger');
     }
   };
+
+  const total = product?.price * quantity + (rateDetails?.amount || 0);
 
   return (
     <div className="container my-5">
@@ -116,63 +203,70 @@ const Checkout = () => {
         {/* Billing Details */}
         <div className="col-md-6">
           <h3 className="mb-4 text-success">Billing Details</h3>
-          {error && <Alert variant="danger">{error}</Alert>}
+          <Alert variant={alertVariant} show={showAlert}>
+            {alertMessage}
+          </Alert>
+
           <Form>
-            <Form.Group className="mb-3">
-              <Form.Label>Full Name</Form.Label>
-              <Form.Control value={user.fullName} readOnly />
+            <Form.Group>
+              <Form.Label>Name</Form.Label>
+              <Form.Control value={deliveryDetails.toAddress.name} readOnly />
             </Form.Group>
-            <Form.Group className="mb-3">
-              <Form.Label>Username</Form.Label>
-              <Form.Control value={user.username} readOnly />
+            <Form.Group>
+              <Form.Label>Email</Form.Label>
+              <Form.Control value={deliveryDetails.toAddress.email} readOnly />
             </Form.Group>
-            <Form.Group className="mb-3">
-              <Form.Label>Email Address</Form.Label>
-              <Form.Control value={user.email} readOnly />
-            </Form.Group>
-            <Form.Group className="mb-3">
-              <Form.Label>Street Address</Form.Label>
+            <Form.Group>
+              <Form.Label>Address</Form.Label>
               <Form.Control
-                type="text"
-                name="streetAddress"
-                placeholder="Enter your street address"
-                value={billingDetails.streetAddress}
-                onChange={handleInputChange}
-                required
+                value={deliveryDetails.toAddress.address}
+                onChange={(e) =>
+                  setDeliveryDetails((prev) => ({
+                    ...prev,
+                    toAddress: { ...prev.toAddress, address: e.target.value },
+                  }))
+                }
               />
             </Form.Group>
-            <Form.Group className="mb-3">
-              <Form.Label>Apartment, Floor, etc. (Optional)</Form.Label>
+            <Form.Group>
+              <Form.Label>Phone</Form.Label>
               <Form.Control
-                type="text"
-                name="apartment"
-                placeholder="Enter apartment details"
-                value={billingDetails.apartment}
-                onChange={handleInputChange}
+                value={deliveryDetails.toAddress.phone}
+                onChange={(e) =>
+                  setDeliveryDetails((prev) => ({
+                    ...prev,
+                    toAddress: { ...prev.toAddress, phone: e.target.value },
+                  }))
+                }
               />
             </Form.Group>
-            <Form.Group className="mb-3">
-              <Form.Label>Town/City</Form.Label>
-              <Form.Control
-                type="text"
-                name="town"
-                placeholder="Enter your town or city"
-                value={billingDetails.town}
-                onChange={handleInputChange}
-                required
-              />
+            <Form.Group>
+              <Form.Label>Type</Form.Label>
+              <Form.Select value={type} onChange={(e) => setType(e.target.value)}>
+                <option value="">Select Type</option>
+                <option value="interstate">Interstate</option>
+                <option value="intrastate">Intrastate</option>
+                <option value="international">International</option>
+                <option value="frozen-international">Frozen International</option>
+                <option value="all">All</option>
+              </Form.Select>
             </Form.Group>
-            <Form.Group className="mb-3">
-              <Form.Label>Phone Number</Form.Label>
-              <Form.Control
-                type="text"
-                name="phoneNumber"
-                placeholder="Enter your phone number"
-                value={billingDetails.phoneNumber}
-                onChange={handleInputChange}
-                required
-              />
+            <Button onClick={handleFetchCouriers}>Fetch Couriers</Button>
+            <Form.Group>
+              <Form.Label>Courier</Form.Label>
+              <Form.Select
+                value={selectedCourier}
+                onChange={(e) => setSelectedCourier(e.target.value)}
+              >
+                <option value="">Select Courier</option>
+                {couriers.map((courier, idx) => (
+                  <option key={idx} value={courier.name}>
+                    {courier.name}
+                  </option>
+                ))}
+              </Form.Select>
             </Form.Group>
+            <Button onClick={handleFetchRate}>Calculate Rate</Button>
           </Form>
         </div>
 
@@ -212,6 +306,15 @@ const Checkout = () => {
                 </div>
               </div>
             )}
+            {rateDetails && (
+              <div className="mt-4">
+                <h5>Shipping Details:</h5>
+                <p>Courier: {rateDetails.courier.name}</p>
+                <p>Amount: {rateDetails.amount} {rateDetails.currency}</p>
+                <p>Estimated Delivery: {rateDetails.estimated_days}</p>
+                <p>Pickup Info: {rateDetails.pickup}</p>
+              </div>
+            )}
             <div className="d-flex justify-content-between">
               <p>Total</p>
               <p>N{total}</p>
@@ -225,6 +328,8 @@ const Checkout = () => {
             </Button>
           </Card>
         </div>
+
+
       </div>
     </div>
   );
