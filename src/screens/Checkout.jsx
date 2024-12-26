@@ -199,24 +199,23 @@ const Checkout = () => {
 
   return (
     <div className="container my-5">
-      <div className="row">
+      <div className="row justify-content-between">
         {/* Billing Details */}
         <div className="col-md-6">
           <h3 className="mb-4 text-success">Billing Details</h3>
           <Alert variant={alertVariant} show={showAlert}>
             {alertMessage}
           </Alert>
-
           <Form>
-            <Form.Group>
+            <Form.Group className="mb-2">
               <Form.Label>Name</Form.Label>
               <Form.Control value={deliveryDetails.toAddress.name} readOnly />
             </Form.Group>
-            <Form.Group>
+            <Form.Group className="mb-2">
               <Form.Label>Email</Form.Label>
               <Form.Control value={deliveryDetails.toAddress.email} readOnly />
             </Form.Group>
-            <Form.Group>
+            <Form.Group className="mb-2">
               <Form.Label>Address</Form.Label>
               <Form.Control
                 value={deliveryDetails.toAddress.address}
@@ -228,7 +227,7 @@ const Checkout = () => {
                 }
               />
             </Form.Group>
-            <Form.Group>
+            <Form.Group className="mb-2">
               <Form.Label>Phone</Form.Label>
               <Form.Control
                 value={deliveryDetails.toAddress.phone}
@@ -240,7 +239,7 @@ const Checkout = () => {
                 }
               />
             </Form.Group>
-            <Form.Group>
+            <Form.Group className="mb-2">
               <Form.Label>Type</Form.Label>
               <Form.Select value={type} onChange={(e) => setType(e.target.value)}>
                 <option value="">Select Type</option>
@@ -251,8 +250,8 @@ const Checkout = () => {
                 <option value="all">All</option>
               </Form.Select>
             </Form.Group>
-            <Button onClick={handleFetchCouriers}>Fetch Couriers</Button>
-            <Form.Group>
+            <Button className="mb-3" onClick={handleFetchCouriers}>Fetch Couriers</Button>
+            <Form.Group className="mb-2">
               <Form.Label>Courier</Form.Label>
               <Form.Select
                 value={selectedCourier}
@@ -266,12 +265,12 @@ const Checkout = () => {
                 ))}
               </Form.Select>
             </Form.Group>
-            <Button onClick={handleFetchRate}>Calculate Rate</Button>
+            <Button className="mb-3" onClick={handleFetchRate}>Calculate Rate</Button>
           </Form>
         </div>
 
         {/* Product Summary */}
-        <div className="col-md-6">
+        <div className="col-md-4">
           <Card className="p-4">
             <h5>Order Summary</h5>
             {product && (
