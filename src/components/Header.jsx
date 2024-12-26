@@ -114,7 +114,7 @@ const Header = () => {
 
               </Nav.Link>
               <Nav.Link href="/upload" className="me-4 fs-6 text-dark">
-                {t('upload')}
+                {t('uploadText')}
               </Nav.Link>
               <Nav.Link href="/register" className="me-3 fs-6 text-dark">
                 {t('signUp')}

@@ -1,8 +1,10 @@
 import { Card, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const Product = ({ product }) => {
   const imageUrl = product.image;
+  const { t } = useTranslation();
 
   return (
     <Card className="my-4 border-0">
@@ -30,7 +32,7 @@ const Product = ({ product }) => {
           <Card.Text as="div" className="product-location">
             <p>{`${product.location}`}</p>
             <Button variant="success" className="text-white text-end">
-              {`${product.tag}`}
+              {product.tag === 'sell' ? t('product.tagSell') : t('product.donate')}
             </Button>
           </Card.Text>
         </Link>

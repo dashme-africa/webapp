@@ -84,7 +84,7 @@ const HeroPage = () => {
                 maxWidth: "80%",
               }}
             >
-              {t('upload')}
+              {t('uploadText')}
             </Button>
           </Link>
         </div>

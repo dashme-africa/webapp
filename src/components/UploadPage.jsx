@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useTranslation } from 'react-i18next';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Button, Alert } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
@@ -8,6 +9,7 @@ const apiURL = import.meta.env.VITE_API_URL;
 
 const UploadPage = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState('sell');
   const [formData, setFormData] = useState({
     title: '',
@@ -85,7 +87,7 @@ const UploadPage = () => {
 
     try {
       if (uploader && !uploader.isVerified) {
-        displayAlert('Your bank details are not verified. Please verify your bank details in your profile page.', 'danger');
+        displayAlert(t('upload.verifiedError'), 'danger');
         setIsSubmitting(false);
         return;
         // Redirect to the home page
@@ -109,7 +111,7 @@ const UploadPage = () => {
       if (formData.image) {
         updatedData.append('image', formData.image);
       } else {
-        displayAlert('Please add the product image', 'danger');
+        displayAlert(t('upload.addImageError'), 'danger');
       }
 
       // Determine the endpoint based on activeTab
@@ -138,7 +140,7 @@ const UploadPage = () => {
         });
 
         // console.log('Success:', response.data);
-        displayAlert('Product Successfully Uploaded');
+        displayAlert(t('upload.successMessage'));
 
         setTimeout(() => {
           // Redirect to the home page
@@ -156,7 +158,7 @@ const UploadPage = () => {
       }
     } catch (error) {
       // console.error('Error uploading data:', error);
-      displayAlert('Failed to submit. Please try again.', 'danger');
+      displayAlert(t('upload.errorMessage'), 'danger');
     } finally {
       setIsSubmitting(false);
     }
@@ -168,20 +170,20 @@ const UploadPage = () => {
 
   return (
     <div className="container mt-5">
-      <Button variant="primary" className="ms-2" onClick={myProducts}>My Products</Button>
+      <Button variant="primary" className="ms-2" onClick={myProducts}>{t('upload.myProducts')}</Button>
       {/* Tabs */}
       <div className="d-flex justify-content-center mb-4">
         <button
           className={`btn me-2 ${activeTab === 'sell' ? 'btn-success' : 'btn-outline-secondary'}`}
           onClick={() => handleTabChange('sell')}
         >
-          Sell
+          {t('upload.sell')}
         </button>
         <button
           className={`btn ${activeTab === 'donate' ? 'btn-success' : 'btn-outline-secondary'}`}
           onClick={() => handleTabChange('donate')}
         >
-          Donate
+          {t('upload.donate')}
         </button>
       </div>
 
@@ -189,7 +191,7 @@ const UploadPage = () => {
       <div className="card shadow">
         <div className="card-body">
           <form onSubmit={handleSubmit}>
-            <h3 className="text-center mb-4">{activeTab === 'sell' ? 'Sell' : 'Donate'}</h3>
+            <h3 className="text-center mb-4">{activeTab === 'sell' ? t('upload.sell') : t('upload.donate')}</h3>
             <Alert variant={alertVariant} show={showAlert}>
               {alertMessage}
             </Alert>
@@ -208,7 +210,7 @@ const UploadPage = () => {
                     style={{ maxHeight: '150px' }}
                   />
                 ) : (
-                  <span className="text-muted">Click to upload a photo</span>
+                  <span className="text-muted">{t('upload.uploadPhotos')}</span>
                 )}
               </label>
               <input
@@ -222,34 +224,34 @@ const UploadPage = () => {
 
             {/* Title */}
             <div className="mb-3">
-              <label className="form-label">Title</label>
+              <label className="form-label">{t('upload.title')}</label>
               <input
                 type="text"
                 className="form-control"
                 name="title"
                 value={formData.title}
                 onChange={handleInputChange}
-                placeholder="Enter title"
-                required
+                placeholder={t('upload.enterTitle')}
+                required 
               />
             </div>
 
             {/* Description */}
             <div className="mb-3">
-              <label className="form-label">Description</label>
+              <label className="form-label">{t('upload.description')}</label>
               <textarea
                 className="form-control"
                 name="description"
                 value={formData.description}
                 onChange={handleInputChange}
-                placeholder="Enter description"
+                placeholder={t('upload.enterDescription')}
                 required
               ></textarea>
             </div>
 
             {/* Category */}
             <div className="mb-3">
-              <label className="form-label">Item Category</label>
+              <label className="form-label">{t('upload.itemCategory')}</label>
               <select
                 className="form-select"
                 name="category"
@@ -258,7 +260,7 @@ const UploadPage = () => {
                 required
               >
                 <option value="" disabled>
-                  Select category
+                {t('upload.selectCategory')}
                 </option>
                 {activeTab === 'sell' ? (
                   <>
@@ -281,14 +283,14 @@ const UploadPage = () => {
             {/* Price */}
             {activeTab === 'sell' && (
               <div className="mb-3">
-                <label className="form-label">Price</label>
+                <label className="form-label">{t('upload.price')}</label>
                 <input
                   type="number"
                   className="form-control"
                   name="price"
                   value={formData.price}
                   onChange={handleInputChange}
-                  placeholder="Enter price"
+                  placeholder={t('upload.enterPrice')}
                   required
                 />
               </div>
@@ -297,7 +299,7 @@ const UploadPage = () => {
             {/* Price Category */}
             {activeTab === 'sell' && (
               <div className="mb-3">
-                <label className="form-label">Price Category</label>
+                <label className="form-label">{t('upload.priceCategory')}</label>
                 <select
                   className="form-select"
                   name="priceCategory"
@@ -306,28 +308,27 @@ const UploadPage = () => {
                   required
                 >
                   <option value="" disabled>
-                    Select category
+                  {t('upload.selectCategory')}
                   </option>
                   <>
                     <option value="500-15000">N500 - N15,000</option>
                     <option value="15000-25000">N15,000 - N25,000</option>
                     <option value="25000-50000">N25,000 - N50,000</option>
                   </>
-
                 </select>
               </div>
             )}
 
             {/* Location */}
             <div className="mb-3">
-              <label className="form-label">Location</label>
+              <label className="form-label">{t('upload.location')}</label>
               <input
                 type="text"
                 className="form-control"
                 name="location"
                 value={formData.location}
                 onChange={handleInputChange}
-                placeholder="Enter location"
+                placeholder={t('upload.enterLocation')}
                 required
               />
             </div>
@@ -338,7 +339,7 @@ const UploadPage = () => {
               className="btn btn-success w-100"
               disabled={isSubmitting}
             >
-              {isSubmitting ? 'Submitting...' : 'Submit'}
+              {isSubmitting ? t('upload.submitting') : t('upload.submit')}
             </button>
           </form>
         </div>
