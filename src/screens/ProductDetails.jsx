@@ -86,13 +86,13 @@ const ProductDetails = () => {
               {product.description}
             </p>
 
-            <p>
+            {/* <p>
               <strong>Choose Size: </strong>
               <Button variant="outline-success" className="me-2">Small</Button>
               <Button variant="outline-success" className="me-2">Medium</Button>
               <Button variant="outline-success" className="me-2">Large</Button>
               <Button variant="outline-success" className="me-2">X-Large</Button>
-            </p>
+            </p> */}
 
             {product.tag === 'sell' ? (
               <h4 className="text-success">N {product.price}</h4>
