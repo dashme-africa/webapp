@@ -104,7 +104,12 @@ const ProductDetails = () => {
               <Button variant="primary" className="me-2">
                 Message Profile
               </Button>
+              {product.tag === 'sell' ? (
               <Button variant="success" className="ms-2" onClick={buyNowHandler}>Buy Now</Button>
+            ) : (
+              <Button variant="success" className="ms-2" onClick={buyNowHandler}>Receive Now</Button>
+            )}
+              
             </div>
           </div>
         </div>
