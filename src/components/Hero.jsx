@@ -55,6 +55,13 @@ const HeroPage = () => {
           >
             {t('accessories')}
           </a>
+          <a
+            href="#electronics"
+            className="mx-2 mb-3 text-dark fs-6"
+            style={{ textDecoration: "none" }}
+          >
+            {t('electronics')}
+          </a>
         </nav>
       </div>
 
