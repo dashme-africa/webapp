@@ -174,14 +174,17 @@ const Checkout = () => {
 
       const subaccountCode = subaccountResponse.data.data.subaccount_code;
 
-      // Initializing the transaction
+      // Initializing the transaction with metadata
       const transactionResponse = await axios.post(`${apiURL}/payment/initialize-transaction`, {
         email: user.email,
         amount: total * 100,
         subaccount: subaccountCode,
+        redis_key: rateDetails.redis_key, // Include redis_key
+        rate_id: rateDetails.courier.id,     // Include rate_id
         transactionCharge: 10000, // Optional: Flat fee for main account
         bearer: 'subaccount', // Optional: Who bears the charge
       });
+
 
       displayAlert('Payment initialization successful. Redirecting...');
       // Redirect to Paystack payment page
@@ -191,6 +194,8 @@ const Checkout = () => {
       displayAlert('Payment initialization failed. Please try again.', 'danger');
     }
   };
+
+
 
   const fetchAddressSuggestions = async (input, addressType) => {
     if (!input) {
@@ -320,7 +325,6 @@ const Checkout = () => {
                 <option value="intrastate">Intrastate</option>
                 <option value="international">International</option>
                 <option value="frozen-international">Frozen International</option>
-                <option value="all">All</option>
               </Form.Select>
             </Form.Group>
             <Button className="mb-3" onClick={handleFetchCouriers}>Fetch Couriers</Button>
@@ -400,8 +404,6 @@ const Checkout = () => {
             </Button>
           </Card>
         </div>
-
-
       </div>
     </div>
   );

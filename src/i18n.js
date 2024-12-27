@@ -14,6 +14,7 @@ const resources = {
             householdItems: "Household Items",
             accessories: "Accessories",
             language: "Language",
+            logout: "Log out",
             "footer": {
                 "smilePrompt": "WANT TO PUT A SMILE ON SOMEONE'S FACE?",
                 "sell": "Sell",
@@ -96,6 +97,7 @@ const resources = {
             accessories: "Accessoires",
             upload: "Télécharger",
             language: "Langue",
+            logout: "Se déconnecter",
             "footer": {
                 "smilePrompt": "VOUS VOULEZ METTRE UN SOURIRE SUR LE VISAGE DE QUELQU'UN ?",
                 "sell": "Vendre",
@@ -177,6 +179,7 @@ const resources = {
             accessories: "Accesorios",
             upload: "Subir",
             language: "Idioma",
+            logout: "Salir",
             "footer": {
                 "smilePrompt": "¿QUIERES PONER UNA SONRISA EN LA CARA DE ALGUIEN?",
                 "sell": "Vender",
@@ -219,7 +222,7 @@ const resources = {
                 "donate": "Donar",
                 "uploadPhotos": "Subir fotos",
                 "title": "Título",
-                "myProducts": "Mis Productos", 
+                "myProducts": "Mis Productos",
                 "enterTitle": "Ingrese el título",
                 "description": "Descripción",
                 "enterDescription": "Ingrese la descripción",

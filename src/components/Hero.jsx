@@ -1,15 +1,13 @@
 import React from "react";
 import { Button } from "react-bootstrap";
 import { Link } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 
-
-const HeroPage = () => {
+const HeroPage = ({ setSelectedCategory }) => {
   const { t } = useTranslation();
 
   return (
     <div style={{ position: "relative", height: "100vh", overflow: "hidden", backgroundColor: "#333B4C" }}>
-      {/* Background Image */}
       <div
         style={{
           backgroundImage: "url('https://res.cloudinary.com/df2q6gyuq/image/upload/v1734502295/hero-banner_tvastc.jpg')",
@@ -21,7 +19,6 @@ const HeroPage = () => {
         }}
       ></div>
 
-      {/* Navigation Links */}
       <div
         className="d-flex justify-content-left align-items-center"
         style={{
@@ -34,34 +31,30 @@ const HeroPage = () => {
         }}
       >
         <nav className="d-flex justify-content-start justify-content-md-center">
-          <a
-            href="#clothes"
-            className="mx-2 mb-3 text-dark fs-6"
-            style={{ textDecoration: "none" }}
+          <button
+            onClick={() => setSelectedCategory("Clothes")}
+            className="btn btn-link text-decoration-none mx-2 mb-3 text-dark fs-6"
           >
-            {t('clothes')}
-          </a>
-          <a
-            href="#household-items"
-            className="mx-2 mb-3 text-dark fs-6"
-            style={{ textDecoration: "none" }}
+            {t("clothes")}
+          </button>
+          <button
+            onClick={() => setSelectedCategory("Household-items")}
+            className="btn btn-link text-decoration-none mx-2 mb-3 text-dark fs-6"
           >
-            {t('householdItems')}
-          </a>
-          <a
-            href="#accessories"
-            className="mx-2 mb-3 text-dark fs-6"
-            style={{ textDecoration: "none" }}
+            {t("householdItems")}
+          </button>
+          <button
+            onClick={() => setSelectedCategory("Accessories")}
+            className="btn btn-link text-decoration-none mx-2 mb-3 text-dark fs-6"
           >
-            {t('accessories')}
-          </a>
-          <a
-            href="#electronics"
-            className="mx-2 mb-3 text-dark fs-6"
-            style={{ textDecoration: "none" }}
+            {t("accessories")}
+          </button>
+          <button
+            onClick={() => setSelectedCategory("Electronics")}
+            className="btn btn-link text-decoration-none mx-2 mb-3 text-dark fs-6"
           >
-            {t('electronics')}
-          </a>
+            {t("electronics")}
+          </button>
         </nav>
       </div>
 
@@ -101,3 +94,6 @@ const HeroPage = () => {
 };
 
 export default HeroPage;
+
+
+

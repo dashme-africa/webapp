@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { setItems } from './features/items/itemsSlice';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
@@ -21,9 +21,14 @@ import ProductDetails from './screens/ProductDetails';
 import Checkout from './screens/Checkout';
 import GoShiip from "./components/GoShiip";
 import MyProducts from "./components/MyProducts";
+import TransactionDetails from "./components/TransactionDetails";
+import TrackingPage from "./components/TrackingPage";
+import ConfirmationPage from "./components/confirmationPage";
+import PaymentHistory from './components/PaymentHistory';
 
 const App = () => {
   const dispatch = useDispatch();
+  const [selectedCategory, setSelectedCategory] = useState('');
 
   useEffect(() => {
     // Example: Set initial items
@@ -41,7 +46,9 @@ const App = () => {
             <Route path="/adminDashboard" element={<AdminDashboard />} />
             <Route path="/admin/products/edit/:id" element={<EditProduct />} />
 
-            <Route path="/" element={<> <Header /> <Hero /> <HomeScreen /> </>} />
+            <Route path="/" element={<> <Header /> <Hero setSelectedCategory={setSelectedCategory} /> <HomeScreen selectedCategory={selectedCategory} /> </>} />
+
+
             <Route path="/upload" element={<><Header /> <UploadPage /></>} />
             <Route path="/profile" element={<><Header /> <Profile /></>} />
             <Route path="/register" element={<><Formhead /> <Register /></>} />
@@ -51,6 +58,10 @@ const App = () => {
             <Route path="/checkout" element={<><Header /> <Checkout /></>} />
             <Route path="/goshiip" element={<><Header /> <GoShiip /></>} />
             <Route path="/my-products" element={<><Header /> <MyProducts /></>} />
+            <Route path="/transaction-details" element={<><Header /> <TransactionDetails /> </>} />
+            <Route path="/tracking" element={<><Header /> <TrackingPage /> </>} />
+            <Route path="/confirmationPage" element={<><Header /> <ConfirmationPage /> </>} />
+            <Route path="/payment-history" element={<><Header /> <PaymentHistory /> </>} />
           </Routes>
         </main>
         <Footer />

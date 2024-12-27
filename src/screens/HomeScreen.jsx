@@ -6,40 +6,41 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 const apiURL = import.meta.env.VITE_API_URL;
 
-const HomeScreen = () => {
+const HomeScreen = ({ selectedCategory }) => {
   const [products, setProducts] = useState([]);
   const { t } = useTranslation();
 
-  // Fetch products when the component mounts
   useEffect(() => {
-    const fetchProducts = async () => {
+    const fetchCategoryProducts = async () => {
       try {
-        const { data } = await axios.get(`${apiURL}/products`);
-        // Sort products by createdAt in descending order
+        const endpoint = selectedCategory
+          ? `${apiURL}/products/?category=${selectedCategory}`
+          : `${apiURL}/products`;
+
+        const { data } = await axios.get(endpoint);
         const sortedProducts = data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
         setProducts(sortedProducts);
       } catch (error) {
         console.error('Error fetching products:', error);
       }
     };
-    fetchProducts();
-  }, []);
+
+    fetchCategoryProducts();
+  }, [selectedCategory]);
 
   return (
     <>
-      {/* Header Row with "Recommended for You" and "See All" */}
       <Row className="align-items-center mb-1 mt-5 px-5">
         <Col>
-          <h4 className="mb-0">{t('home.recommended')}</h4>
+          <h4 className="mb-0">{selectedCategory ? t(selectedCategory) : t("home.recommended")}</h4>
         </Col>
         <Col className="text-end">
           <Link to="/products" className="text-success fs-5 text-decoration-none">
-          {t('home.seeAll')}
+            {t("home.seeAll")}
           </Link>
         </Col>
       </Row>
 
-      {/* Product Cards */}
       <Row className="px-5">
         {products.map((product) => (
           <Col key={product._id} sm={12} md={6} lg={4} xl={2}>
@@ -52,3 +53,5 @@ const HomeScreen = () => {
 };
 
 export default HomeScreen;
+
+

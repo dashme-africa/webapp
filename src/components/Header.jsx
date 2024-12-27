@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Navbar, Nav, Container, Form, FormControl, Button, Dropdown } from 'react-bootstrap';
+import { Navbar, Nav, Container, Form, FormControl, Button, Dropdown, Alert } from 'react-bootstrap';
 import { FaUser, FaBell, FaHeart, FaSearch } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
@@ -10,6 +10,17 @@ const Header = () => {
   const [currentLanguage, setCurrentLanguage] = useState('EN');
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
+  const [alertVariant, setAlertVariant] = useState('success');
+  const displayAlert = (message, variant = 'success', duration = 5000) => {
+    setAlertMessage(message);
+    setAlertVariant(variant);
+    setShowAlert(true);
+    setTimeout(() => {
+      setShowAlert(false);
+    }, duration);
+  };
 
   const handleLanguageChange = (lang, label) => {
     i18n.changeLanguage(lang);
@@ -30,17 +41,33 @@ const Header = () => {
             }
           );
           setUserData(data);
-          // console.log(data)
         } catch (error) {
-          console.error('Error fetching user and account details:', error.response?.data?.message || error.message);
+          console.error('Error fetching user data:', error.response?.data?.message || error.message);
         } finally {
           setLoading(false);
         }
+      } else {
+        setLoading(false);
       }
     };
 
     fetchUserData();
   }, []);
+
+  const handleLogout = () => {
+    // Show the logout message
+    displayAlert('Logging you out. Redirecting...');
+
+    // Clear the token from localStorage
+    localStorage.removeItem('token');
+    setUserData(null);
+
+    // Redirect after 3 seconds
+    setTimeout(() => {
+      window.location.href = '/login';
+    }, 3000);
+  };
+
 
   return (
     <header className="bg-white shadow-sm">
@@ -97,7 +124,6 @@ const Header = () => {
                 <FaHeart size={30} />
               </Nav.Link>
               <Nav.Link href="/profile" className="me-5 d-flex align-items-center">
-
                 {loading ? (
                   <span>Loading...</span>
                 ) : userData?.profilePicture ? (
@@ -111,14 +137,23 @@ const Header = () => {
                   <FaUser size={30} />
                 )}
                 <span>&nbsp;{userData?.username}</span>
-
               </Nav.Link>
+
               <Nav.Link href="/upload" className="me-4 fs-6 text-dark">
                 {t('uploadText')}
               </Nav.Link>
-              <Nav.Link href="/register" className="me-3 fs-6 text-dark">
-                {t('signUp')}
-              </Nav.Link>
+
+              {userData ? (
+                // If user is logged in, show Logout
+                <Nav.Link onClick={handleLogout} className="me-3 fs-6 text-dark">
+                  {t('logout')}
+                </Nav.Link>
+              ) : (
+                // If user is not logged in, show Sign Up
+                <Nav.Link href="/register" className="me-3 fs-6 text-dark">
+                  {t('signUp')}
+                </Nav.Link>
+              )}
 
               <Dropdown>
                 <Dropdown.Toggle variant="light" className="fs-6 text-dark">
@@ -134,7 +169,11 @@ const Header = () => {
           </Navbar.Collapse>
         </Container>
       </Navbar>
+      <Alert variant={alertVariant} show={showAlert}>
+        {alertMessage}
+      </Alert>
     </header>
+
   );
 };
 

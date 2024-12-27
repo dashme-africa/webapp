@@ -145,7 +145,7 @@ const UploadPage = () => {
         setTimeout(() => {
           // Redirect to the home page
           navigate('/');
-        }, 3000); // Navigate after 3 seconds
+        }, 3000);
 
       } catch (error) {
         if (error.response) {
@@ -232,7 +232,7 @@ const UploadPage = () => {
                 value={formData.title}
                 onChange={handleInputChange}
                 placeholder={t('upload.enterTitle')}
-                required 
+                required
               />
             </div>
 
@@ -260,7 +260,7 @@ const UploadPage = () => {
                 required
               >
                 <option value="" disabled>
-                {t('upload.selectCategory')}
+                  {t('upload.selectCategory')}
                 </option>
                 {activeTab === 'sell' ? (
                   <>
@@ -308,7 +308,7 @@ const UploadPage = () => {
                   required
                 >
                   <option value="" disabled>
-                  {t('upload.selectCategory')}
+                    {t('upload.selectCategory')}
                   </option>
                   <>
                     <option value="500-15000">N500 - N15,000</option>
