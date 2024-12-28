@@ -15,6 +15,7 @@ const resources = {
             accessories: "Accessories",
             language: "Language",
             logout: "Log out",
+            noProduct: "No product has been uploaded yet",
             "footer": {
                 "smilePrompt": "WANT TO PUT A SMILE ON SOMEONE'S FACE?",
                 "sell": "Sell",

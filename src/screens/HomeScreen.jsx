@@ -42,11 +42,17 @@ const HomeScreen = ({ selectedCategory }) => {
       </Row>
 
       <Row className="px-5">
-        {products.map((product) => (
-          <Col key={product._id} sm={12} md={6} lg={4} xl={2}>
-            <Product product={product} />
+        {products.length > 0 ? (
+          products.map((product) => (
+            <Col key={product._id} sm={12} md={6} lg={4} xl={2}>
+              <Product product={product} />
+            </Col>
+          ))
+        ) : (
+          <Col>
+            <h3 className="text-center mt-5 mb-5">{t("noProduct")}</h3>
           </Col>
-        ))}
+        )}
       </Row>
     </>
   );

@@ -118,7 +118,7 @@ const ProductDetails = () => {
               {product.description}
             </p>
 
-            {product.tag === 'sell' ? (
+            {product.tag === 'For sale' ? (
               <h4 className="text-success">N {product.price}</h4>
             ) : (
               <h4 className="text-primary">Donate</h4>
@@ -128,7 +128,7 @@ const ProductDetails = () => {
               <Button variant="primary" className="me-2">
                 Message Profile
               </Button>
-              {product.tag === 'sell' ? (
+              {product.tag === 'For sale' ? (
                 <Button variant="success" className="ms-2" onClick={buyNowHandler}>Buy Now</Button>
               ) : (
                 <Button variant="success" className="ms-2" onClick={buyNowHandler}>Receive Now</Button>
