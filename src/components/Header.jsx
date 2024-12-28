@@ -242,7 +242,7 @@ const Header = () => {
       if (!token) return;
 
       try {
-        const { data } = await axios.get(`${apiURL}/notifications`, {
+        const { data } = await axios.get(`${apiURL}/notify/notifications`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -270,7 +270,7 @@ const Header = () => {
     try {
       const token = localStorage.getItem('token');
       await axios.patch(
-        `${apiURL}/notifications/mark-read`,
+        `${apiURL}/notify/notifications/mark-read`,
         {},
         {
           headers: {
