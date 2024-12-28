@@ -1,0 +1,15 @@
+.thumbnails::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+  }
+  
+  .thumbnails::-webkit-scrollbar-thumb {
+    background-color: green;
+    border-radius: 10px;
+  }
+  
+  .thumbnails::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+  
+  

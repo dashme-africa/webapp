@@ -75,6 +75,9 @@ const resources = {
                 "errorMessage": "Failed to submit. Please try again.",
                 "verifiedError": "Your bank details are not verified. Please verify your bank details in your profile page.",
                 "addImageError": "Please add the product image",
+                "setAsPrimary": "Set Primary", 
+                "selectPrimaryImage": "Please select a primary image for display",
+                "maxImagesError": "You can upload a maximum of 10 images",
             },
             "product": {
                 "priceLabel": "Price: ",
@@ -158,6 +161,7 @@ const resources = {
                 "errorMessage": "Échec de la soumission. Veuillez réessayer.",
                 "verifiedError": "Vos coordonnées bancaires ne sont pas vérifiées. Veuillez les vérifier dans votre page de profil.",
                 "addImageError": "Veuillez ajouter l'image du produit",
+                "setAsPrimary": "Primary"
             },
             "product": {
                 "priceLabel": "Prix: ",

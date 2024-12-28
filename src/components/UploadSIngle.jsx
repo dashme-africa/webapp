@@ -75,123 +75,94 @@ const UploadPage = () => {
   };
 
   const handleImageChange = (e) => {
-    const files = Array.from(e.target.files);
     setFormData((prevData) => ({
       ...prevData,
-      images: [...(prevData.images || []), ...files],
+      image: e.target.files[0],
     }));
   };
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  setIsSubmitting(true);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
 
-  // Frontend validation for the number of images
-  if (formData.images && formData.images.length > 10) {
-    displayAlert(t('upload.maxImagesError'), 'danger');
-    setIsSubmitting(false);
-    return;
-  }
-
-  try {
-    // Verify uploader
-    if (uploader && !uploader.isVerified) {
-      displayAlert(t('upload.verifiedError'), 'danger');
-      setIsSubmitting(false);
-      return;
-    }
-
-    // Create FormData
-    const updatedData = new FormData();
-
-    // Append all fields from formData
-    Object.entries(formData).forEach(([key, value]) => {
-      if (key === 'images') {
-        value.forEach((file) => updatedData.append('images', file));
-      } else {
-        updatedData.append(key, value);
+    try {
+      if (uploader && !uploader.isVerified) {
+        displayAlert(t('upload.verifiedError'), 'danger');
+        setIsSubmitting(false);
+        return;
+        // Redirect to the home page
       }
-    });
+      // Create a FormData object
+      const updatedData = new FormData();
 
-    // Add the primary image index
-    if (formData.primaryImageIndex !== null && formData.primaryImageIndex >= 0) {
-      updatedData.append('primaryImageIndex', formData.primaryImageIndex);
-    } else {
-      displayAlert(t('upload.selectPrimaryImage'), 'danger');
+      // Append form fields
+      updatedData.append('title', formData.title);
+      updatedData.append('description', formData.description);
+      updatedData.append('category', formData.category);
+      updatedData.append('price', formData.price);
+      updatedData.append('priceCategory', formData.priceCategory);
+      updatedData.append('location', formData.location);
+
+      if (uploader) {
+        updatedData.append('uploader', uploader._id);
+      }
+
+      // Append the image only if it exists
+      if (formData.image) {
+        updatedData.append('image', formData.image);
+      } else {
+        displayAlert(t('upload.addImageError'), 'danger');
+      }
+
+      // Determine the endpoint based on activeTab
+      const endpoint = activeTab === 'sell'
+        ? `${apiURL}/products`
+        : `${apiURL}/products/donate`;
+
+      try {
+        // Send the data to the server
+        const response = await axios.post(endpoint, updatedData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+
+
+        // Reset the form
+        setFormData({
+          title: '',
+          description: '',
+          category: '',
+          price: '',
+          priceCategory: '',
+          location: '',
+          image: null,
+        });
+
+        // console.log('Success:', response.data);
+        displayAlert(t('upload.successMessage'));
+
+        setTimeout(() => {
+          // Redirect to the home page
+          navigate('/');
+        }, 3000);
+
+      } catch (error) {
+        if (error.response) {
+          // console.error('Error uploading data:', error.response.data.message);
+          displayAlert(`${error.response.data.message}`, 'danger');
+        } else {
+          // console.error('Unexpected error:', error.message);
+          displayAlert('An unexpected error occurred.', 'danger');
+        }
+      }
+    } catch (error) {
+      // console.error('Error uploading data:', error);
+      displayAlert(t('upload.errorMessage'), 'danger');
+    } finally {
       setIsSubmitting(false);
-      return;
     }
-
-    // Append uploader ID if available
-    if (uploader) {
-      updatedData.append('uploader', uploader._id);
-    }
-
-    // Ensure at least one image is uploaded
-    if (!formData.images || formData.images.length === 0) {
-      displayAlert(t('upload.addImageError'), 'danger');
-      setIsSubmitting(false);
-      return;
-    }
-
-    // Determine the endpoint based on activeTab
-    const endpoint = activeTab === 'sell'
-      ? `${apiURL}/products`
-      : `${apiURL}/products/donate`;
-
-    // Send data to the server
-    const response = await axios.post(endpoint, updatedData, {
-      headers: { 'Content-Type': 'multipart/form-data' },
-    });
-
-    // Reset form data
-    setFormData({
-      title: '',
-      description: '',
-      category: '',
-      price: '',
-      priceCategory: '',
-      location: '',
-      images: [],
-      primaryImageIndex: null,
-    });
-
-    // Show success message
-    displayAlert(t('upload.successMessage'));
-
-    // Redirect after a delay
-    setTimeout(() => navigate('/'), 3000);
-
-  } catch (error) {
-    if (error.response) {
-      displayAlert(`${error.response.data.message}`, 'danger');
-    } else {
-      displayAlert('An unexpected error occurred.', 'danger');
-    }
-  } finally {
-    setIsSubmitting(false);
-  }
-};
-
-
-  const handleRemoveImage = (index) => {
-    setFormData((prevData) => {
-      const updatedImages = [...prevData.images];
-      updatedImages.splice(index, 1);
-      return {
-        ...prevData,
-        images: updatedImages,
-        primaryImageIndex:
-          prevData.primaryImageIndex === index
-            ? null
-            : prevData.primaryImageIndex > index
-              ? prevData.primaryImageIndex - 1
-              : prevData.primaryImageIndex,
-      };
-    });
   };
-
-
 
   const myProducts = () => {
     navigate('/my-products');
@@ -224,49 +195,32 @@ const handleSubmit = async (e) => {
             <Alert variant={alertVariant} show={showAlert}>
               {alertMessage}
             </Alert>
-
             {/* Image Upload */}
-            <div className="mb-3">
-              <label htmlFor="imageUpload" className="form-label">{t('upload.uploadPhotos')}</label>
+            <div className="mb-3 text-center">
+              <label
+                htmlFor="imageUpload"
+                className="d-block border border-2 border-secondary rounded bg-light p-5"
+                style={{ cursor: 'pointer' }}
+              >
+                {formData.image ? (
+                  <img
+                    src={URL.createObjectURL(formData.image)}
+                    alt="Preview"
+                    className="img-fluid"
+                    style={{ maxHeight: '150px' }}
+                  />
+                ) : (
+                  <span className="text-muted">{t('upload.uploadPhotos')}</span>
+                )}
+              </label>
               <input
                 type="file"
                 id="imageUpload"
-                className="form-control"
-                multiple
+                className="d-none"
                 accept="image/*"
                 onChange={handleImageChange}
               />
-              <div className="mt-3 d-flex flex-wrap gap-3">
-                {formData.images?.map((image, index) => (
-                  <div key={index} className="image-preview position-relative">
-                    <img
-                      src={URL.createObjectURL(image)}
-                      alt={`Preview ${index}`}
-                      className="img-thumbnail"
-                      style={{ width: '100px', marginRight: '10px' }}
-                    />
-                    <div>
-                      <input
-                        type="radio"
-                        name="primaryImage"
-                        value={index}
-                        checked={formData.primaryImageIndex === index}
-                        onChange={() =>
-                          setFormData((prevData) => ({ ...prevData, primaryImageIndex: index }))
-                        }
-                      />
-                      <label>&nbsp;{t('upload.setAsPrimary')}</label>
-                    </div>
-                    <button
-                      type="button"
-                      className="btn-close position-absolute top-0 end-0"
-                      onClick={() => handleRemoveImage(index)}
-                    ></button>
-                  </div>
-                ))}
-              </div>
             </div>
-
 
             {/* Title */}
             <div className="mb-3">
@@ -281,7 +235,6 @@ const handleSubmit = async (e) => {
                 required
               />
             </div>
-
 
             {/* Description */}
             <div className="mb-3">
@@ -396,3 +349,8 @@ const handleSubmit = async (e) => {
 };
 
 export default UploadPage;
+
+
+
+
+  
