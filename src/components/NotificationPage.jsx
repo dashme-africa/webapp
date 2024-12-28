@@ -14,7 +14,7 @@ const NotificationPage = () => {
       if (!token) return;
 
       try {
-        const { data } = await axios.get(`${apiURL}/notifications`, {
+        const { data } = await axios.get(`${apiURL}/notify/notifications`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -34,7 +34,7 @@ const NotificationPage = () => {
   const markAsRead = async (id) => {
     try {
       const token = localStorage.getItem('token');
-      await axios.patch(`${apiURL}/notifications/${id}/mark-read`, {}, {
+      await axios.patch(`${apiURL}/notify/notifications/${id}/mark-read`, {}, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -52,7 +52,7 @@ const NotificationPage = () => {
   const markAllAsRead = async () => {
     try {
       const token = localStorage.getItem('token');
-      await axios.patch(`${apiURL}/notifications/mark-read`, {}, {
+      await axios.patch(`${apiURL}/notify/notifications/mark-read`, {}, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
