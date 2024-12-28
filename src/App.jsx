@@ -23,7 +23,7 @@ import GoShiip from "./components/GoShiip";
 import MyProducts from "./components/MyProducts";
 import TransactionDetails from "./components/TransactionDetails";
 import TrackingPage from "./components/TrackingPage";
-import ConfirmationPage from "./components/confirmationPage";
+import ConfirmationPage from "./components/ConfirmationPage";
 import PaymentHistory from './components/PaymentHistory';
 
 const App = () => {
