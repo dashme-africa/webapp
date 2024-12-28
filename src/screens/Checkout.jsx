@@ -323,8 +323,6 @@ const Checkout = () => {
                 <option value="">Select Type</option>
                 <option value="interstate">Interstate</option>
                 <option value="intrastate">Intrastate</option>
-                <option value="international">International</option>
-                <option value="frozen-international">Frozen International</option>
               </Form.Select>
             </Form.Group>
             <Button className="mb-3" onClick={handleFetchCouriers}>Fetch Couriers</Button>

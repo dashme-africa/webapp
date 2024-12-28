@@ -73,8 +73,8 @@ const ProductDetails = () => {
                     alt={`Thumbnail ${index + 1}`}
                     className={`img-thumbnail mb-2 ${primaryImage === img ? 'border-primary shadow-sm' : ''}`}
                     style={{
-                      width: '60px',
-                      height: '60px',
+                      width: '80px',
+                      height: '80px',
                       cursor: 'pointer',
                       objectFit: 'cover',
                     }}
