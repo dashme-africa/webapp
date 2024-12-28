@@ -247,10 +247,15 @@ const Header = () => {
             Authorization: `Bearer ${token}`,
           },
         });
-        setNotifications(data.notifications);
+
+        console.log('API response:', data);
+
+        // Assuming notifications are directly in `data.data`
+        const notifications = data.data || [];
+        setNotifications(notifications);
 
         // Calculate unread count
-        const unread = data.notifications.filter((n) => !n.read).length;
+        const unread = notifications.filter((n) => !n.read).length;
         setUnreadCount(unread);
       } catch (error) {
         console.error('Error fetching notifications:', error.response?.data?.message || error.message);
@@ -265,6 +270,7 @@ const Header = () => {
 
     return () => clearInterval(interval); // Cleanup on component unmount
   }, []);
+
 
   const markAllAsRead = async () => {
     try {
@@ -341,20 +347,7 @@ const Header = () => {
               <Nav.Link href="/notifications" className="me-3" onClick={markAllAsRead}>
                 <FaBell size={30} />
                 {unreadCount > 0 && (
-                  <span
-                    style={{
-                      position: 'absolute',
-                      top: '-5px',
-                      right: '-5px',
-                      backgroundColor: 'red',
-                      color: 'white',
-                      borderRadius: '50%',
-                      padding: '3px 6px',
-                      fontSize: '12px',
-                    }}
-                  >
-                    {unreadCount}
-                  </span>
+                  <span className="badge bg-danger">{unreadCount}</span>
                 )}
               </Nav.Link>
 
