@@ -321,7 +321,7 @@ const Checkout = () => {
               <Form.Label>Type</Form.Label>
               <Form.Select value={type} onChange={(e) => setType(e.target.value)}>
                 <option value="">Select Type</option>
-                <option value="interstate">Interstate</option>
+                {/* <option value="interstate">Interstate</option> */}
                 <option value="intrastate">Intrastate</option>
               </Form.Select>
             </Form.Group>
