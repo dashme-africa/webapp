@@ -25,6 +25,7 @@ import TransactionDetails from "./components/TransactionDetails";
 import TrackingPage from "./components/TrackingPage";
 import ConfirmationPage from "./components/ConfirmationPage";
 import PaymentHistory from './components/PaymentHistory';
+import NotificationPage from './components/NotificationPage';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -62,6 +63,7 @@ const App = () => {
             <Route path="/tracking" element={<><Header /> <TrackingPage /> </>} />
             <Route path="/confirmationPage" element={<><Header /> <ConfirmationPage /> </>} />
             <Route path="/payment-history" element={<><Header /> <PaymentHistory /> </>} />
+            <Route path="/notifications" element={<><Header /> <NotificationPage /> </>} />
           </Routes>
         </main>
         <Footer />
