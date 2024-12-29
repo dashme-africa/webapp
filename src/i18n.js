@@ -72,7 +72,7 @@ const resources = {
                 "enterLocation": "Enter location",
                 "submit": "Submit",
                 "submitting": "Submitting...",
-                "successMessage": "Product Successfully Uploaded",
+                "successMessage": "Product Successfully Uploaded and is pending approval.", //updated
                 "errorMessage": "Failed to submit. Please try again.",
                 "verifiedError": "Your bank details are not verified. Please verify your bank details in your profile page.",
                 "addImageError": "Please add the product image",

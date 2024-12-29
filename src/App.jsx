@@ -26,10 +26,53 @@ import TrackingPage from "./components/TrackingPage";
 import ConfirmationPage from "./components/ConfirmationPage";
 import PaymentHistory from './components/PaymentHistory';
 import NotificationPage from './components/NotificationPage';
+import AdminNotification from './components/AdminNotification';
+import useNotifications from './hooks/useNotifications';
 
 const App = () => {
   const dispatch = useDispatch();
   const [selectedCategory, setSelectedCategory] = useState('');
+  // const [notifications, setNotifications] = useState('');
+  // const [unreadCount, setUnreadCount] = useState(0);
+
+  // const fetchNotifications = async () => {
+  //   const token = localStorage.getItem('adminToken');
+  //   if (!token) return;
+
+  //   try {
+  //     const config = { headers: { Authorization: `Bearer ${token}` } };
+  //     const { data } = await axios.get(`${apiURL}/notifyAdmin/notifications`, config);
+  //     setNotifications(data.data);
+  //     setUnreadCount(data.data.filter((notification) => !notification.read).length);
+  //   } catch (err) {
+  //     console.error('Failed to fetch notifications:', err);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   fetchNotifications();
+  //   const interval = setInterval(fetchNotifications, 5000);
+  //   return () => clearInterval(interval);
+  // }, []);
+
+  // const markNotificationAsRead = async (id) => {
+  //   try {
+  //     const token = localStorage.getItem('adminToken');
+  //     const config = { headers: { Authorization: `Bearer ${token}` } };
+  //     await axios.patch(`${apiURL}/notifyAdmin/notifications/${id}/read`, {}, config);
+
+  //     setNotifications((prev) =>
+  //       prev.map((notification) =>
+  //         notification._id === id ? { ...notification, read: true } : notification
+  //       )
+  //     );
+  //     setUnreadCount((prev) => Math.max(prev - 1, 0));
+  //   } catch (err) {
+  //     console.error('Failed to mark notification as read:', err);
+  //   }
+  // };
+
+  const { notifications, unreadCount, markNotificationAsRead } = useNotifications(true);
 
   useEffect(() => {
     // Example: Set initial items
@@ -44,8 +87,32 @@ const App = () => {
           <Routes>
             <Route path="/adminLogin" element={<AdminLogin />} />
             <Route path="/adminRegister" element={<AdminRegister />} />
-            <Route path="/adminDashboard" element={<AdminDashboard />} />
             <Route path="/admin/products/edit/:id" element={<EditProduct />} />
+
+            <Route
+            path="/adminDashboard"
+            element={
+              <AdminDashboard
+                notifications={notifications}
+                unreadCount={unreadCount}
+                markNotificationAsRead={markNotificationAsRead}
+              />
+            }
+          />
+
+         <Route
+            path="/admin/notifications"
+            element={
+              <>
+                <Header />
+                <AdminNotification
+                  notifications={notifications}
+                  markNotificationAsRead={markNotificationAsRead}
+                />
+              </>
+            }
+          />
+
 
             <Route path="/" element={<> <Header /> <Hero setSelectedCategory={setSelectedCategory} /> <HomeScreen selectedCategory={selectedCategory} /> </>} />
 

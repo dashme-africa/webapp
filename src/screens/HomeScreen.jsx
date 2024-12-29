@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import Product from '../components/Product';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+
 const apiURL = import.meta.env.VITE_API_URL;
 
 const HomeScreen = ({ selectedCategory }) => {
@@ -18,7 +19,15 @@ const HomeScreen = ({ selectedCategory }) => {
           : `${apiURL}/products`;
 
         const { data } = await axios.get(endpoint);
-        const sortedProducts = data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+        // Filter products to include only approved ones
+        const approvedProducts = data.filter((product) => product.status === 'approved');
+
+        // Sort approved products by creation date
+        const sortedProducts = approvedProducts.sort(
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+        );
+
         setProducts(sortedProducts);
       } catch (error) {
         console.error('Error fetching products:', error);
@@ -59,5 +68,3 @@ const HomeScreen = ({ selectedCategory }) => {
 };
 
 export default HomeScreen;
-
-
