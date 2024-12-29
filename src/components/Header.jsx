@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Navbar, Nav, Container, Form, FormControl, Button, Dropdown, Alert } from 'react-bootstrap';
-import { FaUser, FaBell, FaHeart, FaSearch } from 'react-icons/fa';
+import { FaUser, FaBell, FaSearch } from 'react-icons/fa'; // FaHeart commented
 import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 
@@ -170,9 +170,9 @@ const Header = () => {
                 )}
               </Nav.Link>
 
-              <Nav.Link href="/favorites" className="me-3">
+              {/* <Nav.Link href="/favorites" className="me-3">
                 <FaHeart size={30} />
-              </Nav.Link>
+              </Nav.Link> */}
 
               <Nav.Link href="/profile" className="me-5 d-flex align-items-center">
                 {loading ? (
