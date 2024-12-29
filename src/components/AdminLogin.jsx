@@ -9,6 +9,17 @@ const AdminLogin = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
+  const [alertVariant, setAlertVariant] = useState('success');
+  const displayAlert = (message, variant = 'success', duration = 5000) => {
+    setAlertMessage(message);
+    setAlertVariant(variant);
+    setShowAlert(true);
+    setTimeout(() => {
+      setShowAlert(false);
+    }, duration);
+  };
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -17,8 +28,10 @@ const AdminLogin = () => {
     try {
       const { data } = await axios.post(`${apiURL}/admin/login`, { email, password });
       localStorage.setItem('adminToken', data.token);
-      alert("Login Successful")
-      navigate('/adminDashboard');
+      displayAlert('Login Successful');
+      setTimeout(() => {
+        navigate('/adminDashboard');
+      }, 2000);
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed');
     }
@@ -29,6 +42,9 @@ const AdminLogin = () => {
       <Form onSubmit={handleLogin} className="p-4 border rounded shadow" style={{ width: '300px' }}>
         <h2 className="text-center mb-4">Admin Login</h2>
         {error && <Alert variant="danger">{error}</Alert>}
+        <Alert variant={alertVariant} show={showAlert}>
+          {alertMessage}
+        </Alert>
         <Form.Group className="mb-3">
           <Form.Label>Email Address</Form.Label>
           <Form.Control

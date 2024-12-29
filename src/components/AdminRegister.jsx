@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from "react-router-dom";
 const apiURL = import.meta.env.VITE_API_URL;
 
 const AdminRegister = () => {
@@ -8,6 +9,7 @@ const AdminRegister = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [message, setMessage] = useState('');
   const [success, setSuccess] = useState(false);
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -29,6 +31,9 @@ const AdminRegister = () => {
         setEmail('');
         setPassword('');
         setConfirmPassword('');
+        setTimeout(() => {
+          navigate('/adminLogin');
+        }, 2000);
       }
     } catch (error) {
       setMessage(error.response?.data?.message || 'An error occurred');

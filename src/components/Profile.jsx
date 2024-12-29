@@ -116,26 +116,33 @@ const Profile = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
+    // Validate account details before proceeding
     if (formData.accountNumber && !isVerified) {
-      displayAlert(`${t("profile.verifyBankDetails")}`, 'danger');
+      displayAlert(`${t("profile.verifyBankDetails")}`, "danger");
       return;
     }
-
+  
     const token = localStorage.getItem("token");
-
+  
+    // Initialize formDataToSubmit first
     const formDataToSubmit = new FormData();
+  
+    // Append all form data to formDataToSubmit
     Object.keys(formData).forEach((key) => {
       formDataToSubmit.append(key, formData[key]);
     });
-
-    // Add isVerified to formData
-    formDataToSubmit.append("isVerified", isVerified);
-
+  
+    // Conditionally append isVerified if necessary
+    if (formData.accountNumber && formData.bankName) {
+      formDataToSubmit.append("isVerified", isVerified);
+    }
+  
+    // Append image if it exists
     if (image) {
       formDataToSubmit.append("image", image);
     }
-
+  
     try {
       const response = await axios.put(
         `${apiURL}/userProfile/profile`,
@@ -146,19 +153,19 @@ const Profile = () => {
           },
         }
       );
-
+  
       if (response.data) {
         setUser(response.data);
         displayAlert(t("profile.profileUpdated"));
       } else {
-        alert(response.data.message || t("profile.failedToUpdate"));
+        displayAlert(response.data.message || t("profile.failedToUpdate"), "danger");
       }
     } catch (error) {
-      // console.error("Failed to update profile:", error);
-      displayAlert('Failed to update profile.', 'danger');
+      displayAlert("Failed to update profile.", "danger");
+      console.error("Failed to update profile:", error);
     }
   };
-
+  
   const verifyBankDetails = async () => {
     try {
       const { accountNumber, bankName } = formData;

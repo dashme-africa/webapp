@@ -352,7 +352,7 @@ const Checkout = () => {
               <div className="mb-4">
                 <div className="d-flex align-items-center justify-content-between">
                   <img
-                    src={product.image}
+                    src={product.primaryImage}
                     alt={product.title}
                     style={{ width: "50px", height: "50px", objectFit: "cover" }}
                   />

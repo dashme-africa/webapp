@@ -65,7 +65,7 @@ const resources = {
                 "itemCategory": "Item Category",
                 "selectCategory": "Select category",
                 "price": "Price",
-                "enterPrice": "Enter price",
+                "enterPrice": "Enter price (N500 - N50,000)", //not updated
                 "priceCategory": "Price Category",
                 "selectPriceCategory": "Select category",
                 "location": "Location",

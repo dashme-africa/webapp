@@ -265,6 +265,8 @@ const handleSubmit = async (e) => {
                   </div>
                 ))}
               </div>
+              <i>Upload multiple photos for items with multiple views (e.g., right, left, top, bottom) to ensure credibility.
+              </i>
             </div>
 
 
@@ -313,14 +315,14 @@ const handleSubmit = async (e) => {
                   <>
                     <option value="Clothes">Clothes</option>
                     <option value="Electronics">Electronics</option>
-                    <option value="Accessories">Accessories</option>
+                    <option value="Accessories">Accessories - sandals, watches, shoes etc</option>
                     <option value="Household-Items">Household Items</option>
                   </>
                 ) : (
                   <>
                     <option value="Clothes">Clothes</option>
                     <option value="Electronics">Electronics</option>
-                    <option value="Accessories">Accessories</option>
+                    <option value="Accessories">Accessories - sandals, watches, shoes etc</option>
                     <option value="Household-Items">Household Items</option>
                   </>
                 )}

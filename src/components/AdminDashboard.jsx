@@ -152,7 +152,7 @@ const AdminDashboard = () => {
             <tr key={product._id}>
               <td>
                 <img
-                  src={product.image || '/placeholder.png'}
+                  src={product.primaryImage || '/placeholder.png'}
                   alt={product.title}
                   style={{ width: '80px', height: '80px', objectFit: 'cover' }}
                 />

@@ -3,6 +3,8 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { Card, Button, Spinner, Alert, Badge } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import { FaUser } from 'react-icons/fa';
+
 
 const ProductDetails = () => {
   const { id } = useParams();
@@ -125,7 +127,7 @@ const ProductDetails = () => {
             )}
 
             <div className="d-flex mt-4">
-              <Button variant="primary" className="me-2">
+              <Button variant="secondary" className="me-2">
                 Message Profile
               </Button>
               {product.tag === 'For sale' ? (
@@ -143,15 +145,29 @@ const ProductDetails = () => {
           <div className="d-flex overflow-auto">
             {relatedProducts?.map((item, index) => (
               <div key={index} className="me-3" style={{ width: '150px' }}>
-                <div className="d-flex gap-2">
-                  <img
-                    src={product.uploader.profilePicture}
-                    alt="sellerProfile"
-                    className="rounded-circle"
-                    style={{ width: '40px', height: '40px', objectFit: 'cover' }}
-                  />
-                  <p className="text-center mt-2">{item.uploader.username || 'Unknown Seller'}</p>
+                <div className="d-flex gap-2 align-items-baseline">
+                  {product.uploader.profilePicture ? (
+                    <img
+                      src={product.uploader.profilePicture}
+                      alt="sellerProfile"
+                      className="rounded-circle"
+                      style={{
+                        width: '40px',
+                        height: '40px',
+                        objectFit: 'cover',
+                      }}
+                    />
+                  ) : (
+                    <div className="rounded-circle bg-light d-flex justify-content-center border align-items-center" style={{ width: '35px', height: '35px' }}>
+                      <FaUser size={20} />
+                    </div>
+
+                  )}
+                  <p className="text-center mt-2">
+                    {product.uploader.username || 'Unknown Seller'}
+                  </p>
                 </div>
+
                 <Card>
                   <Card.Img
                     src={item.primaryImage}
