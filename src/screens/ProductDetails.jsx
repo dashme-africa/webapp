@@ -127,9 +127,10 @@ const ProductDetails = () => {
             )}
 
             <div className="d-flex mt-4">
-              <Button variant="secondary" className="me-2">
+              <Button variant="secondary" className="me-2 disabled">
                 Message Profile
               </Button>
+
               {product.tag === 'For sale' ? (
                 <Button variant="success" className="ms-2" onClick={buyNowHandler}>Buy Now</Button>
               ) : (

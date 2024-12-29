@@ -30,7 +30,7 @@ const HeroPage = ({ setSelectedCategory }) => {
           padding: "10px",
         }}
       >
-        <nav className="d-flex justify-content-start justify-content-md-center">
+        <nav className="d-flex justify-content-start justify-content-md-center flex-nowrap overflow-auto">
           <button
             onClick={() => setSelectedCategory("Clothes")}
             className="btn btn-link text-decoration-none mx-2 mb-3 text-dark fs-6"
@@ -40,9 +40,11 @@ const HeroPage = ({ setSelectedCategory }) => {
           <button
             onClick={() => setSelectedCategory("Household-items")}
             className="btn btn-link text-decoration-none mx-2 mb-3 text-dark fs-6"
+            style={{ whiteSpace: 'nowrap' }}
           >
             {t("householdItems")}
           </button>
+
           <button
             onClick={() => setSelectedCategory("Accessories")}
             className="btn btn-link text-decoration-none mx-2 mb-3 text-dark fs-6"

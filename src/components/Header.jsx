@@ -161,7 +161,7 @@ const Header = () => {
             </div>
           </Form>
 
-          <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end">
+          <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end flex-nowrap overflow-auto pb-2">
             <Nav className="d-flex flex-row align-items-center justify-content-space-between">
               <Nav.Link href="/notifications" className="me-3" onClick={markAllAsRead}>
                 <FaBell size={30} />
@@ -195,11 +195,11 @@ const Header = () => {
               </Nav.Link>
 
               {userData ? (
-                <Nav.Link onClick={handleLogout} className="me-3 fs-6 text-dark">
+                <Nav.Link onClick={handleLogout} className="me-3 fs-6 text-dark" style={{ whiteSpace: 'nowrap' }}>
                   {t('logout')}
                 </Nav.Link>
               ) : (
-                <Nav.Link href="/register" className="me-3 fs-6 text-dark">
+                <Nav.Link href="/register" className="me-3 fs-6 text-dark" style={{ whiteSpace: 'nowrap' }}>
                   {t('signUp')}
                 </Nav.Link>
               )}
