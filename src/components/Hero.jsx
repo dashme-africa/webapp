@@ -65,7 +65,7 @@ const HeroPage = ({ setSelectedCategory }) => {
         className="position-absolute"
         style={{
           left: "7%",
-          bottom: "30%",
+          bottom: "15%",
           borderRadius: "15px",
           boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
           zIndex: 3,
