@@ -155,6 +155,18 @@ const Register = () => {
               </label>
             </div>
 
+            <div className="mb-3 form-check">
+              <input
+                type="checkbox"
+                className="form-check-input"
+                id="agreeCheckbox"
+                required
+              />
+              <label htmlFor="agreeCheckbox" className="form-check-label">
+                I agree to comply to DashMeAfrica 5% commission as capture in T&C
+              </label>
+            </div>
+
             {/* Submit Button */}
             <button
               type="submit"

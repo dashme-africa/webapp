@@ -169,13 +169,17 @@ const AdminDashboard = () => {
                 />
               </td>
               <td>
-                <video
-                  src={product.videoUrl}
-                  alt={product.title}
-                  style={{ width: '250px', height: '250px', objectFit: 'cover' }}
-                  controls
-                >
-                </video>
+                {product.videoUrl ? (
+                  <video
+                    src={product.videoUrl}
+                    alt={product.title}
+                    style={{ width: '250px', height: '250px', objectFit: 'cover' }}
+                    controls
+                  />
+                ) : (
+                  <p>No video</p>
+                )}
+
 
               </td>
               <td>{product.title}</td>

@@ -61,13 +61,8 @@ const HeroPage = ({ setSelectedCategory }) => {
       </div>
 
       {/* Bottom Left Section */}
-      <div
-       className="position-absolute" 
-       style={{
-         zIndex: 3,
-         width: "300px",
-       }}
-      >
+      <div className="position-absolute" style={{ zIndex: 3, width: "300px", top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }} >
+
         <div className="text-center">
           <Link to="/upload">
             <Button

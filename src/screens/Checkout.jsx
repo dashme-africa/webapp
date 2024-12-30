@@ -169,7 +169,7 @@ const Checkout = () => {
         businessName: sellerBankDetails.seller.accountName,
         bankName: sellerBankDetails.seller.bankName,
         accountNumber: sellerBankDetails.seller.accountNumber,
-        percentageCharge: 30,
+        percentageCharge: 5,
       });
 
       const subaccountCode = subaccountResponse.data.data.subaccount_code;
@@ -181,8 +181,6 @@ const Checkout = () => {
         subaccount: subaccountCode,
         redis_key: rateDetails.redis_key, // Include redis_key
         rate_id: rateDetails.courier.id,     // Include rate_id
-        transactionCharge: 10000, // Optional: Flat fee for main account
-        bearer: 'subaccount', // Optional: Who bears the charge
       });
 
 
