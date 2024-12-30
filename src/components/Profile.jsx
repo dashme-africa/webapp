@@ -116,33 +116,33 @@ const Profile = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     // Validate account details before proceeding
     if (formData.accountNumber && !isVerified) {
       displayAlert(`${t("profile.verifyBankDetails")}`, "danger");
       return;
     }
-  
+
     const token = localStorage.getItem("token");
-  
+
     // Initialize formDataToSubmit first
     const formDataToSubmit = new FormData();
-  
+
     // Append all form data to formDataToSubmit
     Object.keys(formData).forEach((key) => {
       formDataToSubmit.append(key, formData[key]);
     });
-  
+
     // Conditionally append isVerified if necessary
     if (formData.accountNumber && formData.bankName) {
       formDataToSubmit.append("isVerified", isVerified);
     }
-  
+
     // Append image if it exists
     if (image) {
       formDataToSubmit.append("image", image);
     }
-  
+
     try {
       const response = await axios.put(
         `${apiURL}/userProfile/profile`,
@@ -153,7 +153,7 @@ const Profile = () => {
           },
         }
       );
-  
+
       if (response.data) {
         setUser(response.data);
         displayAlert(t("profile.profileUpdated"));
@@ -165,7 +165,7 @@ const Profile = () => {
       console.error("Failed to update profile:", error);
     }
   };
-  
+
   const verifyBankDetails = async () => {
     try {
       const { accountNumber, bankName } = formData;
@@ -275,7 +275,7 @@ const Profile = () => {
           <div>
 
             <label className="btn btn-outline-success btn-sm mt-3">
-            {t("profile.uploadPicture")}
+              {t("profile.uploadPicture")}
               <input
                 type="file"
                 accept="image/*"
@@ -352,9 +352,21 @@ const Profile = () => {
         {/* Edit Profile Section */}
         <div className="col-md-8 p-4">
           <h4 className="fw-bold">{t("profile.editProfile")}</h4>
-          <Alert variant={alertVariant} show={showAlert}>
+          <Alert
+            variant={alertVariant}
+            show={showAlert}
+            style={{
+              position: 'fixed',
+              top: '10%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              zIndex: 1000
+            }}
+          >
             {alertMessage}
           </Alert>
+
+
           <form onSubmit={handleSubmit} className="mt-3">
             <div className="mb-3">
               <label className="form-label">{t("profile.fullName")}</label>
@@ -420,7 +432,7 @@ const Profile = () => {
               ></textarea>
             </div>
             <button type="submit" className="btn btn-success w-100">
-            {t("profile.saveChanges")}
+              {t("profile.saveChanges")}
             </button>
           </form>
         </div>

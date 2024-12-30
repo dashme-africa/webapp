@@ -128,7 +128,17 @@ const AdminDashboard = () => {
           </span>
         )}
       </Nav.Link>
-      <Alert variant={alertVariant} show={showAlert}>
+      <Alert
+        variant={alertVariant}
+        show={showAlert}
+        style={{
+          position: 'fixed',
+          top: '10%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          zIndex: 1000
+        }}
+      >
         {alertMessage}
       </Alert>
 

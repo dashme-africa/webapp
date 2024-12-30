@@ -258,7 +258,17 @@ const Checkout = () => {
         {/* Billing Details */}
         <div className="col-md-6">
           <h3 className="mb-4 text-success">Billing Details</h3>
-          <Alert variant={alertVariant} show={showAlert}>
+          <Alert
+            variant={alertVariant}
+            show={showAlert}
+            style={{
+              position: 'fixed',
+              top: '10%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              zIndex: 1000
+            }}
+          >
             {alertMessage}
           </Alert>
           <Form>

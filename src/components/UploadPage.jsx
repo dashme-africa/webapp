@@ -85,12 +85,12 @@ const UploadPage = () => {
     e.preventDefault();
     setIsSubmitting(true);
 
-     // Check for image file sizes (10MB limit)
-  if (formData.images && formData.images.some((file) => file.size > 10 * 1024 * 1024)) {
-    displayAlert('Each Image file size should not exceed 10MB', 'danger');
-    setIsSubmitting(false);
-    return;
-  }
+    // Check for image file sizes (10MB limit)
+    if (formData.images && formData.images.some((file) => file.size > 10 * 1024 * 1024)) {
+      displayAlert('Each Image file size should not exceed 10MB', 'danger');
+      setIsSubmitting(false);
+      return;
+    }
 
     // Frontend validation for the number of images
     if (formData.images && formData.images.length > 10) {
@@ -260,7 +260,19 @@ const UploadPage = () => {
         <div className="card-body">
           <form onSubmit={handleSubmit}>
             <h3 className="text-center mb-4">{activeTab === 'sell' ? t('upload.sell') : t('upload.donate')}</h3>
-            <Alert variant={alertVariant} show={showAlert}>
+
+
+            <Alert
+              variant={alertVariant}
+              show={showAlert}
+              style={{
+                position: 'fixed',
+                top: '10%',
+                left: '50%',
+                zIndex: 1000,
+                transform: 'translate(-50%, -50%)',
+              }}
+            >
               {alertMessage}
             </Alert>
 
@@ -304,7 +316,7 @@ const UploadPage = () => {
                   </div>
                 ))}
               </div>
-              <i>Upload multiple photos for items with multiple views (e.g., right, left, top, bottom) to ensure credibility.
+              <i>Upload multiple photos for items with multiple views (e.g., right, left, top, bottom) to ensure credibility. Each image should not exceed 10MB.
               </i>
             </div>
 
@@ -317,8 +329,7 @@ const UploadPage = () => {
                 accept="video/*"
                 onChange={handleVideoChange}
               />
-              <i>Upload multiple photos for items with multiple views (e.g., right, left, top, bottom) to ensure credibility.
-              </i>
+              <i>Please upload a proof video of the product to verify its authenticity. This video will be reviewed by our admin team before your product is approved for display.</i>
             </div>
 
 
