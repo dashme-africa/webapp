@@ -157,6 +157,16 @@ const AdminDashboard = () => {
                   style={{ width: '80px', height: '80px', objectFit: 'cover' }}
                 />
               </td>
+              <td>
+                <video
+                  src={product.videoUrl}
+                  alt={product.title}
+                  style={{ width: '250px', height: '250px', objectFit: 'cover' }}
+                  controls
+                >
+                </video>
+
+              </td>
               <td>{product.title}</td>
               <td>{product.description || 'No description available'}</td>
               <td>

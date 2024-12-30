@@ -82,97 +82,106 @@ const UploadPage = () => {
     }));
   };
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  setIsSubmitting(true);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
 
-  // Frontend validation for the number of images
-  if (formData.images && formData.images.length > 10) {
-    displayAlert(t('upload.maxImagesError'), 'danger');
-    setIsSubmitting(false);
-    return;
-  }
-
-  try {
-    // Verify uploader
-    if (uploader && !uploader.isVerified) {
-      displayAlert(t('upload.verifiedError'), 'danger');
+    // Frontend validation for the number of images
+    if (formData.images && formData.images.length > 10) {
+      displayAlert(t('upload.maxImagesError'), 'danger');
       setIsSubmitting(false);
       return;
     }
 
-    // Create FormData
-    const updatedData = new FormData();
+    if (formData.video && formData.video.size > 10 * 1024 * 1024) { // 10MB limit
+      displayAlert('Video file size should not exceed 10MB', 'danger');
+      setIsSubmitting(false);
+      return;
+    }
 
-    // Append all fields from formData
-    Object.entries(formData).forEach(([key, value]) => {
-      if (key === 'images') {
-        value.forEach((file) => updatedData.append('images', file));
-      } else {
-        updatedData.append(key, value);
+    try {
+      // Verify uploader
+      if (uploader && !uploader.isVerified) {
+        displayAlert(t('upload.verifiedError'), 'danger');
+        setIsSubmitting(false);
+        return;
       }
-    });
 
-    // Add the primary image index
-    if (formData.primaryImageIndex !== null && formData.primaryImageIndex >= 0) {
-      updatedData.append('primaryImageIndex', formData.primaryImageIndex);
-    } else {
-      displayAlert(t('upload.selectPrimaryImage'), 'danger');
+      // Create FormData
+      const updatedData = new FormData();
+
+      // Append all fields from formData
+      Object.entries(formData).forEach(([key, value]) => {
+        if (key === 'images') {
+          value.forEach((file) => updatedData.append('images', file));
+        } else if (key === 'video') {
+          if (value) updatedData.append('video', value);
+        } else {
+          updatedData.append(key, value);
+        }
+      });
+
+
+      // Add the primary image index
+      if (formData.primaryImageIndex !== null && formData.primaryImageIndex >= 0) {
+        updatedData.append('primaryImageIndex', formData.primaryImageIndex);
+      } else {
+        displayAlert(t('upload.selectPrimaryImage'), 'danger');
+        setIsSubmitting(false);
+        return;
+      }
+
+      // Append uploader ID if available
+      if (uploader) {
+        updatedData.append('uploader', uploader._id);
+      }
+
+      // Ensure at least one image is uploaded
+      if (!formData.images || formData.images.length === 0) {
+        displayAlert(t('upload.addImageError'), 'danger');
+        setIsSubmitting(false);
+        return;
+      }
+
+      // Determine the endpoint based on activeTab
+      const endpoint = activeTab === 'sell'
+        ? `${apiURL}/products`
+        : `${apiURL}/products/donate`;
+
+      // Send data to the server
+      const response = await axios.post(endpoint, updatedData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+
+      // Reset form data
+      setFormData({
+        title: '',
+        description: '',
+        category: '',
+        price: '',
+        priceCategory: '',
+        location: '',
+        images: [],
+        video: null,
+        primaryImageIndex: null,
+      });
+
+      // Show success message
+      displayAlert(t('upload.successMessage'));
+
+      // Redirect after a delay
+      setTimeout(() => navigate('/'), 3000);
+
+    } catch (error) {
+      if (error.response) {
+        displayAlert(`${error.response.data.message}`, 'danger');
+      } else {
+        displayAlert('An unexpected error occurred.', 'danger');
+      }
+    } finally {
       setIsSubmitting(false);
-      return;
     }
-
-    // Append uploader ID if available
-    if (uploader) {
-      updatedData.append('uploader', uploader._id);
-    }
-
-    // Ensure at least one image is uploaded
-    if (!formData.images || formData.images.length === 0) {
-      displayAlert(t('upload.addImageError'), 'danger');
-      setIsSubmitting(false);
-      return;
-    }
-
-    // Determine the endpoint based on activeTab
-    const endpoint = activeTab === 'sell'
-      ? `${apiURL}/products`
-      : `${apiURL}/products/donate`;
-
-    // Send data to the server
-    const response = await axios.post(endpoint, updatedData, {
-      headers: { 'Content-Type': 'multipart/form-data' },
-    });
-
-    // Reset form data
-    setFormData({
-      title: '',
-      description: '',
-      category: '',
-      price: '',
-      priceCategory: '',
-      location: '',
-      images: [],
-      primaryImageIndex: null,
-    });
-
-    // Show success message
-    displayAlert(t('upload.successMessage'));
-
-    // Redirect after a delay
-    setTimeout(() => navigate('/'), 3000);
-
-  } catch (error) {
-    if (error.response) {
-      displayAlert(`${error.response.data.message}`, 'danger');
-    } else {
-      displayAlert('An unexpected error occurred.', 'danger');
-    }
-  } finally {
-    setIsSubmitting(false);
-  }
-};
-
+  };
 
   const handleRemoveImage = (index) => {
     setFormData((prevData) => {
@@ -191,7 +200,19 @@ const handleSubmit = async (e) => {
     });
   };
 
+  const handleVideoChange = (e) => {
+    const file = e.target.files[0];
 
+    if (file && file.size > 10 * 1024 * 1024) { // 10MB limit
+      displayAlert('Video file size should not exceed 10MB', 'danger');
+      return;
+    }
+
+    setFormData((prevData) => ({
+      ...prevData,
+      video: file,
+    }));
+  };
 
   const myProducts = () => {
     navigate('/my-products');
@@ -265,6 +286,19 @@ const handleSubmit = async (e) => {
                   </div>
                 ))}
               </div>
+              <i>Upload multiple photos for items with multiple views (e.g., right, left, top, bottom) to ensure credibility.
+              </i>
+            </div>
+
+            <div className="mb-3">
+              <label htmlFor="videoUpload" className="form-label">Upload a Product Video</label>
+              <input
+                type="file"
+                id="videoUpload"
+                className="form-control"
+                accept="video/*"
+                onChange={handleVideoChange}
+              />
               <i>Upload multiple photos for items with multiple views (e.g., right, left, top, bottom) to ensure credibility.
               </i>
             </div>

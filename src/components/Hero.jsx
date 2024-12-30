@@ -11,7 +11,7 @@ const HeroPage = ({ setSelectedCategory }) => {
       <div
         style={{
           backgroundImage: "url('https://res.cloudinary.com/df2q6gyuq/image/upload/v1734502295/hero-banner_tvastc.jpg')",
-          backgroundPosition: "center",
+          backgroundPosition: "contain",
           backgroundRepeat: "no-repeat",
           backgroundSize: "cover",
           width: "100%",
