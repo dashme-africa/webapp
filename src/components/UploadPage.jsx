@@ -99,6 +99,17 @@ const UploadPage = () => {
       return;
     }
 
+    // Ensure video is compulsory for specific categories
+    const categoriesRequiringVideo = ['Accessories', 'Household-Items', 'Electronics'];
+    if (
+      categoriesRequiringVideo.includes(formData.category) &&
+      (!formData.video || formData.video === null)
+    ) {
+      displayAlert('A video is required for the selected category', 'danger');
+      setIsSubmitting(false);
+      return;
+    }
+
     try {
       // Verify uploader
       if (uploader && !uploader.isVerified) {
