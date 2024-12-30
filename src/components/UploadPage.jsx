@@ -81,10 +81,16 @@ const UploadPage = () => {
       images: [...(prevData.images || []), ...files],
     }));
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
+
+     // Check for image file sizes (10MB limit)
+  if (formData.images && formData.images.some((file) => file.size > 10 * 1024 * 1024)) {
+    displayAlert('Each Image file size should not exceed 10MB', 'danger');
+    setIsSubmitting(false);
+    return;
+  }
 
     // Frontend validation for the number of images
     if (formData.images && formData.images.length > 10) {
@@ -193,6 +199,7 @@ const UploadPage = () => {
       setIsSubmitting(false);
     }
   };
+
 
   const handleRemoveImage = (index) => {
     setFormData((prevData) => {

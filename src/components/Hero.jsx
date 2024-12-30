@@ -15,7 +15,7 @@ const HeroPage = ({ setSelectedCategory }) => {
           backgroundRepeat: "no-repeat",
           backgroundSize: "cover",
           width: "100%",
-          height: "700px",
+          height: "100%",
         }}
       ></div>
 
@@ -64,14 +64,9 @@ const HeroPage = ({ setSelectedCategory }) => {
       <div
        className="position-absolute" 
        style={{
-         left: "7%",
          zIndex: 3,
          width: "300px",
-         bottom: window.innerWidth < 768 ? "30%" : "15%",
-         left: window.innerWidth < 768 ? "10%" : "7%"
        }}
-     
-     
       >
         <div className="text-center">
           <Link to="/upload">

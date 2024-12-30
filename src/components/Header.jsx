@@ -55,40 +55,40 @@ const Header = () => {
     fetchUserData();
   }, []);
 
-  useEffect(() => {
-    const fetchNotifications = async () => {
-      const token = localStorage.getItem('token');
-      if (!token) return;
+  // useEffect(() => {
+  //   const fetchNotifications = async () => {
+  //     const token = localStorage.getItem('token');
+  //     if (!token) return;
 
-      try {
-        const { data } = await axios.get(`${apiURL}/notify/notifications`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+  //     try {
+  //       const { data } = await axios.get(`${apiURL}/notify/notifications`, {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       });
 
-        console.log('API response:', data);
+  //       console.log('API response:', data);
 
-        // Assuming notifications are directly in `data.data`
-        const notifications = data.data || [];
-        setNotifications(notifications);
+  //       // Assuming notifications are directly in `data.data`
+  //       const notifications = data.data || [];
+  //       setNotifications(notifications);
 
-        // Calculate unread count
-        const unread = notifications.filter((n) => !n.read).length;
-        setUnreadCount(unread);
-      } catch (error) {
-        console.error('Error fetching notifications:', error.response?.data?.message || error.message);
-      }
-    };
+  //       // Calculate unread count
+  //       const unread = notifications.filter((n) => !n.read).length;
+  //       setUnreadCount(unread);
+  //     } catch (error) {
+  //       console.error('Error fetching notifications:', error.response?.data?.message || error.message);
+  //     }
+  //   };
 
-    // Poll every 10 seconds
-    const interval = setInterval(fetchNotifications, 10000);
+  //   // Poll every 10 seconds
+  //   const interval = setInterval(fetchNotifications, 10000);
 
-    // Fetch initially
-    fetchNotifications();
+  //   // Fetch initially
+  //   fetchNotifications();
 
-    return () => clearInterval(interval); // Cleanup on component unmount
-  }, []);
+  //   return () => clearInterval(interval); // Cleanup on component unmount
+  // }, []);
 
 
   const markAllAsRead = async () => {

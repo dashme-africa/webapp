@@ -138,6 +138,7 @@ const AdminDashboard = () => {
         <thead>
           <tr>
             <th>Image</th>
+            <th>Proof Video</th>
             <th>Title</th>
             <th>Description</th>
             <th>Price</th>
