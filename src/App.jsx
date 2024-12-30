@@ -104,7 +104,6 @@ const App = () => {
             path="/admin/notifications"
             element={
               <>
-                <Header />
                 <AdminNotification
                   notifications={notifications}
                   markNotificationAsRead={markNotificationAsRead}
