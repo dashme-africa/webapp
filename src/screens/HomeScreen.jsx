@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Row, Col } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import Product from '../components/Product';
@@ -10,6 +10,7 @@ const apiURL = import.meta.env.VITE_API_URL;
 const HomeScreen = ({ selectedCategory }) => {
   const [products, setProducts] = useState([]);
   const { t } = useTranslation();
+  const productsSectionRef = useRef(null);
 
   useEffect(() => {
     const fetchCategoryProducts = async () => {
@@ -29,6 +30,11 @@ const HomeScreen = ({ selectedCategory }) => {
         );
 
         setProducts(sortedProducts);
+
+         // Scroll to the product section
+         if (productsSectionRef.current) {
+          productsSectionRef.current.scrollIntoView({ behavior: 'smooth' });
+        }
       } catch (error) {
         console.error('Error fetching products:', error);
       }
@@ -39,7 +45,7 @@ const HomeScreen = ({ selectedCategory }) => {
 
   return (
     <>
-      <Row className="align-items-center mb-1 mt-5 px-5">
+      <Row className="align-items-center mb-1 mt-5 px-5" ref={productsSectionRef}>
         <Col>
           <h4 className="mb-0">{selectedCategory ? t(selectedCategory) : t("home.recommended")}</h4>
         </Col>
