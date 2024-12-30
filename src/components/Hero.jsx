@@ -11,11 +11,11 @@ const HeroPage = ({ setSelectedCategory }) => {
       <div
         style={{
           backgroundImage: "url('https://res.cloudinary.com/df2q6gyuq/image/upload/v1734502295/hero-banner_tvastc.jpg')",
-          backgroundPosition: "contain",
+          backgroundPosition: "cover",
           backgroundRepeat: "no-repeat",
           backgroundSize: "cover",
           width: "100%",
-          height: "100%",
+          height: "700px",
         }}
       ></div>
 
@@ -62,15 +62,16 @@ const HeroPage = ({ setSelectedCategory }) => {
 
       {/* Bottom Left Section */}
       <div
-        className="position-absolute"
-        style={{
-          left: "7%",
-          bottom: "15%",
-          borderRadius: "15px",
-          boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-          zIndex: 3,
-          width: "300px",
-        }}
+       className="position-absolute" 
+       style={{
+         left: "7%",
+         zIndex: 3,
+         width: "300px",
+         bottom: window.innerWidth < 768 ? "30%" : "15%",
+         left: window.innerWidth < 768 ? "10%" : "7%"
+       }}
+     
+     
       >
         <div className="text-center">
           <Link to="/upload">
