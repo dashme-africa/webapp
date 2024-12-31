@@ -51,16 +51,16 @@ const Checkout = () => {
           const { data } = await axios.get(`${apiURL}/userProfile/profile`, {
             headers: { Authorization: `Bearer ${token}` },
           });
-          setUser({ fullName: data.fullName, email: data.email, address: data.address });
+          setUser({ fullName: data.fullName, email: data.email, address: data.address, phoneNumber: data.phoneNumber });
           setDeliveryDetails((prev) => ({
             ...prev,
-            toAddress: { ...prev.toAddress, name: data.fullName, email: data.email, address: data.address },
+            toAddress: { ...prev.toAddress, name: data.fullName, email: data.email, address: data.address, phone: data.phoneNumber },
           }));
         } catch (error) {
           console.error("Error fetching user data:", error);
         }
       }
-    };
+    }; 
 
     const fetchSellerDetails = async () => {
       if (sellerId) {
@@ -72,7 +72,7 @@ const Checkout = () => {
               name: data.seller.fullName,
               email: data.seller.email,
               address: data.seller.address,
-              phone: "09155802922",
+              phone: data.seller.phoneNumber,
             },
           }));
           setSellerBankDetails(data)
@@ -169,7 +169,7 @@ const Checkout = () => {
         businessName: sellerBankDetails.seller.accountName,
         bankName: sellerBankDetails.seller.bankName,
         accountNumber: sellerBankDetails.seller.accountNumber,
-        percentageCharge: 5,
+        percentageCharge: 10,
       });
 
       const subaccountCode = subaccountResponse.data.data.subaccount_code;
@@ -179,8 +179,8 @@ const Checkout = () => {
         email: user.email,
         amount: total * 100,
         subaccount: subaccountCode,
-        redis_key: rateDetails.redis_key, // Include redis_key
-        rate_id: rateDetails.courier.id,     // Include rate_id
+        redis_key: rateDetails.redis_key, 
+        rate_id: rateDetails.courier.id,     
       });
 
 

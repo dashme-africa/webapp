@@ -19,6 +19,7 @@ const Profile = () => {
     accountName: "",
     accountNumber: "",
     bankName: "",
+    phoneNumber: "",
   });
   const [isVerified, setIsVerified] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
@@ -58,6 +59,7 @@ const Profile = () => {
             accountName: data.accountName || "",
             accountNumber: data.accountNumber || "",
             bankName: data.bankName || "",
+            phoneNumber: data.phoneNumber || "",
           }));
 
           setIsVerified(data.isVerified || false);
@@ -387,6 +389,16 @@ const Profile = () => {
                 name="email"
                 className="form-control"
                 value={formData.email}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="mb-3">
+              <label className="form-label">Phone number</label>
+              <input
+                type="text"
+                name="phoneNumber"
+                className="form-control"
+                value={formData.phoneNumber}
                 onChange={handleChange}
               />
             </div>
