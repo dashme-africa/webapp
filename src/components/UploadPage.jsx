@@ -238,7 +238,7 @@ const UploadPage = () => {
 
   return (
     <div className="container mt-5">
-      <Button variant="primary" className="ms-2" onClick={myProducts}>{t('upload.myProducts')}</Button>
+      <Button variant="primary" className="ms-2 mb-4" onClick={myProducts}>{t('upload.myProducts')}</Button>
       {/* Tabs */}
       <div className="d-flex justify-content-center mb-4">
         <button

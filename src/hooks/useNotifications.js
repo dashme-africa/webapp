@@ -23,9 +23,9 @@ const useNotifications = (isAdmin = false) => {
 
   const markNotificationAsRead = async (id) => {
     try {
-      const token = localStorage.getItem(isAdmin ? 'adminToken' : 'userToken');
+      const token = localStorage.getItem("adminToken");
       const config = { headers: { Authorization: `Bearer ${token}` } };
-      await axios.patch(`${apiURL}/notifyAdmin/notifications/${id}/read`, {}, config);
+      await axios.patch(`${apiURL}/notifyAdmin/notifications/${id}/mark-read`, {}, config);
 
       setNotifications((prev) =>
         prev.map((notification) =>
@@ -38,13 +38,25 @@ const useNotifications = (isAdmin = false) => {
     }
   };
 
+  const markAllNotificationsAsRead = async () => {
+    try {
+      const token = localStorage.getItem("adminToken");
+      const config = { headers: { Authorization: `Bearer ${token}` } };
+      await axios.patch(`${apiURL}/notifyAdmin/notifications/mark-all-read`, {}, config);
+      setNotifications((prev) => prev.map((notification) => ({ ...notification, read: true })));
+      setUnreadCount(0);
+    } catch (err) {
+      console.error('Failed to mark all notifications as read:', err);
+    }
+  };
+
   useEffect(() => {
     fetchNotifications();
     const interval = setInterval(fetchNotifications, 5000);
     return () => clearInterval(interval);
   }, []);
 
-  return { notifications, unreadCount, fetchNotifications, markNotificationAsRead };
+  return { notifications, unreadCount, fetchNotifications, markNotificationAsRead, markAllNotificationsAsRead };
 };
 
 export default useNotifications;

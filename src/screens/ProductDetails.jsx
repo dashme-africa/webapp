@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { Card, Button, Spinner, Alert, Badge } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { FaUser } from 'react-icons/fa';
+import { useTranslation } from 'react-i18next';
 
 
 const ProductDetails = () => {
@@ -14,6 +15,7 @@ const ProductDetails = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const apiURL = import.meta.env.VITE_API_URL;
+  const { t } = useTranslation();
 
   const navigate = useNavigate();
 
@@ -145,7 +147,7 @@ const ProductDetails = () => {
           <h4 className="mb-4">Other Items from {product.uploader.username || 'this user'}</h4>
           <div className="d-flex overflow-auto">
             {relatedProducts?.map((item, index) => (
-              <div key={index} className="me-3" style={{ width: '150px' }}>
+              <div key={index} className="me-3" style={{ width: '150px' }} onClick={() => navigate(`/product/${item._id}`)}>
                 <div className="d-flex gap-2 align-items-baseline">
                   {product.uploader.profilePicture ? (
                     <img
@@ -169,21 +171,47 @@ const ProductDetails = () => {
                   </p>
                 </div>
 
-                <Card>
-                  <Card.Img
-                    src={item.primaryImage}
-                    alt={item.title}
-                    style={{ height: '100px', objectFit: 'cover' }}
-                  />
-                  <Card.Body>
-                    <Card.Title as="div" className="fs-6">{item.title}</Card.Title>
-                    <Card.Text className="text-success">N{item.price}</Card.Text>
+                <Card className="my-4 border-0">
+                  <Link to={`/product/${item._id}`}>
+                    {/* Enforce consistent image height */}
+                    <Card.Img src={item.primaryImage} alt={item.title} variant="top" style={{ height: '200px', objectFit: 'cover', cursor: 'pointer' }} />
+                  </Link>
+
+                  <Card.Body className="p-0">
+                    <div className="d-flex justify-content-between align-items-center mb-1 mt-2">
+                      {/* Title Section */}
+                      <Link to={`/product/${item._id}`} style={{ textDecoration: 'none', color: 'inherit', fontWeight: '400' }} className="product-title" >
+                        <Card.Title as="div">
+                          <strong>{item.title}</strong>
+                        </Card.Title>
+                      </Link>
+                      {/* Love Icon */}
+                      {/* <FaHeart size={25} style={{ color: "grey", cursor: "pointer" }} /> */}
+                    </div>
+                    {/* Price */}
+                    {item.tag === 'For sale' && (
+                      <Card.Text as="div" className="product-price mb-1" style={{ color: '#71033F' }} >
+                        <p className="mb-0">{`N${item.price}`}</p>
+                      </Card.Text>
+                    )}
+                    {/* Location */}
+                    <Card.Text as="div" className="product-location d-flex justify-content-between align-items-center mb-1" >
+                      <p className="mb-0 me-auto fs-6">{`${item.location}`}</p>
+                    </Card.Text>
+                    {/* Button */}
+                    <Link to={`/product/${item._id}`} style={{ textDecoration: 'none' }}>
+                      <Button variant="success" className="text-white">
+                        {item.tag === 'For sale' ? t('product.tagSell') : t('product.donate')}
+                      </Button>
+                    </Link>
                   </Card.Body>
                 </Card>
               </div>
             ))}
           </div>
         </div>
+
+
       </div>
     )
   );
