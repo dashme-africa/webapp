@@ -1,24 +1,48 @@
 import React, { useState } from "react";
+import { Alert } from "react-bootstrap";
+
+const apiURL = import.meta.env.VITE_API_URL;
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [message, setMessage] = useState("");
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
+  const [alertVariant, setAlertVariant] = useState('success');
+  const displayAlert = (message, variant = 'success', duration = 5000) => {
+    setAlertMessage(message);
+    setAlertVariant(variant);
+    setShowAlert(true);
+    setTimeout(() => {
+      setShowAlert(false);
+    }, duration);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-    setMessage("");
+    displayAlert("");
 
-    // Simulate API call
     try {
-      // Replace this with your actual API call
-      setTimeout(() => {
-        setMessage("A reset link has been sent to your email address.");
-        setIsSubmitting(false);
-      }, 2000);
+      const response = await fetch(`${apiURL}/users/forgot-password`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await response.json();
+      console.log(response)
+
+      if (response.ok) {
+        displayAlert("A reset link has been sent to your email address.");
+      } else {
+        displayAlert(data.message || "An error occurred. Please try again.", "danger");
+      }
     } catch (error) {
-      setMessage("An error occurred. Please try again.");
+      displayAlert("An error occurred. Please try again.");
+    } finally {
       setIsSubmitting(false);
     }
   };
@@ -33,7 +57,19 @@ const ForgotPassword = () => {
             Enter your email address and we’ll send you instructions to reset your password.
           </p>
 
-          {message && <div className="alert alert-success">{message}</div>}
+          <Alert
+            variant={alertVariant}
+            show={showAlert}
+            style={{
+              position: 'fixed',
+              top: '10%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              zIndex: 1000
+            }}
+          >
+            {alertMessage}
+          </Alert>
 
           <form onSubmit={handleSubmit}>
             {/* Email Input */}

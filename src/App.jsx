@@ -28,6 +28,7 @@ import PaymentHistory from './components/PaymentHistory';
 import NotificationPage from './components/NotificationPage';
 import AdminNotification from './components/AdminNotification';
 import useNotifications from './hooks/useNotifications';
+import ResetPassword from "./components/ResetPassword";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -130,6 +131,7 @@ const App = () => {
             <Route path="/confirmationPage" element={<><Header /> <ConfirmationPage /> </>} />
             <Route path="/payment-history" element={<><Header /> <PaymentHistory /> </>} />
             <Route path="/notifications" element={<><Header /> <NotificationPage /> </>} />
+            <Route path="/reset-password" element={<ResetPassword />} />
           </Routes>
         </main>
         <Footer />
