@@ -3,52 +3,57 @@
 
 <head>
   <meta charset="UTF-8" />
-  <link rel="icon" type="image/svg+xml"
-    href="https://res.cloudinary.com/df2q6gyuq/image/upload/v1733152278/dashme-logo_asszym.png" />
+  <link rel="icon" type="image/svg+xml" href="https://res.cloudinary.com/df2q6gyuq/image/upload/v1733152278/dashme-logo_asszym.png" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DashMe Africa</title>
 
   <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=${import.meta.env.VITE_GTAG_ID}"></script>
   <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag() { dataLayer.push(arguments); }
-    gtag('js', new Date());
-  
-    gtag('config', '${import.meta.env.VITE_GTAG_ID}');
-  </script>
+    if (`${import.meta.env.VITE_GTAG_ID}`) {
+      const gtagId = `${import.meta.env.VITE_GTAG_ID}`;
+      const script = document.createElement("script");
+      script.async = true;
+      script.src = `https://www.googletagmanager.com/gtag/js?id=${gtagId}`;
+      document.head.appendChild(script);
 
-  <title>DashMe Africa</title>
+      script.onload = () => {
+        window.dataLayer = window.dataLayer || [];
+        function gtag() {
+          window.dataLayer.push(arguments);
+        }
+        gtag("js", new Date());
+        gtag("config", gtagId);
+      };
+    }
+  </script>
 </head>
 
 <body>
   <div id="root"></div>
   <a
-			href="https://wa.me/+2349019389042"
-			class="fixed bottom-4 left-4 z-50 bg-green-500 text-white rounded-full p-0 shadow-md hover:bg-green-600"
-			target="_blank"
-		>
-			<img
-				src="/svg/whatsapp.svg"
-				class="size-10 md:size-16"
-				alt="whatsapp-icon"
-			/>
-		</a>
+    href="https://wa.me/+2349019389042"
+    class="fixed bottom-4 left-4 z-50 bg-green-500 text-white rounded-full p-0 shadow-md hover:bg-green-600"
+    target="_blank"
+  >
+    <img src="/svg/whatsapp.svg" class="size-10 md:size-16" alt="whatsapp-icon" />
+  </a>
   <script type="module" src="/src/main.jsx"></script>
-<!--Start of Tawk.to Script-->
-<script type="text/javascript">
-  var Tawk_API = Tawk_API || {},
-    Tawk_LoadStart = new Date();
-  (function () {
-    var s1 = document.createElement("script"),
-      s0 = document.getElementsByTagName("script")[0];
-    s1.async = true;
-    s1.src = "https://embed.tawk.to/677294afaf5bfec1dbe48f90/1igbp9k2d";
-    s1.charset = "UTF-8";
-    s1.setAttribute("crossorigin", "*");
-    s0.parentNode.insertBefore(s1, s0);
-  })();
-</script>
-<!--End of Tawk.to Script-->
+
+  <!-- Start of Tawk.to Script -->
+  <script type="text/javascript">
+    var Tawk_API = Tawk_API || {},
+      Tawk_LoadStart = new Date();
+    (function () {
+      var s1 = document.createElement("script"),
+        s0 = document.getElementsByTagName("script")[0];
+      s1.async = true;
+      s1.src = "https://embed.tawk.to/677294afaf5bfec1dbe48f90/1igbp9k2d";
+      s1.charset = "UTF-8";
+      s1.setAttribute("crossorigin", "*");
+      s0.parentNode.insertBefore(s1, s0);
+    })();
+  </script>
+  <!-- End of Tawk.to Script -->
 </body>
 
 </html>
