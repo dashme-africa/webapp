@@ -8,13 +8,15 @@
   <title>DashMe Africa</title>
 
   <!-- Google tag (gtag.js) -->
-  <script>
-    if (`${import.meta.env.VITE_GTAG_ID}`) {
-      const gtagId = `${import.meta.env.VITE_GTAG_ID}`;
+  <script type="module">
+    if (import.meta.env.VITE_GTAG_ID) {
+      const gtagId = import.meta.env.VITE_GTAG_ID;
       const script = document.createElement("script");
       script.async = true;
       script.src = `https://www.googletagmanager.com/gtag/js?id=${gtagId}`;
       document.head.appendChild(script);
+
+      console.log("gtagId:", gtagId);
 
       script.onload = () => {
         window.dataLayer = window.dataLayer || [];
@@ -24,6 +26,8 @@
         gtag("js", new Date());
         gtag("config", gtagId);
       };
+    } else {
+      console.error("Google Analytics ID is not defined.");
     }
   </script>
 </head>
