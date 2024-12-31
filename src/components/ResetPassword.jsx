@@ -1,26 +1,26 @@
 import React, { useState } from "react";
-import { useSearchParams } from "react-router-dom"; // If using React Router
+import { useSearchParams, useNavigate } from "react-router-dom"; // If using React Router
 import { Alert } from "react-bootstrap";
 const apiURL = import.meta.env.VITE_API_URL;
 
 const ResetPassword = () => {
-    const [searchParams] = useSearchParams();
-    const [password, setPassword] = useState("");
-    const [confirmPassword, setConfirmPassword] = useState("");
-    const [isSubmitting, setIsSubmitting] = useState(false);
-    const [showAlert, setShowAlert] = useState(false);
-    const [alertMessage, setAlertMessage] = useState('');
-    const [alertVariant, setAlertVariant] = useState('success');
-    const displayAlert = (message, variant = 'success', duration = 5000) => {
-        setAlertMessage(message);
-        setAlertVariant(variant);
-        setShowAlert(true);
-        setTimeout(() => {
-            setShowAlert(false);
-        }, duration);
-    };
+const [searchParams] = useSearchParams();
+const [password, setPassword] = useState("");
+const [confirmPassword, setConfirmPassword] = useState("");
+const [isSubmitting, setIsSubmitting] = useState(false);
+const [showAlert, setShowAlert] = useState(false);
+const [alertMessage, setAlertMessage] = useState('');
+const [alertVariant, setAlertVariant] = useState('success');
+const displayAlert = (message, variant = 'success', duration = 5000) => {
+    setAlertMessage(message);
+    setAlertVariant(variant);
+    setShowAlert(true);
+    setTimeout(() => {
+        setShowAlert(false);
+    }, duration);
+};
 
-    const navigate = useNavigate();
+const navigate = useNavigate();
 
     // Get token from the URL
     const token = searchParams.get("token");
