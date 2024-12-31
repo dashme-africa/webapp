@@ -57,10 +57,10 @@ const Footer = () => {
           </Col>
 
           {/* Nigeria Address */}
-          <Col md={3} className="mb-4 mb-md-0">
+          {/* <Col md={3} className="mb-4 mb-md-0">
             <h6 className="fw-bold">{t('footer.phone')}</h6>
             <a href="tel:+2347008675984" className="text-dark">+234 700 867 5984</a><br />
-          </Col>
+          </Col> */}
 
           {/* UK Address */}
           <Col md={3}>
