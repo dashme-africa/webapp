@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Form, Button, Alert, Card } from "react-bootstrap";
 import axios from "axios";
+import {  } from 'react-router-dom';
 
 const apiURL = import.meta.env.VITE_API_URL;
 
@@ -42,6 +43,18 @@ const Checkout = () => {
       setShowAlert(false);
     }, duration);
   };
+  const navigate = useNavigate();
+  const token = localStorage.getItem("token");
+
+  useEffect(() => {
+    if (!token) {
+      displayAlert('Please log in to access the checkout page.', 'danger');
+      const timer = setTimeout(() => {
+        navigate('/login', { replace: true });
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [token, navigate]);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -155,7 +168,7 @@ const Checkout = () => {
 
   const handlePayment = async () => {
     if (!sellerBankDetails) {
-      displayAlert('Seller bank details are required for payment.', 'danger');
+      displayAlert("The seller's bank account details have not been verified", 'danger');
       return;
     }
     if (!rateDetails) {
