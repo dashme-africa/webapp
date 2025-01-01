@@ -122,7 +122,7 @@ import Register from './components/Register';
 import Login from './components/Login';
 import Profile from './components/Profile';
 import AdminLogin from './components/AdminLogin';
-import AdminRegister from './components/AdminRegister';
+// import AdminRegister from './components/AdminRegister';
 import ForgotPwd from './components/ForgotPwd';
 import AdminDashboard from './components/AdminDashboard';
 import EditProduct from './components/EditProduct';
@@ -156,7 +156,7 @@ const App = () => {
         <ErrorBoundary>
           <Routes>
             <Route path="/adminLogin" element={<AdminLogin />} />
-            <Route path="/adminRegister" element={<AdminRegister />} />
+            {/* <Route path="/adminRegister" element={<AdminRegister />} /> */}
             <Route path="/admin/products/edit/:id" element={<EditProduct />} />
 
             <Route
