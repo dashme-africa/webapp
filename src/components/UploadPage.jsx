@@ -121,9 +121,12 @@ const UploadPage = () => {
       if (uploader && !uploader.isVerified) {
         displayAlert(t('upload.verifiedError'), 'danger');
         setIsSubmitting(false);
+        setTimeout(() => {
+          navigate('/profile');
+        }, 2000);
         return;
       }
-
+      
       // Create FormData
       const updatedData = new FormData();
 
