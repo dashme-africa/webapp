@@ -290,11 +290,11 @@ const Profile = () => {
 
           {/* Bank Details Section */}
           <div className="mt-5 text-start">
-            <h5 className="fw-bold mt-4 mb-4">{t("profile.bankDetails")}</h5>
-            <i>DashMe Africa retains 5% commission on your sales price
-            </i>
+            <h5 className="fw-bold mt-4 mb-2">{t("profile.bankDetails")}</h5>
+            <a href="https://docs.google.com/document/d/1AViIna3B8tHU7kk_sEHDod9LanB9MerP/edit#heading=h.gjdgxs"><i>I agree to DashMe Africa T&Cs
+            </i></a>
             <form onSubmit={handleSubmit}>
-              <div className="mb-3">
+              <div className="mb-3 mt-2">
                 <label className="form-label">{t("profile.accountName")}</label>
                 <input
                   type="text"

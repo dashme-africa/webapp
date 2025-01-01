@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Alert } from "react-bootstrap";
@@ -12,6 +12,14 @@ const Login = () => {
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
   const [alertVariant, setAlertVariant] = useState('success');
+  const navigate = useNavigate();
+  // Redirect if already logged in
+  useEffect(() => {
+    if (localStorage.getItem("token")) {
+      navigate("/");
+    }
+  }, [navigate]);
+
   const displayAlert = (message, variant = 'success', duration = 5000) => {
     setAlertMessage(message);
     setAlertVariant(variant);
@@ -20,8 +28,6 @@ const Login = () => {
       setShowAlert(false);
     }, duration);
   };
-
-  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();

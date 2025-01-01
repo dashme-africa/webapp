@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Alert } from "react-bootstrap";
@@ -16,6 +16,14 @@ const Register = () => {
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
   const [alertVariant, setAlertVariant] = useState('success');
+  const navigate = useNavigate();
+
+  // Redirect if already logged in
+  useEffect(() => {
+    if (localStorage.getItem("token")) {
+      navigate("/");
+    }
+  }, [navigate]);
   const displayAlert = (message, variant = 'success', duration = 5000) => {
     setAlertMessage(message);
     setAlertVariant(variant);
@@ -24,7 +32,6 @@ const Register = () => {
       setShowAlert(false);
     }, duration);
   };
-  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -155,7 +162,7 @@ const Register = () => {
               </label>
             </div>
 
-            {/* <div className="mb-3 form-check">
+            <div className="mb-3 form-check">
               <input
                 type="checkbox"
                 className="form-check-input"
@@ -163,9 +170,10 @@ const Register = () => {
                 required
               />
               <label htmlFor="agreeCheckbox" className="form-check-label">
-                I agree to comply to DashMeAfrica 5% commission as capture in T&C
+              <p className="mr-2">I agree to DashMe Africa <a href="https://docs.google.com/document/d/1AViIna3B8tHU7kk_sEHDod9LanB9MerP/edit#heading=h.gjdgxs">T&Cs</a></p>
+              
               </label>
-            </div> */}
+            </div>
 
             {/* Submit Button */}
             <button
@@ -183,7 +191,7 @@ const Register = () => {
             </a>
           </p>
           <p className="text-center">
-            <a className="text-decoration-none text-success" href="/help">
+            <a className="text-decoration-none text-success" href="https://wa.me/message/7J6DBJ5F6ESGB1">
               Having trouble?
             </a>
           </p>

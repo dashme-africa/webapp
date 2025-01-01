@@ -32,7 +32,7 @@ const Footer = () => {
         {/* Bottom Section */}
         <Row className="text-center text-md-start">
           {/* Logo and Social Links */}
-          <Col md={3} className="mb-4 mb-md-0">
+          <Col md={4} className="mb-4 mb-md-0">
             <img
               src="https://res.cloudinary.com/df2q6gyuq/image/upload/v1733432001/Frame_5_2_1_iomywh.png" // Replace with your logo URL
               alt={t('footer.logoAlt')}
@@ -49,7 +49,7 @@ const Footer = () => {
           </Col>
 
           {/* Mission Statement */}
-          <Col md={3} className="mb-4 mb-md-0">
+          <Col md={4} className="mb-4 mb-md-0">
             <h6 className="fw-bold">{t('footer.missionTitle')}</h6>
             <p className="text-muted">
               {t('footer.missionDescription')}
@@ -57,15 +57,16 @@ const Footer = () => {
           </Col>
 
           {/* Nigeria Address */}
-          {/* <Col md={3} className="mb-4 mb-md-0">
-            <h6 className="fw-bold">{t('footer.phone')}</h6>
-            <a href="tel:+2347008675984" className="text-dark">+234 700 867 5984</a><br />
+          {/* <Col md={4} className="mb-4 mb-md-0">
+            <h6 className="fw-bold">{t('footer.waphone')}</h6>
+            
           </Col> */}
 
           {/* UK Address */}
-          <Col md={3}>
+          <Col md={4}>
             <h6 className="fw-bold">{t('footer.email')}</h6>
-            <a href="mailto:talktous@dashmeafrica.com " className="text-dark">talktous@dashmeafrica.com </a>
+            <a href="mailto:talktous@dashmeafrica.com " className="text-dark">talktous@dashmeafrica.com </a><br /><br />
+            <a href="https://wa.me/message/7J6DBJ5F6ESGB1" className="text-dark">Having Issues, Need Help?, Chat On WhatsApp</a>
           </Col>
         </Row>
 

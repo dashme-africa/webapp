@@ -282,6 +282,7 @@ const Checkout = () => {
           >
             {alertMessage}
           </Alert>
+          <i>Our courier services only delivers Intrastate (within the state) at the moment</i>
           <Form>
             <Form.Group className="mb-2">
               <Form.Label>Name</Form.Label>
@@ -340,6 +341,7 @@ const Checkout = () => {
             </Form.Group>
             <Form.Group className="mb-2">
               <Form.Label>Type</Form.Label>
+              <i className="d-inline-block">Our courier services only delivers Intrastate (within the state) at the moment</i>
               <Form.Select value={type} onChange={(e) => setType(e.target.value)}>
                 <option value="">Select Type</option>
                 <option value="interstate">Interstate</option>

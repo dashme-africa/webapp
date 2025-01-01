@@ -24,7 +24,7 @@ const resources = {
                 "logoAlt": "DashMeAfrica Logo",
                 "missionTitle": "Our Mission",
                 "missionDescription": "To become the leading online marketplace where we help you donate or sell your used items at giveaway prices, thereby reducing CO2 emissions through our platform.",
-                "phone": "Phone number",
+                "waphone": "Whatsapp number",
                 "email": "Email",
                 "copyRight": "DashMeAfrica © {{year}}"
             },
@@ -110,7 +110,7 @@ const resources = {
                 "logoAlt": "Logo DashMeAfrica",
                 "missionTitle": "Notre Mission",
                 "missionDescription": "Devenir la principale place de marché en ligne où nous vous aidons à donner ou à vendre vos articles d'occasion à des prix exceptionnels, réduisant ainsi les émissions de CO2 grâce à notre plateforme.",
-                "phone": "Numéro de téléphone",
+                "waphone": "Numéro de téléphone",
                 "email": "E-mail",
                 "copyRight": "DashMeAfrica © {{year}}"
             },
@@ -193,7 +193,7 @@ const resources = {
                 "logoAlt": "Logotipo de DashMeAfrica",
                 "missionTitle": "Nuestra Misión",
                 "missionDescription": "Convertirnos en el principal mercado en línea donde te ayudamos a donar o vender tus artículos usados a precios increíbles, reduciendo así las emisiones de CO2 a través de nuestra plataforma.",
-                "phone": "Número de teléfono",
+                "waphone": "Número de teléfono",
                 "email": "Correo electrónico",
                 "copyRight": "DashMeAfrica © {{year}}"
             },

@@ -161,7 +161,7 @@ const Header = () => {
             </div>
           </Form>
 
-          <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end flex-nowrap overflow-auto pb-2">
+          <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end flex-nowrap overflow-sm-auto pb-2">
             <Nav className="d-flex flex-row align-items-center justify-content-space-between">
               <Nav.Link href="/notifications" className="me-3" onClick={markAllAsRead}>
                 <FaBell size={30} />
@@ -208,12 +208,13 @@ const Header = () => {
                 <Dropdown.Toggle variant="light" className="fs-6 text-dark">
                   {currentLanguage}
                 </Dropdown.Toggle>
-                <Dropdown.Menu>
+                <Dropdown.Menu className="position-absolute">
                   <Dropdown.Item onClick={() => handleLanguageChange('en', 'EN')}>EN</Dropdown.Item>
                   <Dropdown.Item onClick={() => handleLanguageChange('fr', 'FR')}>FR</Dropdown.Item>
                   <Dropdown.Item onClick={() => handleLanguageChange('es', 'ES')}>ES</Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
+
             </Nav>
           </Navbar.Collapse>
         </Container>
