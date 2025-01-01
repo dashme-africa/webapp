@@ -19,11 +19,12 @@ const Register = () => {
   const navigate = useNavigate();
 
   // Redirect if already logged in
-  useEffect(() => {
-    if (localStorage.getItem("token")) {
-      navigate("/");
-    }
-  }, [navigate]);
+  // useEffect(() => {
+  //   if (localStorage.getItem("token")) {
+  //     navigate("/");
+  //   }
+  // }, [navigate]);
+  
   const displayAlert = (message, variant = 'success', duration = 5000) => {
     setAlertMessage(message);
     setAlertVariant(variant);
@@ -82,7 +83,7 @@ const Register = () => {
           </Alert>
           <form onSubmit={handleSubmit}>
             {/* Full Name */}
-            <div className="mb-3">
+            <div className="mb-4">
               <input
                 type="text"
                 name="fullName"
@@ -95,7 +96,7 @@ const Register = () => {
             </div>
 
             {/* Username */}
-            <div className="mb-3">
+            <div className="mb-4">
               <input
                 type="text"
                 name="username"
@@ -111,7 +112,7 @@ const Register = () => {
             </div>
 
             {/* Email */}
-            <div className="mb-3">
+            <div className="mb-4">
               <input
                 type="email"
                 name="email"
@@ -124,7 +125,7 @@ const Register = () => {
             </div>
 
             {/* Password */}
-            <div className="mb-3">
+            <div className="mb-4">
               <input
                 type="password"
                 name="password"
@@ -137,7 +138,7 @@ const Register = () => {
             </div>
 
             {/* Confirm Password */}
-            <div className="mb-3">
+            <div className="mb-4">
               <input
                 type="password"
                 name="confirmPassword"
