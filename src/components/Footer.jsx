@@ -66,7 +66,7 @@ const Footer = () => {
           <Col md={4}>
             <h6 className="fw-bold">{t('footer.email')}</h6>
             <a href="mailto:talktous@dashmeafrica.com " className="text-dark">talktous@dashmeafrica.com </a><br /><br />
-            <a href="https://wa.me/message/7J6DBJ5F6ESGB1" className="text-dark">Having Issues, Need Help?, Chat On WhatsApp</a>
+            <a href="https://wa.me/message/7J6DBJ5F6ESGB1" className="text-dark ">Having Issues, Need Help? <br />Chat On WhatsApp</a>
           </Col>
         </Row>
 
