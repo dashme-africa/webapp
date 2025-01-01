@@ -9,11 +9,11 @@ const HeroPage = ({ setSelectedCategory }) => {
 
   const screenSize = window.innerWidth; // Example logic
   const getBackgroundImage = () => {
-    if (screenSize <= 600) {
+    if (screenSize <= 640) {
       return 'https://res.cloudinary.com/dsa52qglg/image/upload/v1735752185/360px_X_640_20241231_191314_0000_y1twwu.png';
     } else if (screenSize <= 1024) {
       return 'https://res.cloudinary.com/dsa52qglg/image/upload/v1735752228/768_X_1024_ucl80s.png';
-    } else if (screenSize <= 2000) {
+    } else if (screenSize <= 2560) {
       return 'https://res.cloudinary.com/dsa52qglg/image/upload/v1735752226/1440_X_900_20241231_200134_0000_oqhlq3.png';
     }
     // Add more conditions as needed
