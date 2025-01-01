@@ -17,13 +17,6 @@ const Register = () => {
   const [alertMessage, setAlertMessage] = useState('');
   const [alertVariant, setAlertVariant] = useState('success');
   const navigate = useNavigate();
-
-  // Redirect if already logged in
-  // useEffect(() => {
-  //   if (localStorage.getItem("token")) {
-  //     navigate("/");
-  //   }
-  // }, [navigate]);
   
   const displayAlert = (message, variant = 'success', duration = 5000) => {
     setAlertMessage(message);
@@ -50,6 +43,13 @@ const Register = () => {
     if (formData.password !== formData.confirmPassword) {
       displayAlert('Passwords do not match.', 'danger');
       return
+    }
+
+    // Check if username looks like an email address
+    const usernameLooksLikeEmail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(formData.username);
+    if (usernameLooksLikeEmail) {
+      displayAlert('Username cannot be an email address.', 'danger');
+      return;
     }
 
     console.log(formData)
