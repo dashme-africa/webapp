@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Form, Button, Container, Alert } from 'react-bootstrap';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
+
 const apiURL = import.meta.env.VITE_API_URL;
 
 const AdminLogin = () => {
@@ -12,6 +14,9 @@ const AdminLogin = () => {
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
   const [alertVariant, setAlertVariant] = useState('success');
+  const [passwordType, setPasswordType] = useState('password');
+  const [icon, setIcon] = useState(<FaEyeSlash />);
+
   const displayAlert = (message, variant = 'success', duration = 5000) => {
     setAlertMessage(message);
     setAlertVariant(variant);
@@ -21,10 +26,19 @@ const AdminLogin = () => {
     }, duration);
   };
 
+  const togglePassword = () => {
+    if (passwordType === 'password') {
+      setPasswordType('text');
+      setIcon(<FaEye />);
+    } else {
+      setPasswordType('password');
+      setIcon(<FaEyeSlash />);
+    }
+  };
+
   const handleLogin = async (e) => {
     e.preventDefault();
     setError('');
-
     try {
       const { data } = await axios.post(`${apiURL}/admin/login`, { email, password });
       localStorage.setItem('adminToken', data.token);
@@ -47,27 +61,17 @@ const AdminLogin = () => {
         </Alert>
         <Form.Group className="mb-3">
           <Form.Label>Email Address</Form.Label>
-          <Form.Control
-            type="email"
-            placeholder="Enter email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
+          <Form.Control type="email" placeholder="Enter email" value={email} onChange={(e) => setEmail(e.target.value)} required />
         </Form.Group>
-        <Form.Group className="mb-3">
+        <Form.Group className="mb-3" >
           <Form.Label>Password</Form.Label>
-          <Form.Control
-            type="password"
-            placeholder="Enter password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+          <div className="position-relative">
+          <Form.Control type={passwordType} placeholder="Enter password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+          <span className="position-absolute p-2 top-50 end-0 translate-middle-y cursor-pointer" onClick={togglePassword}>{icon}</span>
+          </div>
         </Form.Group>
-        <Button type="submit" variant="success" className="w-100">
-          Login
-        </Button>
+
+        <Button type="submit" variant="success" className="w-100"> Login </Button>
       </Form>
     </Container>
   );
