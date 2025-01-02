@@ -197,7 +197,7 @@ const Register = () => {
             {/* Submit Button */}
             <button
               type="submit"
-              className="btn btn-success mt-3 w-100"
+              className="btn btn-success mt-4 w-100"
               disabled={isSubmitting}
             >
               {isSubmitting ? "Registering..." : "Register"}
