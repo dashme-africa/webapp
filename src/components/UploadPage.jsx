@@ -19,6 +19,8 @@ const UploadPage = () => {
     priceCategory: '',
     location: '',
     image: null,
+    specification: "",  
+    condition: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [uploader, setUploader] = useState(null);
@@ -203,6 +205,8 @@ const UploadPage = () => {
         images: [],
         video: null,
         primaryImageIndex: null,
+        specification: "",  
+        condition: "",
       });
 
       // Show success message
@@ -383,6 +387,19 @@ const UploadPage = () => {
               ></textarea>
             </div>
 
+            {/* Specification */}
+            <div className="mb-3">
+              <label className="form-label">Specification (if any defects, kindly state) </label>
+              <textarea
+                className="form-control"
+                name="specification"
+                value={formData.specification}
+                onChange={handleInputChange}
+                placeholder="Enter product specification"
+                required
+              ></textarea>
+            </div>
+
             {/* Category */}
             <div className="mb-3">
               <label className="form-label">{t('upload.itemCategory')}</label>
@@ -448,6 +465,29 @@ const UploadPage = () => {
                     <option value="500-15000">N500 - N15,000</option>
                     <option value="15000-25000">N15,000 - N25,000</option>
                     <option value="25000-50000">N25,000 - N50,000</option>
+                  </>
+                </select>
+              </div>
+            )}
+
+            {/* Condition */}
+            {activeTab === 'sell' && (
+              <div className="mb-3">
+                <label className="form-label">Condition</label>
+                <select
+                  className="form-select"
+                  name="condition"
+                  value={formData.condition}
+                  onChange={handleInputChange}
+                  required
+                >
+                  <option value="" disabled>
+                    {t('upload.selectCategory')}
+                  </option>
+                  <>
+                    <option value="New">New</option>
+                    <option value="Fairly Used">Fairly Used</option>
+                    <option value="Refurbished">Refurbished</option>
                   </>
                 </select>
               </div>

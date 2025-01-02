@@ -61,7 +61,7 @@ const resources = {
                 "myProducts": "My Products",
                 "enterTitle": "Enter title",
                 "description": "Description",
-                "enterDescription": "Enter description",
+                "enterDescription": "Enter product description", //not updated
                 "itemCategory": "Item Category",
                 "selectCategory": "Select category",
                 "price": "Price",

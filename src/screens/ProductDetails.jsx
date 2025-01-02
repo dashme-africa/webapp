@@ -118,6 +118,12 @@ const ProductDetails = () => {
               </Badge>
             </p>
             <p>
+              <strong>Condition: </strong>
+              <Badge>
+                {product.condition}
+              </Badge>
+            </p>
+            <p>
               <strong>Description: </strong>
               {product.description}
             </p>
@@ -135,7 +141,6 @@ const ProductDetails = () => {
                 Message Profile<br />
               </Button>
               </div>
-
               {product.tag === 'For sale' ? (
                 <Button variant="success" className="ms-2 px-4" onClick={buyNowHandler}>Buy Now</Button>
               ) : (
