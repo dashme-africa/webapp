@@ -130,8 +130,7 @@ const ProductDetails = () => {
 
             <div className="d-flex  mt-4">
               <div className='d-flex flex-column'>
-
-                <i>*Coming Soon...</i>
+                <i className='text-danger'>*Coming Soon...</i>
               <Button variant="secondary" className="me-3 disabled">
                 Message Profile<br />
               </Button>
