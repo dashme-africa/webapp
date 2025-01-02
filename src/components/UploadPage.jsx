@@ -47,10 +47,15 @@ const UploadPage = () => {
         } catch (error) {
           console.error('Failed to fetch uploader info:', error);
         }
-      }
-    };
-    fetchUploader();
-  }, []);
+      } else {
+        displayAlert('Please log in to access the checkout page.', 'danger');
+        const timer = setTimeout(() => {
+          navigate('/login', { replace: true });
+        }, 2000);
+        return () => clearTimeout(timer);
+      };
+      fetchUploader();
+    }, [token, navigate]);
 
 
   const handleTabChange = (tab) => {
@@ -117,6 +122,17 @@ const UploadPage = () => {
     }
 
     try {
+
+        // Verify uploader profile completeness
+      if (!uploader || !uploader.name || !uploader.email || !uploader.phone || !uploader.address) {
+        displayAlert('Please complete your profile before uploading a product.', 'danger');
+        setIsSubmitting(false);
+        setTimeout(() => {
+          navigate('/profile');
+        }, 2000);
+        return;
+      }
+
       // Verify uploader
       if (uploader && !uploader.isVerified) {
         displayAlert(t('upload.verifiedError'), 'danger');
