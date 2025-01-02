@@ -2,7 +2,10 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Alert } from "react-bootstrap";
+import ReCAPTCHA from "react-google-recaptcha";
+
 const apiURL = import.meta.env.VITE_API_URL;
+const siteKey = "6LcNPqwqAAAAAGaqwfOrxhB8t8av07unRcvt-UfC"; // Google reCAPTCHA site key
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -12,6 +15,7 @@ const Register = () => {
     password: "",
     confirmPassword: "",
   });
+  const [captchaToken, setCaptchaToken] = useState(null); // Store the reCAPTCHA token
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
@@ -32,8 +36,17 @@ const Register = () => {
     setFormData({ ...formData, [name]: value });
   };
 
+  const handleCaptcha = (token) => {
+    setCaptchaToken(token); // Store reCAPTCHA token on verification
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!captchaToken) {
+      displayAlert("Please complete the reCAPTCHA verification.", "danger");
+      return;
+    }
 
     if (!formData.password || !formData.confirmPassword || !formData.fullName || !formData.username || !formData.email) {
       displayAlert('All fields are required', 'danger');
@@ -52,12 +65,13 @@ const Register = () => {
       return;
     }
 
-    console.log(formData)
     setIsSubmitting(true);
+
     try {
       const response = await axios.post(
         `${apiURL}/users/register`,
-        formData
+        formData,
+        captchaToken, // Include captchaToken in the request
       );
 
       displayAlert('Registration Successful.');
@@ -74,6 +88,7 @@ const Register = () => {
 
   return (
     <div className="container my-5">
+      <div className="g-recaptcha" data-sitekey="6LcNPqwqAAAAAGaqwfOrxhB8t8av07unRcvt-UfC"></div>
       <div className="row g-0">
         {/* Left Column: Form */}
         <div className="col-md-6 p-5 bg-light">
@@ -175,6 +190,9 @@ const Register = () => {
               
               </label>
             </div>
+
+            {/* Add reCAPTCHA */}
+            <ReCAPTCHA sitekey={siteKey} onChange={handleCaptcha} />
 
             {/* Submit Button */}
             <button

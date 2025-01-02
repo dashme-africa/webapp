@@ -75,6 +75,7 @@ const Footer = () => {
         <Row>
           <Col className="text-center text-muted">
             <small>DashMeAfrica &copy; {currentYear}</small>
+            <p>An Andrexa Global Product</p>
           </Col>
         </Row>
       </Container>
