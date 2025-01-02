@@ -52,10 +52,12 @@ const UploadPage = () => {
         const timer = setTimeout(() => {
           navigate('/login', { replace: true });
         }, 2000);
+
         return () => clearTimeout(timer);
+        }
       };
       fetchUploader();
-    }, [token, navigate]);
+    }, [navigate]);
 
 
   const handleTabChange = (tab) => {
