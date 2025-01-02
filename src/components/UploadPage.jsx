@@ -48,7 +48,7 @@ const UploadPage = () => {
           console.error('Failed to fetch uploader info:', error);
         }
       } else {
-        displayAlert('Please log in to access the checkout page.', 'danger');
+        displayAlert('Please log in to access the upload page.', 'danger');
         const timer = setTimeout(() => {
           navigate('/login', { replace: true });
         }, 2000);
