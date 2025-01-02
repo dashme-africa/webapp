@@ -128,13 +128,17 @@ const ProductDetails = () => {
               <h4 className="text-primary">Donate</h4>
             )}
 
-            <div className="d-flex mt-4">
-              <Button variant="secondary" className="me-2 disabled">
-                Message Profile
+            <div className="d-flex  mt-4">
+              <div className='d-flex flex-column'>
+
+                <i>*Coming Soon...</i>
+              <Button variant="secondary" className="me-3 disabled">
+                Message Profile<br />
               </Button>
+              </div>
 
               {product.tag === 'For sale' ? (
-                <Button variant="success" className="ms-2" onClick={buyNowHandler}>Buy Now</Button>
+                <Button variant="success" className="ms-2 px-4" onClick={buyNowHandler}>Buy Now</Button>
               ) : (
                 <Button variant="success" className="ms-2" onClick={buyNowHandler}>Receive Now</Button>
               )}

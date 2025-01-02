@@ -1,5 +1,6 @@
 import { Card, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import { FaUser } from 'react-icons/fa';
 // import { FaHeart } from 'react-icons/fa';
 import { useTranslation } from 'react-i18next';
 
@@ -10,6 +11,27 @@ const Product = ({ product }) => {
   return (
     <Card className="my-4 border-0">
       {/* Wrap image in Link for navigation */}
+      <div className="d-flex gap-2 align-items-baseline">
+        {product.uploader.profilePicture ? (
+          <img
+            src={product.uploader.profilePicture}
+            alt="sellerProfile"
+            className="rounded-circle"
+            style={{
+              width: '40px',
+              height: '40px',
+              objectFit: 'cover',
+            }}
+          />
+        ) : (
+          <div className="rounded-circle bg-light d-flex justify-content-center border align-items-center" style={{ width: '35px', height: '35px' }}>
+            <FaUser size={20} />
+          </div>
+        )}
+        <p className="text-center mt-2">
+          {product.uploader.username || 'Unknown Seller'}
+        </p>
+      </div>
       <Link to={`/product/${product._id}`}>
         {/* Enforce consistent image height */}
         <Card.Img src={imageUrl} variant="top" style={{ height: '200px', objectFit: 'cover' }} />

@@ -286,11 +286,11 @@ const Checkout = () => {
           <Form>
             <Form.Group className="mb-2">
               <Form.Label>Name</Form.Label>
-              <Form.Control value={deliveryDetails.toAddress.name} readOnly />
+              <Form.Control value={deliveryDetails.toAddress.name} placeholder="Only registered users can checkout." readOnly />
             </Form.Group>
             <Form.Group className="mb-2">
               <Form.Label>Email</Form.Label>
-              <Form.Control value={deliveryDetails.toAddress.email} readOnly />
+              <Form.Control value={deliveryDetails.toAddress.email} placeholder="Only registered users can checkout" readOnly />
             </Form.Group>
             {/* <Form.Group className="mb-2">
               <Form.Label>Address</Form.Label>
