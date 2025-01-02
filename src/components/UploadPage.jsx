@@ -44,6 +44,7 @@ const UploadPage = () => {
             headers: { Authorization: `Bearer ${token}` },
           });
           setUploader(response.data);
+          console.log(response.data);
         } catch (error) {
           console.error('Failed to fetch uploader info:', error);
         }
@@ -126,7 +127,7 @@ const UploadPage = () => {
     try {
 
         // Verify uploader profile completeness
-      if (!uploader || !uploader.name || !uploader.email || !uploader.phone || !uploader.address) {
+      if (!uploader || !uploader.fullName || !uploader.email || !uploader.phoneNumber || !uploader.address) {
         displayAlert('Please complete your profile before uploading a product.', 'danger');
         setIsSubmitting(false);
         setTimeout(() => {
