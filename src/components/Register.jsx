@@ -67,11 +67,12 @@ const Register = () => {
 
     setIsSubmitting(true);
 
+    const data = { ...formData, captchaToken }; // Include captchaToken in the data
+
     try {
       const response = await axios.post(
         `${apiURL}/users/register`,
-        formData,
-        captchaToken, // Include captchaToken in the request
+        data,
       );
 
       displayAlert('Registration Successful.');

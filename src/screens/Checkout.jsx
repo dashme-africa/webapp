@@ -45,15 +45,15 @@ const Checkout = () => {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
 
-  useEffect(() => {
-    if (!token) {
-      displayAlert('Please log in to access the checkout page.', 'danger');
-      const timer = setTimeout(() => {
-        navigate('/login', { replace: true });
-      }, 2000);
-      return () => clearTimeout(timer);
-    }
-  }, [token, navigate]);
+  // useEffect(() => {
+  //   if (!token) {
+  //     displayAlert('Please log in to access the checkout page.', 'danger');
+  //     const timer = setTimeout(() => {
+  //       navigate('/login', { replace: true });
+  //     }, 2000);
+  //     return () => clearTimeout(timer);
+  //   }
+  // }, [token, navigate]);
 
   useEffect(() => {
     const fetchUser = async () => {
