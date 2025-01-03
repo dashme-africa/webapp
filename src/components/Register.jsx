@@ -3,9 +3,11 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Alert } from "react-bootstrap";
 import ReCAPTCHA from "react-google-recaptcha";
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 const apiURL = import.meta.env.VITE_API_URL;
 const siteKey = "6LcNPqwqAAAAAGaqwfOrxhB8t8av07unRcvt-UfC"; // Google reCAPTCHA site key
+
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -20,8 +22,13 @@ const Register = () => {
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
   const [alertVariant, setAlertVariant] = useState('success');
+  const [passwordType, setPasswordType] = useState('password');
+  const [icon, setIcon] = useState(<FaEyeSlash />);
+  const [confirmPasswordType, setConfirmPasswordType] = useState('password');
+  const [confirmPasswordIcon, setConfirmPasswordIcon] = useState(<FaEyeSlash />);
+
   const navigate = useNavigate();
-  
+
   const displayAlert = (message, variant = 'success', duration = 5000) => {
     setAlertMessage(message);
     setAlertVariant(variant);
@@ -30,6 +37,25 @@ const Register = () => {
       setShowAlert(false);
     }, duration);
   };
+  const togglePassword = () => {
+    if (passwordType === 'password') {
+      setPasswordType('text');
+      setIcon(<FaEye />);
+    } else {
+      setPasswordType('password');
+      setIcon(<FaEyeSlash />);
+    }
+  };
+  const toggleConfirmPassword = () => {
+    if (confirmPasswordType === 'password') {
+      setConfirmPasswordType('text');
+      setConfirmPasswordIcon(<FaEye />);
+    } else {
+      setConfirmPasswordType('password');
+      setConfirmPasswordIcon(<FaEyeSlash />);
+    }
+  };
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -139,9 +165,9 @@ const Register = () => {
             </div>
 
             {/* Password */}
-            <div className="mb-4">
+            <div className="mb-4 position-relative">
               <input
-                type="password"
+                type={passwordType}
                 name="password"
                 className="form-control"
                 value={formData.password}
@@ -149,12 +175,13 @@ const Register = () => {
                 placeholder="Password"
                 required
               />
+              <span className="position-absolute p-2 top-50 end-0 translate-middle-y cursor-pointer" onClick={togglePassword}>{icon}</span>
             </div>
 
             {/* Confirm Password */}
-            <div className="mb-4">
+            <div className="mb-4 position-relative">
               <input
-                type="password"
+                type={confirmPasswordType}
                 name="confirmPassword"
                 className="form-control"
                 value={formData.confirmPassword}
@@ -162,7 +189,14 @@ const Register = () => {
                 placeholder="Confirm Password"
                 required
               />
+              <span
+                className="position-absolute p-2 top-50 end-0 translate-middle-y cursor-pointer"
+                onClick={toggleConfirmPassword}
+              >
+                {confirmPasswordIcon}
+              </span>
             </div>
+
 
             {/* Terms */}
             <div className="mb-3 form-check">
@@ -185,8 +219,8 @@ const Register = () => {
                 required
               />
               <label htmlFor="agreeCheckbox" className="form-check-label">
-              <p className="mr-2">I agree to DashMe Africa <a href="https://docs.google.com/document/d/1AViIna3B8tHU7kk_sEHDod9LanB9MerP/edit#heading=h.gjdgxs">T&Cs</a></p>
-              
+                <p className="mr-2">I agree to DashMe Africa <a href="https://docs.google.com/document/d/1AViIna3B8tHU7kk_sEHDod9LanB9MerP/edit#heading=h.gjdgxs">T&Cs</a></p>
+
               </label>
             </div>
 

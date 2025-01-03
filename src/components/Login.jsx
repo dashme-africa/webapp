@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Alert } from "react-bootstrap";
 const apiURL = import.meta.env.VITE_API_URL;
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -12,6 +13,8 @@ const Login = () => {
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
   const [alertVariant, setAlertVariant] = useState('success');
+  const [passwordType, setPasswordType] = useState('password');
+  const [icon, setIcon] = useState(<FaEyeSlash />);
   const navigate = useNavigate();
   // Redirect if already logged in
   useEffect(() => {
@@ -27,6 +30,16 @@ const Login = () => {
     setTimeout(() => {
       setShowAlert(false);
     }, duration);
+  };
+
+  const togglePassword = () => {
+    if (passwordType === 'password') {
+      setPasswordType('text');
+      setIcon(<FaEye />);
+    } else {
+      setPasswordType('password');
+      setIcon(<FaEyeSlash />);
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -85,19 +98,22 @@ const Login = () => {
             </div>
 
             {/* Password */}
-            <div className="mb-3">
+            <div className="mb-3 ">
               <label htmlFor="password" className="form-label">
                 Password
               </label>
-              <input
-                type="password"
-                id="password"
-                className="form-control"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Password"
-                required
-              />
+              <div className="position-relative">
+                <input
+                  type={passwordType}
+                  id="password"
+                  className="form-control"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Password"
+                  required
+                />
+                <span className="position-absolute p-2 top-50 end-0 translate-middle-y cursor-pointer" onClick={togglePassword}>{icon}</span>
+              </div>
             </div>
 
             {/* Submit Button */}
