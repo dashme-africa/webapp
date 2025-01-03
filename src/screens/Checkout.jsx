@@ -121,8 +121,14 @@ const Checkout = () => {
     const validatePayload = (payload) => {
       const { toAddress } = payload;
       if (!toAddress?.name) {
-        return "Name is required.";
-      }
+        setTimeout(() => {
+          navigate('/login');
+        }, 2000); // redirect after 2 seconds
+        return "Name is required. Please login to proceed.";
+      }      
+      if (!toAddress?.name) {
+        return navigate('/login');
+      }      
       if (!toAddress?.email) {
         return "Email is required.";
       }
