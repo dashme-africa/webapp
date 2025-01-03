@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import { Form, Button, Alert, Card } from "react-bootstrap";
+import { useLocation, useNavigate, Link } from "react-router-dom";
+import { Form, Button, Alert, Card  } from "react-bootstrap";
 import axios from "axios";
-import {  } from 'react-router-dom';
 
 const apiURL = import.meta.env.VITE_API_URL;
 
@@ -282,12 +281,14 @@ const Checkout = () => {
           >
             {alertMessage}
           </Alert>
-          <i>Our courier services only delivers Intrastate (within the state) at the moment</i>
+          <i>Having Troubles During Checkout, click either live chat or <a href="https://wa.me/message/7J6DBJ5F6ESGB1" className="text-dark ">send whatsapp</a></i>
+          
           <Form>
-            <Form.Group className="mb-2">
+            <Form.Group className="mb-2 mt-3">
               <Form.Label>Name</Form.Label>
               <Form.Control value={deliveryDetails.toAddress.name} placeholder="Only registered users can checkout." readOnly />
             </Form.Group>
+            {!token && (<p>Please register <Link to="/register">here</Link></p>)}
             <Form.Group className="mb-2">
               <Form.Label>Email</Form.Label>
               <Form.Control value={deliveryDetails.toAddress.email} placeholder="Only registered users can checkout" readOnly />
