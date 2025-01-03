@@ -216,6 +216,7 @@ const UploadPage = () => {
       setTimeout(() => navigate('/'), 3000);
 
     } catch (error) {
+      console.error('An unexpected error occurred:', error);
       if (error.response) {
         displayAlert(`${error.response.data.message}`, 'danger');
       } else {
