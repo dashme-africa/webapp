@@ -71,9 +71,7 @@ const Register = () => {
 
     try {
       const response = await axios.post(
-        `${apiURL}/users/register`,
-        data,
-      );
+        `${apiURL}/users/register`, data);
 
       displayAlert('Registration Successful.');
       setTimeout(() => {
