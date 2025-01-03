@@ -40,7 +40,7 @@ const resources = {
                 "bio": "Bio",
                 "saveChanges": "Save Changes",
                 "uploadPicture": "Upload Picture",
-                "bankDetails": "Bank Details",
+                "bankDetails": "Verify Bank Details", //not updated
                 "accountName": "Account Name",
                 "accountNumber": "Account Number",
                 "bankName": "Bank Name",

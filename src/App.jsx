@@ -138,6 +138,7 @@ import NotificationPage from './components/NotificationPage';
 import AdminNotification from './components/AdminNotification';
 import useNotifications from './hooks/useNotifications';
 import ResetPassword from "./components/ResetPassword";
+import AccountSummary from './components/AccountSummary';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -206,6 +207,7 @@ const App = () => {
             <Route path="/payment-history" element={<Layout><PaymentHistory /></Layout>} />
             <Route path="/notifications" element={<Layout><NotificationPage /></Layout>} />
             <Route path="/reset-password" element={<ResetPassword />} />
+            <Route path="/account-summary" element={<Layout><AccountSummary /></Layout>} />
           </Routes>
         </ErrorBoundary>
       </Router>
