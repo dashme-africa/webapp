@@ -161,8 +161,9 @@ const Header = () => {
             </div>
           </Form>
 
-          <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end flex-nowrap overflow-sm-auto pb-2">
+          <Navbar.Collapse id="basic-navbar-nav" className="justify-content-end flex-nowrap overflow-auto pb-2">
             <Nav className="d-flex flex-row align-items-center justify-content-space-between">
+
               <Nav.Link href="/notifications" className="me-3" onClick={markAllAsRead}>
                 <FaBell size={30} />
                 {unreadCount > 0 && (
@@ -174,7 +175,7 @@ const Header = () => {
                 <FaHeart size={30} />
               </Nav.Link> */}
 
-              <Nav.Link href="/profile" className="me-5 d-flex align-items-center">
+              <Nav.Link href="/profile" className="me-3 d-flex align-items-center">
                 {loading ? (
                   <span>Loading...</span>
                 ) : userData?.profilePicture ? (
@@ -187,7 +188,7 @@ const Header = () => {
                 ) : (
                   <FaUser size={30} />
                 )}
-                <span>&nbsp;{userData?.username}</span>
+                <span style={{ whiteSpace: 'nowrap' }}>&nbsp;{userData?.username}</span>
               </Nav.Link>
 
               <Nav.Link href="/upload" className="me-4 fs-6 text-dark">
@@ -217,6 +218,8 @@ const Header = () => {
 
             </Nav>
           </Navbar.Collapse>
+
+          
         </Container>
       </Navbar>
       <Alert variant={alertVariant} show={showAlert}>
