@@ -100,12 +100,7 @@ const ForgotPassword = () => {
 
           {/* Help Text */}
           <p className="text-center mt-3">
-            <a href="/help" className="text-success text-decoration-none">
-              Having trouble?
-            </a> &nbsp;
-            <a href="/login" className="text-success text-decoration-none">
-              Go back
-            </a>
+            <p>Having Issues, Need Help? <a href="https://wa.me/message/7J6DBJ5F6ESGB1" className="text-success">Chat On WhatsApp</a></p>
           </p>
         </div>
 
