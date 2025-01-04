@@ -341,6 +341,7 @@ const AccountSummary = () => {
                           name="phoneNumber"
                           className="form-control"
                           value={formData.phoneNumber}
+                          placeholder="e.g. 08012345678"
                           onChange={handleChange} />
                       </Form.Group>
                     </Col>

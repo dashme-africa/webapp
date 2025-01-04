@@ -348,6 +348,7 @@ const Checkout = () => {
               <Form.Label>Phone</Form.Label>
               <Form.Control
                 value={deliveryDetails.toAddress.phone}
+                placeholder="e.g. 08012345678"
                 onChange={(e) =>
                   setDeliveryDetails((prev) => ({
                     ...prev,
