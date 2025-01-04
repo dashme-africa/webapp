@@ -171,6 +171,8 @@ const Checkout = () => {
     }));
   };
 
+  const total = product?.price * quantity + (rateDetails?.amount || 0);
+
   const handlePayment = async () => {
     if (!sellerBankDetails) {
       displayAlert("The seller's bank account details have not been verified", 'danger');
@@ -180,6 +182,12 @@ const Checkout = () => {
       displayAlert('Calculate Rate before proceeding to checkout', 'danger');
       return;
     }
+
+    const productAmount = product.price * quantity;
+  const shippingAmount = rateDetails.amount;
+  const totalAmount = productAmount + shippingAmount;
+  const platformCharge = Math.floor((10 / 100) * productAmount) + shippingAmount;
+
 
     try {
       // Initiating subaccount creation for the seller
@@ -195,10 +203,13 @@ const Checkout = () => {
       // Initializing the transaction with metadata
       const transactionResponse = await axios.post(`${apiURL}/payment/initialize-transaction`, {
         email: user.email,
-        amount: total * 100,
-        subaccount: subaccountCode,
-        redis_key: rateDetails.redis_key, 
-        rate_id: rateDetails.courier.id,     
+      amount: totalAmount * 100, // convert to kobo
+      subaccount: subaccountCode,
+      transaction_charge: platformCharge * 100, // convert to kobo
+      redis_key: rateDetails.redis_key,
+      rate_id: rateDetails.courier.id,
+      rate_amount: rateDetails.amount,
+
       });
 
 
@@ -266,7 +277,6 @@ const Checkout = () => {
     }
   };
 
-  const total = product?.price * quantity + (rateDetails?.amount || 0);
 
   return (
     <div className="container my-5">

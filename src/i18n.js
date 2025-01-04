@@ -48,7 +48,7 @@ const resources = {
                 "verified": "Verified",
                 "profileUpdated": "Profile updated successfully.",
                 "failedToUpdate": "Failed to update profile.",
-                "verifyBankDetails": "Please verify your bank details before saving. Redir",
+                "verifyBankDetails": "Please verify your bank details to complete profile info.", //not updated
                 "bankVerified": "Bank details verified successfully. Save changes to update profile", //not updated 
                 "bankVerificationFailed": "Failed to verify bank details.",
                 "loading": "Loading...",

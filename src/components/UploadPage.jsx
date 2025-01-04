@@ -21,6 +21,7 @@ const UploadPage = () => {
     image: null,
     specification: "",  
     condition: "",
+    images: [],  
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [uploader, setUploader] = useState(null);
@@ -36,7 +37,6 @@ const UploadPage = () => {
     }, duration);
   };
 
-  // Fetch uploader info on component mount
   useEffect(() => {
     const fetchUploader = async () => {
       const token = localStorage.getItem('token');
@@ -46,7 +46,26 @@ const UploadPage = () => {
             headers: { Authorization: `Bearer ${token}` },
           });
           setUploader(response.data);
+
           console.log(response.data);
+
+          if (!response.data.fullName ||
+              !response.data.email ||
+              !response.data.address ||
+              !response.data.bio ||
+              !response.data.phoneNumber) {
+              displayAlert('Please complete your profile info to upload a product', 'danger');
+              setTimeout(() => {
+                    navigate('/profile');  // Redirect to profile if bank is not verified
+                  }, 3000);
+            } else if (!response.data.isVerified) {
+            displayAlert('Please verify your bank details to upload a product.', 'danger');
+            setTimeout(() => {
+              navigate('/profile');  // Redirect to profile if bank is not verified
+            }, 3000);
+          } else {
+            displayAlert('Reach a wider audience! Upload your product now.', 'success');
+          }
         } catch (error) {
           console.error('Failed to fetch uploader info:', error);
         }
@@ -55,42 +74,13 @@ const UploadPage = () => {
         const timer = setTimeout(() => {
           navigate('/login', { replace: true });
         }, 2000);
-
         return () => clearTimeout(timer);
-        }
-      };
-      fetchUploader();
-    }, [navigate]);
+      }
+    };
+    fetchUploader();
+  }, [navigate]);
 
 
-  const handleTabChange = (tab) => {
-    setActiveTab(tab);
-    setFormData({
-      title: '',
-      description: '',
-      category: '',
-      price: '',
-      priceCategory: '',
-      location: '',
-      image: null,
-    });
-  };
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
-
-  const handleImageChange = (e) => {
-    const files = Array.from(e.target.files);
-    setFormData((prevData) => ({
-      ...prevData,
-      images: [...(prevData.images || []), ...files],
-    }));
-  };
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -130,7 +120,7 @@ const UploadPage = () => {
 
         // Verify uploader profile completeness
       if (!uploader || !uploader.fullName || !uploader.email || !uploader.phoneNumber || !uploader.address) {
-        displayAlert('Please complete your profile before uploading a product.', 'danger');
+        displayAlert('Please complete your profile info before uploading a product.', 'danger');
         setIsSubmitting(false);
         setTimeout(() => {
           navigate('/profile');
@@ -163,14 +153,14 @@ const UploadPage = () => {
       });
 
 
+
       // Add the primary image index
-      if (formData.primaryImageIndex !== null && formData.primaryImageIndex >= 0) {
-        updatedData.append('primaryImageIndex', formData.primaryImageIndex);
-      } else {
+      if (formData.primaryImageIndex === null || formData.primaryImageIndex < 0) {
         displayAlert(t('upload.selectPrimaryImage'), 'danger');
         setIsSubmitting(false);
         return;
       }
+      
 
       // Append uploader ID if available
       if (uploader) {
@@ -227,7 +217,35 @@ const UploadPage = () => {
     }
   };
 
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+    setFormData({
+      title: '',
+      description: '',
+      category: '',
+      price: '',
+      priceCategory: '',
+      location: '',
+      image: null,
+    });
+  };
 
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleImageChange = (e) => {
+    const files = Array.from(e.target.files);
+    setFormData((prevData) => ({
+      ...prevData,
+      images: [...(prevData.images || []), ...files],
+    }));
+  };
+  
   const handleRemoveImage = (index) => {
     setFormData((prevData) => {
       const updatedImages = [...prevData.images];
@@ -347,6 +365,7 @@ const UploadPage = () => {
               </i>
             </div>
 
+            {/* Video Upload */}
             <div className="mb-3">
               <label htmlFor="videoUpload" className="form-label">Upload a Product Video</label>
               <input
