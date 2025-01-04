@@ -279,7 +279,6 @@ const AccountSummary = () => {
               </i>
             ) : null}
 
-            {/* <i className="mb-4 d-block text-danger"> Ensure profile info is complete and bank details are verified to enable product upload</i> */}
             <Alert
               variant={alertVariant}
               show={showAlert}
