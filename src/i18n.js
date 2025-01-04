@@ -46,7 +46,7 @@ const resources = {
                 "bankName": "Bank Name",
                 "verify": "Verify",
                 "verified": "Verified",
-                "profileUpdated": "Profile updated successfully.",
+                "profileUpdated": "Profile updated successfully! You're eligible to upload products",
                 "failedToUpdate": "Failed to update profile.",
                 "verifyBankDetails": "Please verify your bank details to complete profile info.", //not updated
                 "bankVerified": "Bank details verified successfully. Save changes to update profile", //not updated 

@@ -4,6 +4,7 @@ import axios from "axios";
 const apiURL = import.meta.env.VITE_API_URL;
 import { Table } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from "react-router-dom";
 import '../custom.css';
 
 const AccountSummary = () => {
@@ -38,6 +39,7 @@ const AccountSummary = () => {
   };
   const [activeTab, setActiveTab] = useState("profile"); 
   const [transactions, setTransactions] = useState([]); 
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Fetch user profile
@@ -161,6 +163,9 @@ const AccountSummary = () => {
       if (response.data) {
         setUser(response.data);
         displayAlert(t("profile.profileUpdated"));
+        setTimeout(() => {
+          navigate('/upload');
+        }, 3000); 
       } else {
         displayAlert(response.data.message || t("profile.failedToUpdate"), "danger");
       }
