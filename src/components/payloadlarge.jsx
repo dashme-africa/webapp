@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useTranslation } from 'react-i18next';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Spinner, Button, Alert } from 'react-bootstrap';
+import { Button, Alert } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+
 const apiURL = import.meta.env.VITE_API_URL;
 
 
@@ -79,6 +80,7 @@ const UploadPage = () => {
     };
     fetchUploader();
   }, [navigate]);
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -183,7 +185,6 @@ const UploadPage = () => {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
 
-
       // Reset form data
       setFormData({
         title: '',
@@ -245,7 +246,7 @@ const UploadPage = () => {
       images: [...(prevData.images || []), ...files],
     }));
   };
-
+  
   const handleRemoveImage = (index) => {
     setFormData((prevData) => {
       const updatedImages = [...prevData.images];
@@ -305,6 +306,7 @@ const UploadPage = () => {
         <div className="card-body">
           <form onSubmit={handleSubmit}>
             <h3 className="text-center mb-4">{activeTab === 'sell' ? t('upload.sell') : t('upload.donate')}</h3>
+
 
             <Alert
               variant={alertVariant}
@@ -490,25 +492,27 @@ const UploadPage = () => {
             )}
 
             {/* Condition */}
-            <div className="mb-3">
-              <label className="form-label">Condition</label>
-              <select
-                className="form-select"
-                name="condition"
-                value={formData.condition}
-                onChange={handleInputChange}
-                required
-              >
-                <option value="" disabled>
-                  {t('upload.selectCategory')}
-                </option>
-                <>
-                  <option value="New">New</option>
-                  <option value="Fairly Used">Fairly Used</option>
-                  <option value="Refurbished">Refurbished</option>
-                </>
-              </select>
-            </div>
+            {activeTab === 'sell' && (
+              <div className="mb-3">
+                <label className="form-label">Condition</label>
+                <select
+                  className="form-select"
+                  name="condition"
+                  value={formData.condition}
+                  onChange={handleInputChange}
+                  required
+                >
+                  <option value="" disabled>
+                    {t('upload.selectCategory')}
+                  </option>
+                  <>
+                    <option value="New">New</option>
+                    <option value="Fairly Used">Fairly Used</option>
+                    <option value="Refurbished">Refurbished</option>
+                  </>
+                </select>
+              </div>
+            )}
 
             {/* Location */}
             <div className="mb-3">
