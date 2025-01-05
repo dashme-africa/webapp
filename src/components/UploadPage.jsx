@@ -155,8 +155,8 @@ const UploadPage = () => {
         setIsSubmitting(false);
         return;
       }
-      
-      
+
+
       // Create final formData for backend submission
       const updatedData = {
         title: formData.title,
