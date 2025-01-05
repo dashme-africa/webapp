@@ -19,9 +19,9 @@ const UploadPage = () => {
     priceCategory: '',
     location: '',
     image: null,
-    specification: "",
+    specification: "",  
     condition: "",
-    images: [],
+    images: [],  
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [uploader, setUploader] = useState(null);
@@ -47,16 +47,18 @@ const UploadPage = () => {
           });
           setUploader(response.data);
 
+          console.log(response.data);
+
           if (!response.data.fullName ||
-            !response.data.email ||
-            !response.data.address ||
-            !response.data.bio ||
-            !response.data.phoneNumber) {
-            displayAlert('Please complete your profile info to upload a product', 'danger');
-            setTimeout(() => {
-              navigate('/profile');  // Redirect to profile if bank is not verified
-            }, 3000);
-          } else if (!response.data.isVerified) {
+              !response.data.email ||
+              !response.data.address ||
+              !response.data.bio ||
+              !response.data.phoneNumber) {
+              displayAlert('Please complete your profile info to upload a product', 'danger');
+              setTimeout(() => {
+                    navigate('/profile');  // Redirect to profile if bank is not verified
+                  }, 3000);
+            } else if (!response.data.isVerified) {
             displayAlert('Please verify your bank details to upload a product.', 'danger');
             setTimeout(() => {
               navigate('/profile');  // Redirect to profile if bank is not verified
@@ -89,7 +91,6 @@ const UploadPage = () => {
       return;
     }
 
-    console.log(formData.images.length);
     // Frontend validation for the number of images
     if (formData.images && formData.images.length > 10) {
       displayAlert(t('upload.maxImagesError'), 'danger');
@@ -106,70 +107,17 @@ const UploadPage = () => {
     // Ensure video is compulsory for specific categories
     const categoriesRequiringVideo = ['Accessories', 'Household-Items', 'Electronics'];
     if (
-      categoriesRequiringVideo.some(category =>
-        category.toLowerCase() === formData.category.toLowerCase()
-      ) && (!formData.video || formData.video === null)
+      categoriesRequiringVideo.includes(formData.category) &&
+      (!formData.video || formData.video === null)
     ) {
       displayAlert('A video is required for the selected category', 'danger');
       setIsSubmitting(false);
       return;
     }
 
-
     try {
-      const uploadedImages = await Promise.all(
-        formData.images.map(async (image) => {
-          const formDataForCloudinary = new FormData();
-          formDataForCloudinary.append('file', image);
-          formDataForCloudinary.append('upload_preset', 'dashme-upload-preset');
-          const { data } = await axios.post(
-            'https://api.cloudinary.com/v1_1/dsa52qglg/image/upload',
-            formDataForCloudinary
-          );
-          return data.secure_url;
-        })
-      );
 
-
-      // If a video is provided, upload it to Cloudinary
-      let uploadedVideo = null;
-      if (formData.video) {
-        const formDataForVideo = new FormData();
-        formDataForVideo.append('file', formData.video);
-        formDataForVideo.append('upload_preset', 'dashme-upload-preset'); // Replace with your upload preset
-
-        const videoResponse = await axios.post(
-          'https://api.cloudinary.com/v1_1/dsa52qglg/video/upload', // Replace with your Cloudinary URL
-          formDataForVideo
-        );
-        uploadedVideo = videoResponse.data.secure_url; // Store the video URL
-      }
-
-      // Ensure primary image index is selected and valid
-      if (formData.primaryImageIndex === null || formData.primaryImageIndex < 0 || formData.primaryImageIndex >= uploadedImages.length) {
-        displayAlert(t('upload.selectPrimaryImage'), 'danger');
-        setIsSubmitting(false);
-        return;
-      }
-
-      // Create final formData for backend submission
-      const updatedData = {
-        title: formData.title,
-        description: formData.description,
-        category: formData.category,
-        price: formData.price,
-        priceCategory: formData.priceCategory,
-        location: formData.location,
-        specification: formData.specification,
-        condition: formData.condition,
-        primaryImageIndex: formData.primaryImageIndex,
-        images: uploadedImages.join(', '),
-        video: uploadedVideo,
-        uploader: uploader._id,
-      };
-
-
-      // Verify uploader profile completeness
+        // Verify uploader profile completeness
       if (!uploader || !uploader.fullName || !uploader.email || !uploader.phoneNumber || !uploader.address) {
         displayAlert('Please complete your profile info before uploading a product.', 'danger');
         setIsSubmitting(false);
@@ -188,6 +136,35 @@ const UploadPage = () => {
         }, 2000);
         return;
       }
+      
+      // Create FormData
+      const updatedData = new FormData();
+
+      // Append all fields from formData
+      Object.entries(formData).forEach(([key, value]) => {
+        if (key === 'images') {
+          value.forEach((file) => updatedData.append('images', file));
+        } else if (key === 'video') {
+          if (value) updatedData.append('video', value);
+        } else {
+          updatedData.append(key, value);
+        }
+      });
+
+
+
+      // Add the primary image index
+      if (formData.primaryImageIndex === null || formData.primaryImageIndex < 0) {
+        displayAlert(t('upload.selectPrimaryImage'), 'danger');
+        setIsSubmitting(false);
+        return;
+      }
+      
+
+      // Append uploader ID if available
+      if (uploader) {
+        updatedData.append('uploader', uploader._id);
+      }
 
       // Ensure at least one image is uploaded
       if (!formData.images || formData.images.length === 0) {
@@ -196,13 +173,18 @@ const UploadPage = () => {
         return;
       }
 
-      // Now handle submission to your backend
-      const endpoint = activeTab === 'sell' ? `${apiURL}/products` : `${apiURL}/products/donate`;
-      const response = await axios.post(endpoint, updatedData);
+      // Determine the endpoint based on activeTab
+      const endpoint = activeTab === 'sell'
+        ? `${apiURL}/products`
+        : `${apiURL}/products/donate`;
 
-      console.log(response)
+      // Send data to the server
+      const response = await axios.post(endpoint, updatedData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
 
-      // Reset form data after successful submission
+
+      // Reset form data
       setFormData({
         title: '',
         description: '',
@@ -213,7 +195,7 @@ const UploadPage = () => {
         images: [],
         video: null,
         primaryImageIndex: null,
-        specification: "",
+        specification: "",  
         condition: "",
       });
 
@@ -225,7 +207,7 @@ const UploadPage = () => {
 
     } catch (error) {
       console.error('An unexpected error occurred:', error);
-      if (error.response && error.response.data && error.response.data.message) {
+      if (error.response) {
         displayAlert(`${error.response.data.message}`, 'danger');
       } else {
         displayAlert('An unexpected error occurred.', 'danger');
