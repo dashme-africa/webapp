@@ -83,6 +83,19 @@ const AccountSummary = () => {
     }
   }, [activeTab]);
 
+  useEffect(() => {
+    const fetchBanks = async () => {
+      try {
+        const response = await axios.get(`${apiURL}/userProfile/banks`);
+        setBanks(response.data);
+      } catch (error) {
+        console.error("Error fetching bank list:", error.message);
+      }
+    };
+    fetchBanks();
+  }, []);
+  
+
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -224,7 +237,7 @@ const AccountSummary = () => {
         {
           params: {
             input: encodeURIComponent(input),
-            key: "AlzaSy0XONEOOhGloShSf_9uN8Qhx8wWrVodlYb",
+            key: "AlzaSyFVdcyOOSaO_fmoNiBWYVud1cZgwS_FvNI",
           },
         }
       );
@@ -247,7 +260,7 @@ const AccountSummary = () => {
 
   // Fetch transactions
   const fetchTransactions = async () => {
-    setLoading(true);
+    // setLoading(true);
     try {
       const token = localStorage.getItem("token");
       const { data } = await axios.get(`${apiURL}/transactions`, {
@@ -258,7 +271,7 @@ const AccountSummary = () => {
     } catch (error) {
       console.error("Failed to fetch transactions", error);
     } finally {
-      setLoading(false);
+      // setLoading(false);
     }
   };
 
