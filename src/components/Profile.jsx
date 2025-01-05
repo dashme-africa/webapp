@@ -453,6 +453,7 @@ const AccountSummary = () => {
                       name="bankName"
                       id="bankName"
                       className="form-control"
+                      placeholder="Type to find bank name"
                       value={formData.bankName}
                       onChange={handleChange}
                       disabled={isVerified} />
