@@ -130,6 +130,9 @@ const UploadPage = () => {
         })
       );
 
+      // Update the primaryImageIndex to match the index in the uploadedImages array
+      formData.primaryImageIndex = uploadedImages.indexOf(uploadedImages[formData.primaryImageIndex]);
+
 
       // If a video is provided, upload it to Cloudinary
       let uploadedVideo = null;
@@ -145,13 +148,15 @@ const UploadPage = () => {
         uploadedVideo = videoResponse.data.secure_url; // Store the video URL
       }
 
+
       // Ensure primary image index is selected and valid
       if (formData.primaryImageIndex === null || formData.primaryImageIndex < 0 || formData.primaryImageIndex >= uploadedImages.length) {
         displayAlert(t('upload.selectPrimaryImage'), 'danger');
         setIsSubmitting(false);
         return;
       }
-
+      
+      
       // Create final formData for backend submission
       const updatedData = {
         title: formData.title,
