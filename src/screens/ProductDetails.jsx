@@ -154,27 +154,33 @@ const ProductDetails = () => {
           </div>
         </div>
 
+        {/* {relatedProducts?.map((item, index) => ( */}
+              {/* <div key={index} className="me-3" style={{ width: '150px' }} onClick={() => navigate(`/product/${item._id}`)}> */}
+
         {/* Related Products Section */}
         <div className="related-products mt-5">
           <h4 className="mb-4">Other Items from {product.uploader.username || 'this user'}</h4>
-          <div className="d-flex overflow-auto">
-            {relatedProducts?.map((item, index) => (
-              <div key={index} className="me-3" style={{ width: '150px' }} onClick={() => navigate(`/product/${item._id}`)}>
-                <div className="d-flex gap-2 align-items-baseline">
-                  {product.uploader.profilePicture ? (
-                    <img
-                      src={product.uploader.profilePicture}
-                      alt="sellerProfile"
-                      className="rounded-circle"
-                      style={{
-                        width: '40px',
-                        height: '40px',
-                        objectFit: 'cover',
-                      }}
-                    />
-                  ) : (
-                    <div className="rounded-circle bg-light d-flex justify-content-center border align-items-center" style={{ width: '35px', height: '35px' }}>
-                      <FaUser size={20} />
+          <div className="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-3">
+            {relatedProducts
+              ?.filter((item) => item.status === 'approved') // Filter approved products
+              .map((item, index) => (
+
+                <div key={index} className="col" onClick={() => navigate(`/product/${item._id}`)}>
+                  <div className="d-flex gap-2 align-items-baseline">
+                    {product.uploader.profilePicture ? (
+                      <img
+                        src={product.uploader.profilePicture}
+                        alt="sellerProfile"
+                        className="rounded-circle"
+                        style={{
+                          width: '40px',
+                          height: '40px',
+                          objectFit: 'cover',
+                        }}
+                      />
+                    ) : (
+                      <div className="rounded-circle bg-light d-flex justify-content-center border align-items-center" style={{ width: '35px', height: '35px' }}>
+                        <FaUser size={20} />
                     </div>
 
                   )}
