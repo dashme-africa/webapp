@@ -2,11 +2,11 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Alert } from "react-bootstrap";
-import ReCAPTCHA from "react-google-recaptcha";
+// import ReCAPTCHA from "react-google-recaptcha";
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 const apiURL = import.meta.env.VITE_API_URL;
-const siteKey = "6LcNPqwqAAAAAGaqwfOrxhB8t8av07unRcvt-UfC"; // Google reCAPTCHA site key
+// const siteKey = "6LcNPqwqAAAAAGaqwfOrxhB8t8av07unRcvt-UfC"; // Google reCAPTCHA site key
 
 
 const Register = () => {
@@ -17,7 +17,7 @@ const Register = () => {
     password: "",
     confirmPassword: "",
   });
-  const [captchaToken, setCaptchaToken] = useState(null); // Store the reCAPTCHA token
+  // const [captchaToken, setCaptchaToken] = useState(null); // Store the reCAPTCHA token
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
@@ -62,17 +62,17 @@ const Register = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleCaptcha = (token) => {
-    setCaptchaToken(token); // Store reCAPTCHA token on verification
-  };
+  // const handleCaptcha = (token) => {
+  //   setCaptchaToken(token); // Store reCAPTCHA token on verification
+  // };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!captchaToken) {
-      displayAlert("Please complete the reCAPTCHA verification.", "danger");
-      return;
-    }
+    // if (!captchaToken) {
+    //   displayAlert("Please complete the reCAPTCHA verification.", "danger");
+    //   return;
+    // }
 
     if (!formData.password || !formData.confirmPassword || !formData.fullName || !formData.username || !formData.email) {
       displayAlert('All fields are required', 'danger');
@@ -93,7 +93,8 @@ const Register = () => {
 
     setIsSubmitting(true);
 
-    const data = { ...formData, captchaToken }; // Include captchaToken in the data
+    // const data = { ...formData, captchaToken }; // Include captchaToken in the data
+    const data = { ...formData }; // Include captchaToken in the data
 
     try {
       const response = await axios.post(
@@ -113,7 +114,7 @@ const Register = () => {
 
   return (
     <div className="container my-5">
-      <div className="g-recaptcha" data-sitekey="6LcNPqwqAAAAAGaqwfOrxhB8t8av07unRcvt-UfC"></div>
+      {/* <div className="g-recaptcha" data-sitekey="6LcNPqwqAAAAAGaqwfOrxhB8t8av07unRcvt-UfC"></div> */}
       <div className="row g-0">
         {/* Left Column: Form */}
         <div className="col-md-6 p-5 bg-light">
@@ -225,7 +226,7 @@ const Register = () => {
             </div>
 
             {/* Add reCAPTCHA */}
-            <ReCAPTCHA sitekey={siteKey} onChange={handleCaptcha} />
+            {/* <ReCAPTCHA sitekey={siteKey} onChange={handleCaptcha} /> */}
 
             {/* Submit Button */}
             <button
