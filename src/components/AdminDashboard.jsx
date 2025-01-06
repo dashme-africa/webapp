@@ -154,6 +154,7 @@ const AdminDashboard = () => {
             <th>Price</th>
             <th>Category</th>
             <th>Tag</th>
+            <th>Uploader Details</th>
             <th>Status</th>
             <th>Actions</th>
           </tr>
@@ -179,8 +180,6 @@ const AdminDashboard = () => {
                 ) : (
                   <p>No video</p>
                 )}
-
-
               </td>
               <td>{product.title}</td>
               <td>{product.description || 'No description available'}</td>
@@ -189,6 +188,10 @@ const AdminDashboard = () => {
               </td>
               <td>{product.category}</td>
               <td>{product.tag || 'Not specified'}</td>
+              <td>
+                {product.uploader.username} ({product.uploader.email}) - {product.uploader.phoneNumber}
+              </td>
+
               <td>
                 <span
                   className={`badge ${product.status === 'approved'

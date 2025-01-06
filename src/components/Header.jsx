@@ -67,7 +67,7 @@ const Header = () => {
           },
         });
 
-        console.log('API response:', data);
+        // console.log('API response:', data);
 
         // Assuming notifications are directly in `data.data`
         const notifications = data.data || [];

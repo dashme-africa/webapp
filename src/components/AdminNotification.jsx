@@ -2,15 +2,17 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from "react-bootstrap";
 
-const AdminNotification = ({ notifications, markNotificationAsRead, markAllNotificationsAsRead  }) => {
+const AdminNotification = ({ notifications, markNotificationAsRead, markAllNotificationsAsRead }) => {
   console.log(notifications)
   return (
     <div className="container my-5">
-      <Button className='btn-success'>Back</Button>
+      <Link to="/adminDashboard">
+        <Button className='btn-success'>Back</Button>
+
+      </Link>
       <div className="d-flex justify-content-between align-items-center mb-3">
         <h1>Admin Notifications</h1>
-        <Link to="/adminDashboard">
-        </Link>
+
         <Button onClick={markAllNotificationsAsRead}>Mark all as read</Button>
       </div>
       {notifications.length === 0 ? (

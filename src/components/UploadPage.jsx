@@ -46,7 +46,6 @@ const UploadPage = () => {
             headers: { Authorization: `Bearer ${token}` },
           });
           setUploader(response.data);
-
           if (!response.data.fullName ||
             !response.data.email ||
             !response.data.address ||
@@ -77,6 +76,9 @@ const UploadPage = () => {
     };
     fetchUploader();
   }, [navigate]);
+
+  console.log(uploader)
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -164,7 +166,7 @@ const UploadPage = () => {
         category: formData.category,
         price: formData.price,
         priceCategory: formData.priceCategory,
-        location: formData.location,
+        location: uploader.address,
         specification: formData.specification,
         condition: formData.condition,
         primaryImageIndex: formData.primaryImageIndex,
@@ -540,9 +542,10 @@ const UploadPage = () => {
                 type="text"
                 className="form-control"
                 name="location"
-                value={formData.location}
+                value={uploader ? uploader.address : ''} 
                 onChange={handleInputChange}
                 placeholder={t('upload.enterLocation')}
+                disabled={true}
                 required
               />
             </div>
