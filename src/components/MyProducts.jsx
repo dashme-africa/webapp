@@ -103,7 +103,7 @@ const MyProductsPage = () => {
           {products.map((product) => (
             <Col md={4} className="mb-4" key={product._id}>
               <Card>
-                <Card.Img variant="top" src={product.image} alt={product.title} />
+                <Card.Img variant="top" src={product.primaryImage} alt={product.title} />
                 <Card.Body>
                   <Card.Title>{product.title}</Card.Title>
                   <Card.Text>{product.description}</Card.Text>

@@ -180,10 +180,10 @@ const EditProduct = () => {
             className="form-control"
             onChange={handleImageChange}
           />
-          {product.image && (
+          {product.primaryImage && (
             <div className="mt-3">
               <img
-                src={product.image}
+                src={product.primaryImage}
                 alt="Product"
                 style={{ width: '100px', height: '100px', objectFit: 'cover' }}
               />
