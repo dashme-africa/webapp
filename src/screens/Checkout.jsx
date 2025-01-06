@@ -130,14 +130,15 @@ const Checkout = () => {
     const validatePayload = (payload) => {
       
       const { toAddress } = payload;
-        if (!toAddress) {
-          return "Invalid address details. Please fill in the required fields.";
-        }
+      
       if (!toAddress?.name) {
         setTimeout(() => {
           navigate('/login');
         }, 2000); // redirect after 2 seconds
         return "Name is required. Please login to proceed.";
+      }
+      if (!toAddress) {
+        return "Invalid address details. Please fill in the required fields.";
       }
       if (!toAddress?.email) {
         return "Email is required.";
@@ -151,8 +152,8 @@ const Checkout = () => {
       if (!deliveryDetails.toAddress.country) {
         return "Country is required.";
       }
-      if (!toAddress?.phone) {
-        return "Phone number is required.";
+      if (!toAddress.phone || !/^0\d{10}$/.test(toAddress.phone)) {
+        return "Invalid phone number. Please enter 11 digits starting with 0.";
       }
       return null;
     };

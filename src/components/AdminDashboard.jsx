@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Nav, Alert } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { FaBell } from 'react-icons/fa';
 
 const apiURL = import.meta.env.VITE_API_URL;
@@ -163,11 +164,13 @@ const AdminDashboard = () => {
           {products.map((product) => (
             <tr key={product._id}>
               <td>
+                <Link to={product.primaryImage}>
                 <img
                   src={product.primaryImage || '/placeholder.png'}
                   alt={product.title}
                   style={{ width: '80px', height: '80px', objectFit: 'cover' }}
                 />
+              </Link>
               </td>
               <td>
                 {product.videoUrl ? (
