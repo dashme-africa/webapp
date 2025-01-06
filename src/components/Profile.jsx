@@ -38,8 +38,8 @@ const AccountSummary = () => {
       setShowAlert(false);
     }, duration);
   };
-  const [activeTab, setActiveTab] = useState("profile"); 
-  const [transactions, setTransactions] = useState([]); 
+  const [activeTab, setActiveTab] = useState("profile");
+  const [transactions, setTransactions] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -97,7 +97,7 @@ const AccountSummary = () => {
     };
     fetchBanks();
   }, []);
-  
+
 
 
   const handleImageChange = (e) => {
@@ -137,10 +137,10 @@ const AccountSummary = () => {
     // Initialize formDataToSubmit first
     const formDataToSubmit = new FormData();
 
-  Object.keys(formData).forEach((key) => { 
-      formDataToSubmit.append(key, formData[key]); 
-  });
-  
+    Object.keys(formData).forEach((key) => {
+      formDataToSubmit.append(key, formData[key]);
+    });
+
     // Append image if it exists
     if (image) {
       formDataToSubmit.append("image", image);
@@ -160,8 +160,8 @@ const AccountSummary = () => {
       displayAlert("Please complete your profile information", "danger");
       return;
     }
-  
-  
+
+
 
     // Validate account details before proceeding
     if (!formData.accountName || !formData.accountNumber || !formData.bankName || !isVerified) {
@@ -192,7 +192,7 @@ const AccountSummary = () => {
         displayAlert(t("profile.profileUpdated"));
         setTimeout(() => {
           navigate('/upload');
-        }, 3000); 
+        }, 3000);
       } else {
         displayAlert(response.data.message || t("profile.failedToUpdate"), "danger");
       }
@@ -361,38 +361,47 @@ const AccountSummary = () => {
                     </Col>
                   </Row>
 
-                  <Form.Group className="mb-3">
-                    <Form.Label>City</Form.Label>
-                    <Form.Control
-                      type="text"
-                      name="city"
-                      className="form-control"
-                      value={formData.city}
-                      onChange={handleChange}
-                    />
-                  </Form.Group>
+                  <Row>
+                    <Col md={4}>
+                      <Form.Group className="mb-3">
+                        <Form.Label>City</Form.Label>
+                        <Form.Control
+                          type="text"
+                          name="city"
+                          className="form-control"
+                          value={formData.city}
+                          onChange={handleChange}
+                        />
+                      </Form.Group>
+                    </Col>
 
-                  <Form.Group className="mb-3">
-                    <Form.Label>State</Form.Label>
-                    <Form.Control
-                      type="text"
-                      name="state"
-                      className="form-control"
-                      value={formData.state}
-                      onChange={handleChange}
-                    />
-                  </Form.Group>
+                    <Col md={4}>
+                      <Form.Group className="mb-3">
+                        <Form.Label>State</Form.Label>
+                        <Form.Control
+                          type="text"
+                          name="state"
+                          className="form-control"
+                          value={formData.state}
+                          onChange={handleChange}
+                        />
+                      </Form.Group>
+                    </Col>
 
-                  <Form.Group className="mb-3">
-                    <Form.Label>Country</Form.Label>
-                    <Form.Control
-                      type="text"
-                      name="country"
-                      className="form-control"
-                      value={formData.country}
-                      onChange={handleChange}
-                    />
-                  </Form.Group>
+                    <Col md={4}>
+                      <Form.Group className="mb-3">
+                        <Form.Label>Country</Form.Label>
+                        <Form.Control
+                          type="text"
+                          name="country"
+                          className="form-control"
+                          value={formData.country}
+                          onChange={handleChange}
+                        />
+                      </Form.Group>
+                    </Col>
+                  </Row>
+
 
                   <Form.Group className="mb-3">
                     <Form.Label>{t("profile.bio")}</Form.Label>
@@ -475,9 +484,9 @@ const AccountSummary = () => {
               </Form.Group>
             </Form>
           </Col>
-        ) 
+        )
       case "orders":
-        return <h4>My Orders</h4>; 
+        return <h4>My Orders</h4>;
       case "transactions":
         return (
           <Table striped bordered hover responsive>
@@ -508,7 +517,7 @@ const AccountSummary = () => {
           </Table>
         );
       case "shipments":
-        return <h4>My Shipments</h4>; 
+        return <h4>My Shipments</h4>;
       default:
         return <h4>Select a section</h4>;
     }
