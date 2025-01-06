@@ -183,8 +183,15 @@ const Checkout = () => {
         return;
       }
       const { data } = await axios.post(`${apiURL}/rates`, payload);
-      setRateDetails(data.data.rates);
-      displayAlert('Rate fetched successfully!. Proceed to payment');
+      console.log(data);
+      
+      if (data.data.rates && data.data.rates.status === true) {
+        setRateDetails(data.data.rates);
+        displayAlert('Rate fetched successfully!. Proceed to payment');
+      } else {
+        const errorMessage = data.data.rates.message || 'Failed to fetch rates';
+        displayAlert(errorMessage, 'danger');
+      }
     } catch (error) {
       console.error("Error fetching rates:", error.response?.data || error.message);
       displayAlert('Failed to fetch rates.', 'danger');
