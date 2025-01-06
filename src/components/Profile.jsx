@@ -371,6 +371,7 @@ const AccountSummary = () => {
                           className="form-control"
                           value={formData.city}
                           onChange={handleChange}
+                          placeholder="e.g. Ikeja"
                         />
                       </Form.Group>
                     </Col>
@@ -384,6 +385,7 @@ const AccountSummary = () => {
                           className="form-control"
                           value={formData.state}
                           onChange={handleChange}
+                          placeholder="e.g. Lagos"
                         />
                       </Form.Group>
                     </Col>
@@ -397,6 +399,7 @@ const AccountSummary = () => {
                           className="form-control"
                           value={formData.country}
                           onChange={handleChange}
+                          placeholder="e.g. Nigeria"
                         />
                       </Form.Group>
                     </Col>

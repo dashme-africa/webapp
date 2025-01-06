@@ -345,7 +345,9 @@ const Checkout = () => {
 
 
             <Form.Group className="mb-2">
-              <Form.Label>Type</Form.Label>
+              <Form.Label>Type</Form.Label><br />
+              <i>*Interstate (deliveries between states eg. From Lagos to Abuja)*</i> <br />
+              <i>*Intrastate (deliveries within the state eg. From Ajah to VI)*</i>
               <Form.Select value={type} onChange={(e) => setType(e.target.value)}>
                 <option value="">Select Type</option>
                 <option value="interstate">Interstate</option>

@@ -48,6 +48,7 @@ const Header = () => {
           setLoading(false);
         }
       } else {
+        setUserData(null);
         setLoading(false);
       }
     };
@@ -178,7 +179,7 @@ const Header = () => {
               <Nav.Link href="/profile" className="me-3 d-flex align-items-center">
                 {loading ? (
                   <span>Loading...</span>
-                ) : userData?.profilePicture ? (
+                ) :userData && userData?.profilePicture ? (
                   <img
                     src={userData.profilePicture}
                     alt="Profile"
