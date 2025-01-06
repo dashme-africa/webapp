@@ -17,11 +17,11 @@ const Login = () => {
   const [icon, setIcon] = useState(<FaEyeSlash />);
   const navigate = useNavigate();
   // Redirect if already logged in
-  useEffect(() => {
-    if (localStorage.getItem("token")) {
-      navigate("/");
-    }
-  }, [navigate]);
+  // useEffect(() => {
+  //   if (localStorage.getItem("token")) {
+  //     navigate("/");
+  //   }
+  // }, [navigate]);
 
   const displayAlert = (message, variant = 'success', duration = 5000) => {
     setAlertMessage(message);
