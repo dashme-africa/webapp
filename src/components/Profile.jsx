@@ -325,7 +325,7 @@ const AccountSummary = () => {
                 <Col md={9}>
                   <Row>
                     <Col md={12}>
-                      <Form.Group className="mb-3">
+                      <Form.Group className="mb-4">
                         <Form.Label>{t("profile.fullName")}</Form.Label>
                         <Form.Control type="text"
                           name="fullName"
@@ -337,8 +337,8 @@ const AccountSummary = () => {
                   </Row>
                   <Row>
                     <Col md={6}>
-                      <Form.Group className="mb-3">
-                        <Form.Label>Phone Number</Form.Label>
+                      <Form.Group className="mb-4">
+                        <Form.Label>Phone No. (whatsapp only)</Form.Label>
                         <Form.Control type="text"
                           name="phoneNumber"
                           className="form-control"
@@ -348,7 +348,7 @@ const AccountSummary = () => {
                       </Form.Group>
                     </Col>
                     <Col md={6}>
-                      <Form.Group className="mb-3">
+                      <Form.Group className="mb-4">
                         <Form.Label>{t("profile.email")}</Form.Label>
                         <Form.Control
                           type="email"
@@ -363,7 +363,7 @@ const AccountSummary = () => {
 
                   <Row>
                     <Col md={4}>
-                      <Form.Group className="mb-3">
+                      <Form.Group className="mb-4">
                         <Form.Label>City</Form.Label>
                         <Form.Control
                           type="text"
@@ -376,7 +376,7 @@ const AccountSummary = () => {
                     </Col>
 
                     <Col md={4}>
-                      <Form.Group className="mb-3">
+                      <Form.Group className="mb-4">
                         <Form.Label>State</Form.Label>
                         <Form.Control
                           type="text"
@@ -389,7 +389,7 @@ const AccountSummary = () => {
                     </Col>
 
                     <Col md={4}>
-                      <Form.Group className="mb-3">
+                      <Form.Group className="mb-4">
                         <Form.Label>Country</Form.Label>
                         <Form.Control
                           type="text"
@@ -403,7 +403,7 @@ const AccountSummary = () => {
                   </Row>
 
 
-                  <Form.Group className="mb-3">
+                  <Form.Group className="mb-4">
                     <Form.Label>{t("profile.bio")}</Form.Label>
                     <Form.Control name="bio"
                       className="form-control"
@@ -419,7 +419,7 @@ const AccountSummary = () => {
                 <h4 className="mb-3 text-success">{t("profile.bankDetails")}</h4>
                 <i className="mb-3">I agree to DashMe Africa <a href="https://docs.google.com/document/d/1AViIna3B8tHU7kk_sEHDod9LanB9MerP/edit#heading=h.gjdgxs">T&Cs</a></i>
                 <Col md={6}>
-                  <Form.Group className="mb-3">
+                  <Form.Group className="mb-4">
                     <Form.Label>{t("profile.accountName")}</Form.Label>
                     <Form.Control type="text"
                       name="accountName"
@@ -433,7 +433,7 @@ const AccountSummary = () => {
                   </Form.Group>
                 </Col>
                 <Col md={6}>
-                  <Form.Group className="mb-3">
+                  <Form.Group className="mb-4">
                     <Form.Label htmlFor="accountNumber">{t("profile.accountNumber")}</Form.Label>
                     <Form.Control
                       type="text"
@@ -446,7 +446,7 @@ const AccountSummary = () => {
                   </Form.Group>
                 </Col>
                 <Col md={6}>
-                  <Form.Group className="mb-3">
+                  <Form.Group className="mb-4">
                     <Form.Label htmlFor="bankName">{t("profile.bankName")}</Form.Label>
                     <Form.Control
                       type="text"
@@ -474,7 +474,7 @@ const AccountSummary = () => {
                   </Form.Group>
                 </Col>
               </Row>
-              <Form.Group className="mb-3 d-flex justify-content-between">
+              <Form.Group className="mb-4 d-flex justify-content-between">
                 <Button type="button" onClick={verifyBankDetails} disabled={isVerified} className="w-50 me-3">
                   {isVerified ? `${t("profile.verified")}` : `${t("profile.verify")}`}
                 </Button>
