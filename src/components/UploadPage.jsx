@@ -48,7 +48,9 @@ const UploadPage = () => {
           setUploader(response.data);
           if (!response.data.fullName ||
             !response.data.email ||
-            !response.data.address ||
+            !response.data.city ||
+            !response.data.state ||
+            !response.data.country ||
             !response.data.bio ||
             !response.data.phoneNumber) {
             displayAlert('Please complete your profile info to upload a product', 'danger');
@@ -76,9 +78,6 @@ const UploadPage = () => {
     };
     fetchUploader();
   }, [navigate]);
-
-  console.log(uploader)
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -166,7 +165,7 @@ const UploadPage = () => {
         category: formData.category,
         price: formData.price,
         priceCategory: formData.priceCategory,
-        location: uploader.address,
+        location: `${uploader.city}, ${uploader.state}, ${uploader.country}`,
         specification: formData.specification,
         condition: formData.condition,
         primaryImageIndex: formData.primaryImageIndex,
@@ -177,7 +176,7 @@ const UploadPage = () => {
 
 
       // Verify uploader profile completeness
-      if (!uploader || !uploader.fullName || !uploader.email || !uploader.phoneNumber || !uploader.address) {
+      if (!uploader || !uploader.fullName || !uploader.email || !uploader.phoneNumber || !uploader.city || !uploader.state || !uploader.country || !uploader.bio) {
         displayAlert('Please complete your profile info before uploading a product.', 'danger');
         setIsSubmitting(false);
         setTimeout(() => {
@@ -206,8 +205,6 @@ const UploadPage = () => {
       // Now handle submission to your backend
       const endpoint = activeTab === 'sell' ? `${apiURL}/products` : `${apiURL}/products/donate`;
       const response = await axios.post(endpoint, updatedData);
-
-      console.log(response)
 
       // Reset form data after successful submission
       setFormData({
@@ -542,7 +539,7 @@ const UploadPage = () => {
                 type="text"
                 className="form-control"
                 name="location"
-                value={uploader ? uploader.address : ''} 
+                value={uploader ? `${uploader.city}, ${uploader.state}, ${uploader.country}` : ''}
                 onChange={handleInputChange}
                 placeholder={t('upload.enterLocation')}
                 disabled={true}

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate, Link } from "react-router-dom";
-import { Form, Button, Alert, Card  } from "react-bootstrap";
+import { Form, Button, Alert, Card } from "react-bootstrap";
 import axios from "axios";
 
 const apiURL = import.meta.env.VITE_API_URL;
@@ -9,21 +9,6 @@ const Checkout = () => {
   const { state } = useLocation();
   const { product, sellerId } = state || {};
   const [quantity, setQuantity] = useState(1);
-  const [deliveryDetails, setDeliveryDetails] = useState({
-    fromAddress: { name: "", email: "", address: "", phone: "" },
-    toAddress: { name: "", email: "", address: "", phone: "" },
-    parcels: { width: "10", length: "10", height: "5", weight: "2" },
-    items: [
-      {
-        name: product?.title || "",
-        description: product?.description || "",
-        weight: "2",
-        category: product?.category || "",
-        amount: product?.price || 0,
-        quantity: quantity,
-      },
-    ],
-  });
   const [user, setUser] = useState({ fullName: "", email: "" });
   const [couriers, setCouriers] = useState([]);
   const [suggestions, setSuggestions] = useState({ toAddress: [], fromAddress: [] });
@@ -44,6 +29,28 @@ const Checkout = () => {
   };
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
+  const [deliveryDetails, setDeliveryDetails] = useState({
+    fromAddress: { name: "", email: "", address: "", phone: "" },
+    toAddress: {
+      name: "",
+      email: "",
+      city: "",
+      state: "",
+      country: "",
+      phone: ""
+    },
+    parcels: { width: "10", length: "10", height: "5", weight: "2" },
+    items: [
+      {
+        name: product?.title || "",
+        description: product?.description || "",
+        weight: "2",
+        category: product?.category || "",
+        amount: product?.price || 0,
+        quantity: quantity,
+      },
+    ],
+  });
 
   // useEffect(() => {
   //   if (!token) {
@@ -63,36 +70,38 @@ const Checkout = () => {
           const { data } = await axios.get(`${apiURL}/userProfile/profile`, {
             headers: { Authorization: `Bearer ${token}` },
           });
-          setUser({ fullName: data.fullName, email: data.email, address: data.address, phoneNumber: data.phoneNumber });
+          setUser({ fullName: data.fullName, email: data.email, city: data.city, state: data.state, country: data.country, phoneNumber: data.phoneNumber });
           setDeliveryDetails((prev) => ({
             ...prev,
-            toAddress: { ...prev.toAddress, name: data.fullName, email: data.email, address: data.address, phone: data.phoneNumber },
+            toAddress: { ...prev.toAddress, name: data.fullName, email: data.email, city: data.city, state: data.state, country: data.country, phone: data.phoneNumber },
           }));
         } catch (error) {
           console.error("Error fetching user data:", error);
         }
       }
-    }; 
+    };
 
     const fetchSellerDetails = async () => {
       if (sellerId) {
         try {
           const { data } = await axios.get(`${apiURL}/payment/seller/${sellerId}`);
+          const sellerAddress = `${data.seller.city}, ${data.seller.state}, ${data.seller.country}`;
           setDeliveryDetails((prev) => ({
             ...prev,
             fromAddress: {
               name: data.seller.fullName,
               email: data.seller.email,
-              address: data.seller.address,
+              address: sellerAddress,
               phone: data.seller.phoneNumber,
             },
           }));
-          setSellerBankDetails(data)
+          setSellerBankDetails(data);
         } catch (error) {
           console.error("Error fetching seller details:", error);
         }
       }
     };
+    
 
     fetchUser();
     fetchSellerDetails();
@@ -119,21 +128,28 @@ const Checkout = () => {
       return;
     }
     const validatePayload = (payload) => {
+      
       const { toAddress } = payload;
+        if (!toAddress) {
+          return "Invalid address details. Please fill in the required fields.";
+        }
       if (!toAddress?.name) {
         setTimeout(() => {
           navigate('/login');
         }, 2000); // redirect after 2 seconds
         return "Name is required. Please login to proceed.";
-      }      
-      if (!toAddress?.name) {
-        return navigate('/login');
-      }      
+      }
       if (!toAddress?.email) {
         return "Email is required.";
       }
-      if (!toAddress?.address) {
-        return "Address is required.";
+      if (!deliveryDetails.toAddress.city) {
+        return "City is required.";
+      }
+      if (!deliveryDetails.toAddress.state) {
+        return "State is required.";
+      }
+      if (!deliveryDetails.toAddress.country) {
+        return "Country is required.";
       }
       if (!toAddress?.phone) {
         return "Phone number is required.";
@@ -142,11 +158,23 @@ const Checkout = () => {
     };
 
     try {
+      const address = `${deliveryDetails.toAddress.city}, ${deliveryDetails.toAddress.state}, ${deliveryDetails.toAddress.country}`;
+
       const payload = {
         type,
         carrierName: selectedCourier,
-        ...deliveryDetails,
+        fromAddress: deliveryDetails.fromAddress,
+        toAddress: {
+          name: deliveryDetails.toAddress.name,
+          email: deliveryDetails.toAddress.email,
+          address,
+          phone: deliveryDetails.toAddress.phone,
+        },
+        parcels: deliveryDetails.parcels,
+        items: deliveryDetails.items,
       };
+
+      // console.log("Payload:", payload);
 
       // Validate payload before making the request
       const validationError = validatePayload(payload);
@@ -184,9 +212,9 @@ const Checkout = () => {
     }
 
     const productAmount = product.price * quantity;
-  const shippingAmount = rateDetails.amount;
-  const totalAmount = productAmount + shippingAmount;
-  const platformCharge = Math.floor((10 / 100) * productAmount) + shippingAmount;
+    const shippingAmount = rateDetails.amount;
+    const totalAmount = productAmount + shippingAmount;
+    const platformCharge = Math.floor((10 / 100) * productAmount) + shippingAmount;
 
 
     try {
@@ -203,15 +231,14 @@ const Checkout = () => {
       // Initializing the transaction with metadata
       const transactionResponse = await axios.post(`${apiURL}/payment/initialize-transaction`, {
         email: user.email,
-      amount: totalAmount * 100, // convert to kobo
-      subaccount: subaccountCode,
-      transaction_charge: platformCharge * 100, // convert to kobo
-      redis_key: rateDetails.redis_key,
-      rate_id: rateDetails.courier.id,
-      rate_amount: rateDetails.amount,
+        amount: totalAmount * 100, // convert to kobo
+        subaccount: subaccountCode,
+        transaction_charge: platformCharge * 100, // convert to kobo
+        redis_key: rateDetails.redis_key,
+        rate_id: rateDetails.courier.id,
+        rate_amount: rateDetails.amount,
 
       });
-
 
       displayAlert('Payment initialization successful. Redirecting...');
       // Redirect to Paystack payment page
@@ -222,46 +249,8 @@ const Checkout = () => {
     }
   };
 
-
-
-  const fetchAddressSuggestions = async (input, addressType) => {
-    if (!input) {
-      setSuggestions((prev) => ({ ...prev, [addressType]: [] }));
-      return;
-    }
-
-    try {
-      const response = await axios.get(
-        "https://maps.gomaps.pro/maps/api/place/queryautocomplete/json",
-        {
-          params: {
-            input: encodeURIComponent(input),
-            key: "AlzaSyFVdcyOOSaO_fmoNiBWYVud1cZgwS_FvNI",
-          },
-        }
-      );
-
-      const fetchedSuggestions = response.data.predictions.map((prediction) => ({
-        displayName: prediction.description,
-        placeId: prediction.place_id,
-      }));
-
-      setSuggestions((prev) => ({ ...prev, [addressType]: fetchedSuggestions }));
-    } catch (error) {
-      console.error("Error fetching address suggestions:", error.response?.data || error.message);
-      setSuggestions((prev) => ({ ...prev, [addressType]: [] }));
-    }
-  };
-
-  const handleAddressSelection = (addressType, suggestion) => {
-    setDeliveryDetails((prev) => ({
-      ...prev,
-      [addressType]: { ...prev[addressType], address: suggestion.displayName },
-    }));
-    setSuggestions((prev) => ({ ...prev, [addressType]: [] }));
-  };
-
   const handleInputChange = (section, field, value, index = null) => {
+    // console.log(`Updating ${section}.${field} with value: ${value}`);
     setDeliveryDetails((prevDetails) => {
       const updatedDetails = { ...prevDetails };
       if (index !== null) {
@@ -271,10 +260,6 @@ const Checkout = () => {
       }
       return updatedDetails;
     });
-
-    if (field === "address" && (section === "toAddress" || section === "fromAddress")) {
-      fetchAddressSuggestions(value, section);
-    }
   };
 
 
@@ -298,65 +283,67 @@ const Checkout = () => {
             {alertMessage}
           </Alert>
           <i>Having Troubles During Checkout, click either live chat or <a href="https://wa.me/message/7J6DBJ5F6ESGB1" className="text-dark ">send whatsapp</a></i>
-          
+
           <Form>
             <Form.Group className="mb-2 mt-3">
               <Form.Label>Name</Form.Label>
-              <Form.Control value={deliveryDetails.toAddress.name} placeholder="Only registered users can checkout." readOnly />
+              <Form.Control value={deliveryDetails.toAddress ? deliveryDetails.toAddress.name : ''} placeholder="Only registered users can checkout." readOnly />
             </Form.Group>
             {!token && (<p>Please register <Link to="/register">here</Link></p>)}
             <Form.Group className="mb-2">
               <Form.Label>Email</Form.Label>
-              <Form.Control value={deliveryDetails.toAddress.email} placeholder="Only registered users can checkout" readOnly />
+              <Form.Control value={deliveryDetails.toAddress?.email} placeholder="Only registered users can checkout" readOnly />
             </Form.Group>
-            {/* <Form.Group className="mb-2">
-              <Form.Label>Address</Form.Label>
-              <Form.Control
-                value={deliveryDetails.toAddress.address}
-                onChange={(e) =>
-                  setDeliveryDetails((prev) => ({
-                    ...prev,
-                    toAddress: { ...prev.toAddress, address: e.target.value },
-                  }))
-                }
-              />
-            </Form.Group> */}
-            <Form.Group className="mb-2 position-relative">
-              <Form.Label>Address</Form.Label>
-              <Form.Control
-                value={deliveryDetails.toAddress.address}
-                onChange={(e) => handleInputChange("toAddress", "address", e.target.value)}
-                placeholder="Enter your address"
-              />
-              {suggestions.toAddress.length > 0 && (
-                <ul className="list-group position-absolute w-100" style={{ zIndex: 1000 }}>
-                  {suggestions.toAddress.map((suggestion, index) => (
-                    <li
-                      key={index}
-                      className="list-group-item list-group-item-action"
-                      onClick={() => handleAddressSelection("toAddress", suggestion)}
-                      style={{ cursor: "pointer" }}
-                    >
-                      {suggestion.displayName}
-                    </li>
-                  ))}
-                </ul>
-              )}
+
+            {/* Address Details */}
+            <Form.Group className="mb-2">
+              <div className="d-flex justify-content-between">
+                <div className="me-2 flex-grow-1">
+                  <Form.Label>City</Form.Label>
+                  <Form.Control
+                    value={deliveryDetails.toAddress?.city}
+                    onChange={(e) => handleInputChange("toAddress", "city", e.target.value)}
+                    placeholder="e.g. Ikeja"
+                  />
+                </div>
+                <div className="flex-grow-1">
+                  <Form.Label>State/Province</Form.Label>
+                  <Form.Control
+                    value={deliveryDetails.toAddress?.state}
+                    onChange={(e) => handleInputChange("toAddress", "state", e.target.value)}
+                    placeholder="e.g. Lagos"
+                  />
+                </div>
+              </div>
             </Form.Group>
 
             <Form.Group className="mb-2">
-              <Form.Label>Phone</Form.Label>
-              <Form.Control
-                value={deliveryDetails.toAddress.phone}
-                placeholder="e.g. 08012345678"
-                onChange={(e) =>
-                  setDeliveryDetails((prev) => ({
-                    ...prev,
-                    toAddress: { ...prev.toAddress, phone: e.target.value },
-                  }))
-                }
-              />
+              <div className="d-flex justify-content-between">
+                <div className="me-2 flex-grow-1">
+                  <Form.Label>Country</Form.Label>
+                  <Form.Control
+                    value={deliveryDetails.toAddress?.country}
+                    onChange={(e) => handleInputChange("toAddress", "country", e.target.value)}
+                    placeholder="e.g. Nigeria"
+                  />
+                </div>
+                <div className="flex-grow-1">
+                  <Form.Label>Phone</Form.Label>
+                  <Form.Control
+                    value={deliveryDetails.toAddress?.phone}
+                    placeholder="e.g. 08012345678"
+                    onChange={(e) =>
+                      setDeliveryDetails((prev) => ({
+                        ...prev,
+                        toAddress: { ...prev.toAddress, phone: e.target.value },
+                      }))
+                    }
+                  />
+                </div>
+              </div>
             </Form.Group>
+
+
             <Form.Group className="mb-2">
               <Form.Label>Type</Form.Label>
               <Form.Select value={type} onChange={(e) => setType(e.target.value)}>

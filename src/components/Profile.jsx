@@ -17,7 +17,9 @@ const AccountSummary = () => {
     fullName: "",
     username: "",
     email: "",
-    address: "",
+    city: "",
+    state: "",
+    country: "",
     bio: "",
     accountName: "",
     accountNumber: "",
@@ -28,7 +30,6 @@ const AccountSummary = () => {
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
   const [alertVariant, setAlertVariant] = useState('success');
-  const [suggestions, setSuggestions] = useState({ toAddress: [], fromAddress: [] });
   const displayAlert = (message, variant = 'success', duration = 10000) => {
     setAlertMessage(message);
     setAlertVariant(variant);
@@ -59,7 +60,9 @@ const AccountSummary = () => {
             fullName: data.fullName || "",
             username: data.username || "",
             email: data.email || "",
-            address: data.address || "",
+            city: data.city || "",
+            state: data.state || "",
+            country: data.country || "",
             bio: data.bio || "",
             accountName: data.accountName || "",
             accountNumber: data.accountNumber || "",
@@ -134,24 +137,34 @@ const AccountSummary = () => {
     // Initialize formDataToSubmit first
     const formDataToSubmit = new FormData();
 
-    // Append all form data to formDataToSubmit
-    Object.keys(formData).forEach((key) => {
-      formDataToSubmit.append(key, formData[key]);
-    });
-
+  Object.keys(formData).forEach((key) => { 
+      formDataToSubmit.append(key, formData[key]); 
+  });
+  
     // Append image if it exists
     if (image) {
       formDataToSubmit.append("image", image);
     }
 
     // Validate form data
-    if (!formData.fullName || !formData.username || !formData.email || !formData.address || !formData.bio || !formData.phoneNumber) {
+    if (
+      !formData.fullName ||
+      !formData.username ||
+      !formData.email ||
+      !formData.city ||
+      !formData.state ||
+      !formData.country ||
+      !formData.bio ||
+      !formData.phoneNumber
+    ) {
       displayAlert("Please complete your profile information", "danger");
       return;
     }
+  
+  
 
     // Validate account details before proceeding
-    if (!formData.accountName || !formData.accountNumber || !formData.accountNumber || !isVerified) {
+    if (!formData.accountName || !formData.accountNumber || !formData.bankName || !isVerified) {
       displayAlert(`${t("profile.verifyBankDetails")}`, "danger");
       return;
     }
@@ -161,6 +174,7 @@ const AccountSummary = () => {
       formDataToSubmit.append("isVerified", isVerified);
     }
 
+    console.log(formData)
 
     try {
       const response = await axios.put(
@@ -225,34 +239,7 @@ const AccountSummary = () => {
     }
   };
 
-  const fetchAddressSuggestions = async (input, addressType) => {
-    if (!input) {
-      setSuggestions((prev) => ({ ...prev, [addressType]: [] }));
-      return;
-    }
 
-    try {
-      const response = await axios.get(
-        "https://maps.gomaps.pro/maps/api/place/queryautocomplete/json",
-        {
-          params: {
-            input: encodeURIComponent(input),
-            key: "AlzaSyFVdcyOOSaO_fmoNiBWYVud1cZgwS_FvNI",
-          },
-        }
-      );
-
-      const fetchedSuggestions = response.data.predictions.map((prediction) => ({
-        displayName: prediction.description,
-        placeId: prediction.place_id,
-      }));
-
-      setSuggestions((prev) => ({ ...prev, [addressType]: fetchedSuggestions }));
-    } catch (error) {
-      console.error("Error fetching address suggestions:", error.response?.data || error.message);
-      setSuggestions((prev) => ({ ...prev, [addressType]: [] }));
-    }
-  };
 
   if (!user) {
     return <div className="text-center py-5">{t("profile.loading")}</div>;
@@ -267,7 +254,7 @@ const AccountSummary = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
       setTransactions(data.data); // Set transactions data
-      console.log("Transactions fetched successfully", data);
+      // console.log("Transactions fetched successfully", data);
     } catch (error) {
       console.error("Failed to fetch transactions", error);
     } finally {
@@ -284,7 +271,9 @@ const AccountSummary = () => {
             {!isVerified ||
               !formData.fullName ||
               !formData.email ||
-              !formData.address ||
+              !formData.city ||
+              !formData.state ||
+              !formData.country ||
               !formData.bio ||
               !formData.phoneNumber ? (
               <i className="d-block text-danger">
@@ -371,38 +360,40 @@ const AccountSummary = () => {
                       </Form.Group>
                     </Col>
                   </Row>
-                  <Form.Group className="mb-3 position-relative">
-                    <Form.Label>{t("profile.address")}</Form.Label>
+
+                  <Form.Group className="mb-3">
+                    <Form.Label>City</Form.Label>
                     <Form.Control
-                      name="address"
+                      type="text"
+                      name="city"
                       className="form-control"
-                      rows="3"
-                      value={formData.address}
-                      onChange={(e) => {
-                        handleChange(e);
-                        fetchAddressSuggestions(e.target.value, "address");
-                      }}
+                      value={formData.city}
+                      onChange={handleChange}
                     />
-                    {suggestions.address && suggestions.address.length > 0 && (
-                      <ul className="list-group position-absolute w-100 mt-1" style={{ zIndex: 1050 }}>
-                        {suggestions.address.map((suggestion, index) => (
-                          <li
-                            key={index}
-                            className="list-group-item list-group-item-action"
-                            onClick={() => {
-                              setFormData((prevData) => ({
-                                ...prevData,
-                                address: suggestion.displayName,
-                              }));
-                              setSuggestions((prev) => ({ ...prev, address: [] }));
-                            }}
-                          >
-                            {suggestion.displayName}
-                          </li>
-                        ))}
-                      </ul>
-                    )}
                   </Form.Group>
+
+                  <Form.Group className="mb-3">
+                    <Form.Label>State</Form.Label>
+                    <Form.Control
+                      type="text"
+                      name="state"
+                      className="form-control"
+                      value={formData.state}
+                      onChange={handleChange}
+                    />
+                  </Form.Group>
+
+                  <Form.Group className="mb-3">
+                    <Form.Label>Country</Form.Label>
+                    <Form.Control
+                      type="text"
+                      name="country"
+                      className="form-control"
+                      value={formData.country}
+                      onChange={handleChange}
+                    />
+                  </Form.Group>
+
                   <Form.Group className="mb-3">
                     <Form.Label>{t("profile.bio")}</Form.Label>
                     <Form.Control name="bio"
