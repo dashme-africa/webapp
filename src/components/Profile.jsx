@@ -6,7 +6,8 @@ import { Table } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from "react-router-dom";
 import '../custom.css';
-import { TbChevronsDownLeft } from "react-icons/tb";
+import MyProducts from './MyProducts';
+
 
 const AccountSummary = () => {
   const { t } = useTranslation();
@@ -34,7 +35,6 @@ const AccountSummary = () => {
   const [activeTab, setActiveTab] = useState("profile");
   const [transactions, setTransactions] = useState([]);
   const [orders, setOrders] = useState([]); // New state for orders
-  const [shipments, setShipments] = useState([]); // New state for shipments
   const navigate = useNavigate();
 
   const displayAlert = (message, variant = 'success', duration = 10000) => {
@@ -107,39 +107,31 @@ const AccountSummary = () => {
     const fetchOrders = async () => {
       const token = localStorage.getItem("token");
       const userId = user._id;
-      console.log(user)
       try {
         const token = localStorage.getItem("token");
         const { data } = await axios.get(`${apiURL}/orders/user/${userId}`, {
           headers: {
-            Authorization: `Bearer ${token}`
+            Authorization: `Bearer ${token}`,
           },
         });
-        setOrders(data.orders);
+        const ordersWithShipmentStatus = await Promise.all(data.orders.map(async (order) => {
+          const shipmentStatusResponse = await axios.get(`${apiURL}/track-shipment/${order.shipmentReference}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          // console.log(shipmentStatusResponse.data.data.current_status)
+          return { ...order, shipmentStatus: shipmentStatusResponse.data.data.current_status };
+        }));
+        setOrders(ordersWithShipmentStatus);
       } catch (error) {
         console.error("Failed to fetch orders", error);
-      }
+      }
     };
-  
-    // Fetch shipments
-    // const fetchShipments = async () => {
-    //   try {
-    //     const token = localStorage.getItem("token");
-    //     const { data } = await axios.get(`${apiURL}/api/track-shipment/:reference`, {
-    //       headers: {
-    //         Authorization: `Bearer ${token}`,
-    //       },
-    //     });
-    //     setShipments(data.shipments);
-    //   } catch (error) {
-    //     console.error("Failed to fetch shipments", error);
-    //   }
-    // };
   
     useEffect(() => {
       if (user) {
         fetchOrders();
-        // fetchShipments();
       }
     }, [user]);
     
@@ -542,33 +534,50 @@ const AccountSummary = () => {
         case "orders": 
         return (
           orders.length > 0 ? (
-            <Table striped bordered hover responsive>
-              <thead className="table-success">
-                <tr>
-                  <th>No.</th>
-                  {/* <th>Order ID</th> */}
-                  <th>Product Image</th>
-                  <th>Title</th>
-                  <th>Total</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {orders.map((order, index) => (
-                  <tr key={order._id}>
-                    <td>{index + 1}</td>
-                    {/* <td>{order._id}</td> */}
-                    <td><img src={order.productId.primaryImage} width="70px" alt="" /></td>
-                    <td>{order.productId.title}</td>
-                    {/* <td>{new Date(order.createdAt).toLocaleString()}</td> */}
-                    <td>₦{(order.productId.price).toFixed(2)}</td>
-                    <td className={order.status === 'success' ? 'text-success' : 'text-danger'}> 
-                      {order.status} 
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
+            <div className="p-3">
+              <h4 className="text-success mb-3">View and Track Orders</h4>
+            <Table striped hover responsive>
+             <thead className="table-success text-center"> 
+          <tr> 
+            <th>No.</th> 
+            {/* <th>Order ID</th> */} 
+            <th>Product Image</th> 
+            <th>Title</th> 
+            <th>Total</th> 
+            <th>Quantity</th> 
+            <th>Shipment Status</th> 
+          </tr> 
+        </thead> 
+
+              <tbody className="text-center"> 
+          {orders.map((order, index) => ( 
+            <tr key={order._id}> 
+              <td>{index + 1}</td> 
+              {/* <td>{order._id}</td> */} 
+              <td><img src={order.productId.primaryImage} width="70px" alt="" /></td> 
+              <td>{order.productId.title}</td> 
+              {/* <td>{new Date(order.createdAt).toLocaleString()}</td> */} 
+              <td>₦{(order.productId.price).toFixed(2)} 
+              {}
+                
+                </td> 
+              <td> 
+                {order.quantity}  
+              </td> 
+              <td> 
+                {order?.shipmentStatus === 'pending' ? ( 
+                  <span className="text-warning">Pending</span> 
+                ) : order.shipmentStatus?.current_status === 'shipped' ? ( 
+                  <span className="text-success">Shipped</span> 
+                ) : ( 
+                  <span className="text-danger">Error</span> 
+                )} 
+              </td> 
+            </tr> 
+          ))} 
+        </tbody>
             </Table>
+            </div>
           ) : (
             <p className="text-center text-muted">No orders yet</p>
           )
@@ -577,8 +586,10 @@ const AccountSummary = () => {
       case "transactions":
         return (
           transactions.length > 0 ? (
-            <Table striped bordered hover responsive>
-              <thead className="table-success">
+            <div className="p-3">
+              <h4 className="text-success mb-3">View Transactions</h4>
+            <Table striped hover responsive>
+              <thead className="table-success text-center">
                 <tr>
                   <th>No.</th>
                   <th>Date</th>
@@ -588,7 +599,7 @@ const AccountSummary = () => {
                   <th>Reference</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody className="text-center">
                 {transactions.map((transaction, index) => (
                   <tr key={transaction.reference}>
                     <td>{index + 1}</td>
@@ -603,42 +614,15 @@ const AccountSummary = () => {
                 ))}
               </tbody>
             </Table>
+            </div>
+
           ) : (
             <p className="text-center text-muted">No transactions yet</p>
           )
         );
         
-      case "shipments":
-        return (
-          shipments.length > 0 ? (
-            <Table striped bordered hover responsive>
-              <thead className="table-success">
-                <tr>
-                  <th>No.</th>
-                  <th>Shipment ID</th>
-                  <th>Date</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {shipments.map((shipment, index) => (
-                  <tr key={shipment._id}>
-                    <td>{index + 1}</td>
-                    <td>{shipment._id}</td>
-                    <td>{new Date(shipment.createdAt).toLocaleString()}</td>
-                    <td className={shipment.status === 'success' ? 'text-success' : 'text-danger'}> 
-                      {shipment.status} 
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </Table>
-          ) : (
-            <p className="text-center text-muted">No shipments yet</p>
-          )
-        );
-        
-
+      case "my-products":
+        return <MyProducts />;
       default:
         return <h4>Select a section</h4>;
     }
@@ -679,12 +663,12 @@ const AccountSummary = () => {
                 My Transactions
               </li>
               <li
-                className={`px-3 py-3 rounded ${activeTab === "shipments" ? "bg-success text-white" : "hover-bg-success"
+                className={`px-3 py-3 rounded ${activeTab === "my-products" ? "bg-success text-white" : "hover-bg-success"
                   }`}
                 style={{ cursor: "pointer" }}
-                onClick={() => setActiveTab("shipments")}
+                onClick={() => setActiveTab("my-products")}
               >
-                My Shipments
+                My Products
               </li>
             </ul>
           </div>

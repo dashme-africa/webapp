@@ -93,7 +93,7 @@ const MyProductsPage = () => {
 
   return (
     <Container className="mt-4">
-      <h1 className="text-center mb-4">My Products</h1>
+      <h4 className="text-success mb-3">My Products</h4>
       {products.length === 0 ? (
         <div className="text-center text-muted">
           <h4>You have not uploaded any product</h4>
