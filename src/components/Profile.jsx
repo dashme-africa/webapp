@@ -124,6 +124,8 @@ const AccountSummary = () => {
           },
         });
         const ordersWithShipmentStatus = await Promise.all(data.orders.map(async (order) => {
+          if (order.shipmentReference) {
+
           const shipmentStatusResponse = await axios.get(`${apiURL}/track-shipment/${order.shipmentReference}`, {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -131,6 +133,12 @@ const AccountSummary = () => {
           });
           // console.log(shipmentStatusResponse.data.data.current_status)
           return { ...order, shipmentStatus: shipmentStatusResponse.data.data.current_status };
+      } else {
+        return {
+          ...order,
+          shipmentStatus: { current_status: "Not Available" }
+        };
+      }
         }));
         setOrders(ordersWithShipmentStatus);
       } catch (error) {
@@ -578,6 +586,8 @@ const AccountSummary = () => {
                           <span className="text-warning">Pending</span>
                         ) : order.shipmentStatus?.current_status === 'shipped' ? (
                           <span className="text-success">Shipped</span>
+                        ) : order.shipmentStatus?.current_status === 'Not Available' ? (
+                          <span>Not Available</span>
                         ) : (
                           <span className="text-danger">Error</span>
                         )}
