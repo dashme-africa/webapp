@@ -557,11 +557,11 @@ const AccountSummary = () => {
                 {orders.map((order, index) => (
                   <tr key={order._id}>
                     <td>{index + 1}</td>
-                    <td>{order._id}</td>
-                    <td><img src={order.primaryImage} alt="" /></td>
-                    <td>{order.title}</td>
+                    {/* <td>{order._id}</td> */}
+                    <td><img src={order.productId.primaryImage} width="70px" alt="" /></td>
+                    <td>{order.productId.title}</td>
                     {/* <td>{new Date(order.createdAt).toLocaleString()}</td> */}
-                    <td>₦{(order.total / 100).toFixed(2)}</td>
+                    <td>₦{(order.productId.price).toFixed(2)}</td>
                     <td className={order.status === 'success' ? 'text-success' : 'text-danger'}> 
                       {order.status} 
                     </td>
