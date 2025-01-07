@@ -6,6 +6,7 @@ import { Table } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from "react-router-dom";
 import '../custom.css';
+import { TbChevronsDownLeft } from "react-icons/tb";
 
 const AccountSummary = () => {
   const { t } = useTranslation();
@@ -30,6 +31,12 @@ const AccountSummary = () => {
   const [showAlert, setShowAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
   const [alertVariant, setAlertVariant] = useState('success');
+  const [activeTab, setActiveTab] = useState("profile");
+  const [transactions, setTransactions] = useState([]);
+  const [orders, setOrders] = useState([]); // New state for orders
+  const [shipments, setShipments] = useState([]); // New state for shipments
+  const navigate = useNavigate();
+
   const displayAlert = (message, variant = 'success', duration = 10000) => {
     setAlertMessage(message);
     setAlertVariant(variant);
@@ -38,9 +45,6 @@ const AccountSummary = () => {
       setShowAlert(false);
     }, duration);
   };
-  const [activeTab, setActiveTab] = useState("profile");
-  const [transactions, setTransactions] = useState([]);
-  const navigate = useNavigate();
 
   useEffect(() => {
     // Fetch user profile
@@ -97,6 +101,48 @@ const AccountSummary = () => {
     };
     fetchBanks();
   }, []);
+
+
+    // Fetch orders
+    const fetchOrders = async () => {
+      const token = localStorage.getItem("token");
+      const userId = user._id;
+      console.log(user)
+      try {
+        const token = localStorage.getItem("token");
+        const { data } = await axios.get(`${apiURL}/orders/user/${userId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          },
+        });
+        setOrders(data.orders);
+      } catch (error) {
+        console.error("Failed to fetch orders", error);
+      }
+    };
+  
+    // Fetch shipments
+    // const fetchShipments = async () => {
+    //   try {
+    //     const token = localStorage.getItem("token");
+    //     const { data } = await axios.get(`${apiURL}/api/track-shipment/:reference`, {
+    //       headers: {
+    //         Authorization: `Bearer ${token}`,
+    //       },
+    //     });
+    //     setShipments(data.shipments);
+    //   } catch (error) {
+    //     console.error("Failed to fetch shipments", error);
+    //   }
+    // };
+  
+    useEffect(() => {
+      if (user) {
+        fetchOrders();
+        // fetchShipments();
+      }
+    }, [user]);
+    
 
 
 
@@ -240,7 +286,6 @@ const AccountSummary = () => {
   };
 
 
-
   if (!user) {
     return <div className="text-center py-5">{t("profile.loading")}</div>;
   }
@@ -261,6 +306,12 @@ const AccountSummary = () => {
       // setLoading(false);
     }
   };
+
+
+
+
+
+
 
   const renderContent = () => {
     switch (activeTab) {
@@ -488,39 +539,106 @@ const AccountSummary = () => {
             </Form>
           </Col>
         )
-      case "orders":
-        return <h4>My Orders</h4>;
+        case "orders": 
+        return (
+          orders.length > 0 ? (
+            <Table striped bordered hover responsive>
+              <thead className="table-success">
+                <tr>
+                  <th>No.</th>
+                  {/* <th>Order ID</th> */}
+                  <th>Product Image</th>
+                  <th>Title</th>
+                  <th>Total</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {orders.map((order, index) => (
+                  <tr key={order._id}>
+                    <td>{index + 1}</td>
+                    <td>{order._id}</td>
+                    <td><img src={order.primaryImage} alt="" /></td>
+                    <td>{order.title}</td>
+                    {/* <td>{new Date(order.createdAt).toLocaleString()}</td> */}
+                    <td>₦{(order.total / 100).toFixed(2)}</td>
+                    <td className={order.status === 'success' ? 'text-success' : 'text-danger'}> 
+                      {order.status} 
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          ) : (
+            <p className="text-center text-muted">No orders yet</p>
+          )
+        );
+      
       case "transactions":
         return (
-          <Table striped bordered hover responsive>
-            <thead className="table-success">
-              <tr>
-                <th>No.</th>
-                <th>Date</th>
-                <th>Amount</th>
-                <th>Method</th>
-                <th>Status</th>
-                <th>Reference</th>
-              </tr>
-            </thead>
-            <tbody>
-              {transactions.map((transaction, index) => (
-                <tr key={transaction.reference}>
-                  <td>{index + 1}</td>
-                  <td>{new Date(transaction.paidAt).toLocaleString()}</td>
-                  <td>₦{(transaction.amount / 100).toFixed(2)}</td>
-                  <td>{transaction.paymentMethod}</td>
-                  <td className={transaction.status === 'success' ? 'text-success' : 'text-danger'}>
-                    {transaction.status}
-                  </td>
-                  <td>{transaction.reference}</td>
+          transactions.length > 0 ? (
+            <Table striped bordered hover responsive>
+              <thead className="table-success">
+                <tr>
+                  <th>No.</th>
+                  <th>Date</th>
+                  <th>Amount</th>
+                  <th>Method</th>
+                  <th>Status</th>
+                  <th>Reference</th>
                 </tr>
-              ))}
-            </tbody>
-          </Table>
+              </thead>
+              <tbody>
+                {transactions.map((transaction, index) => (
+                  <tr key={transaction.reference}>
+                    <td>{index + 1}</td>
+                    <td>{new Date(transaction.paidAt).toLocaleString()}</td>
+                    <td>₦{(transaction.amount / 100).toFixed(2)}</td>
+                    <td>{transaction.paymentMethod}</td>
+                    <td className={transaction.status === 'success' ? 'text-success' : 'text-danger'}> 
+                      {transaction.status} 
+                    </td>
+                    <td>{transaction.reference}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          ) : (
+            <p className="text-center text-muted">No transactions yet</p>
+          )
         );
+        
       case "shipments":
-        return <h4>My Shipments</h4>;
+        return (
+          shipments.length > 0 ? (
+            <Table striped bordered hover responsive>
+              <thead className="table-success">
+                <tr>
+                  <th>No.</th>
+                  <th>Shipment ID</th>
+                  <th>Date</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {shipments.map((shipment, index) => (
+                  <tr key={shipment._id}>
+                    <td>{index + 1}</td>
+                    <td>{shipment._id}</td>
+                    <td>{new Date(shipment.createdAt).toLocaleString()}</td>
+                    <td className={shipment.status === 'success' ? 'text-success' : 'text-danger'}> 
+                      {shipment.status} 
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          ) : (
+            <p className="text-center text-muted">No shipments yet</p>
+          )
+        );
+        
+
       default:
         return <h4>Select a section</h4>;
     }

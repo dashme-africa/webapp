@@ -131,6 +131,10 @@ const ProductDetails = () => {
               <strong>Specification: </strong>
               {product.specification}
             </p>
+            <p>
+              <strong>Location: </strong>
+              {product.location}
+            </p>
 
             {product.tag === 'For sale' ? (
               <h4 className="text-success">N {product.price}</h4>

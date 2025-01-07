@@ -70,7 +70,7 @@ const Checkout = () => {
           const { data } = await axios.get(`${apiURL}/userProfile/profile`, {
             headers: { Authorization: `Bearer ${token}` },
           });
-          setUser({ fullName: data.fullName, email: data.email, city: data.city, state: data.state, country: data.country, phoneNumber: data.phoneNumber });
+          setUser({ id: data._id, fullName: data.fullName, email: data.email, city: data.city, state: data.state, country: data.country, phoneNumber: data.phoneNumber });
           setDeliveryDetails((prev) => ({
             ...prev,
             toAddress: { ...prev.toAddress, name: data.fullName, email: data.email, city: data.city, state: data.state, country: data.country, phone: data.phoneNumber },
@@ -184,7 +184,7 @@ const Checkout = () => {
         return;
       }
       const { data } = await axios.post(`${apiURL}/rates`, payload);
-      console.log(data);
+      // console.log(data);
       
       if (data.data.rates && data.data.rates.status === true) {
         setRateDetails(data.data.rates);
@@ -236,6 +236,22 @@ const Checkout = () => {
 
       const subaccountCode = subaccountResponse.data.data.subaccount_code;
 
+      // Pass product ID, quantity, amount, rate amount, and seller ID
+      console.log({
+        email: user.email,
+        amount: totalAmount * 100, // convert to kobo
+        subaccount: subaccountCode,
+        transaction_charge: platformCharge * 100, // convert to kobo
+        redis_key: rateDetails.redis_key,
+        rate_id: rateDetails.courier.id,
+        rate_amount: rateDetails.amount,
+        product_id: product._id, // Pass product ID
+        quantity: quantity, // Pass quantity
+        product_amount: product.price, // Pass amount of product (before rate was added
+        seller_id: sellerId, // Pass seller ID 
+        user_id: user.id, // Pass user ID
+      })
+
       // Initializing the transaction with metadata
       const transactionResponse = await axios.post(`${apiURL}/payment/initialize-transaction`, {
         email: user.email,
@@ -245,7 +261,11 @@ const Checkout = () => {
         redis_key: rateDetails.redis_key,
         rate_id: rateDetails.courier.id,
         rate_amount: rateDetails.amount,
-
+        product_id: product._id, // Pass product ID
+        quantity: quantity, // Pass quantity
+        product_amount: product.price, // Pass amount of product (before rate was added
+        seller_id: sellerId, // Pass seller ID 
+        user_id: user.id, // Pass user ID
       });
 
       displayAlert('Payment initialization successful. Redirecting...');
