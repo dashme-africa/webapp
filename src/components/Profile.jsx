@@ -4,15 +4,17 @@ import axios from "axios";
 const apiURL = import.meta.env.VITE_API_URL;
 import { Table } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams  } from "react-router-dom";
 import '../custom.css';
 import MyProducts from './MyProducts';
+
 
 
 const AccountSummary = () => {
   const { t } = useTranslation();
   const [user, setUser] = useState(null);
   const [image, setImage] = useState(null);
+  const [searchParams, setSearchParams] = useSearchParams();
   const [banks, setBanks] = useState([]);
   const [filteredBanks, setFilteredBanks] = useState([]);
   const [formData, setFormData] = useState({
@@ -85,12 +87,6 @@ const AccountSummary = () => {
   }, []);
 
   useEffect(() => {
-    if (activeTab === "transactions") {
-      fetchTransactions();
-    }
-  }, [activeTab]);
-
-  useEffect(() => {
     const fetchBanks = async () => {
       try {
         const response = await axios.get(`${apiURL}/userProfile/banks`);
@@ -102,10 +98,23 @@ const AccountSummary = () => {
     fetchBanks();
   }, []);
 
+  useEffect(() => {
+    if (activeTab === "transactions") {
+      fetchTransactions();
+    }
+  }, [activeTab]);
+
+  useEffect(() => {
+    const tab = searchParams.get('tab');
+    if (tab === 'orders') {
+      setActiveTab('orders');
+    }
+  }, [searchParams]);
+  
+
 
     // Fetch orders
     const fetchOrders = async () => {
-      const token = localStorage.getItem("token");
       const userId = user._id;
       try {
         const token = localStorage.getItem("token");
@@ -531,96 +540,96 @@ const AccountSummary = () => {
             </Form>
           </Col>
         )
-        case "orders": 
+      case "orders":
         return (
           orders.length > 0 ? (
             <div className="p-3">
               <h4 className="text-success mb-3">View and Track Orders</h4>
-            <Table striped hover responsive>
-             <thead className="table-success text-center"> 
-          <tr> 
-            <th>No.</th> 
-            {/* <th>Order ID</th> */} 
-            <th>Product Image</th> 
-            <th>Title</th> 
-            <th>Total</th> 
-            <th>Quantity</th> 
-            <th>Shipment Status</th> 
-          </tr> 
-        </thead> 
+              <Table striped hover responsive>
+                <thead className="table-success text-center">
+                  <tr>
+                    <th>No.</th>
+                    {/* <th>Order ID</th> */}
+                    <th>Product Image</th>
+                    <th>Title</th>
+                    <th>Total</th>
+                    <th>Quantity</th>
+                    <th>Shipment Status</th>
+                  </tr>
+                </thead>
 
-              <tbody className="text-center"> 
-          {orders.map((order, index) => ( 
-            <tr key={order._id}> 
-              <td>{index + 1}</td> 
-              {/* <td>{order._id}</td> */} 
-              <td><img src={order.productId.primaryImage} width="70px" alt="" /></td> 
-              <td>{order.productId.title}</td> 
-              {/* <td>{new Date(order.createdAt).toLocaleString()}</td> */} 
-              <td>₦{(order.productId.price).toFixed(2)} 
-              {}
-                
-                </td> 
-              <td> 
-                {order.quantity}  
-              </td> 
-              <td> 
-                {order?.shipmentStatus === 'pending' ? ( 
-                  <span className="text-warning">Pending</span> 
-                ) : order.shipmentStatus?.current_status === 'shipped' ? ( 
-                  <span className="text-success">Shipped</span> 
-                ) : ( 
-                  <span className="text-danger">Error</span> 
-                )} 
-              </td> 
-            </tr> 
-          ))} 
-        </tbody>
-            </Table>
+                <tbody className="text-center">
+                  {orders.map((order, index) => (
+                    <tr key={order._id}>
+                      <td>{index + 1}</td>
+                      {/* <td>{order._id}</td> */}
+                      <td><img src={order.productId.primaryImage} width="70px" alt="" /></td>
+                      <td>{order.productId.title}</td>
+                      {/* <td>{new Date(order.createdAt).toLocaleString()}</td> */}
+                      <td>₦{(order.productId.price).toFixed(2)}
+                        { }
+
+                      </td>
+                      <td>
+                        {order.quantity}
+                      </td>
+                      <td>
+                        {order?.shipmentStatus === 'pending' ? (
+                          <span className="text-warning">Pending</span>
+                        ) : order.shipmentStatus?.current_status === 'shipped' ? (
+                          <span className="text-success">Shipped</span>
+                        ) : (
+                          <span className="text-danger">Error</span>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
             </div>
           ) : (
             <p className="text-center text-muted">No orders yet</p>
           )
         );
-      
+
       case "transactions":
         return (
           transactions.length > 0 ? (
             <div className="p-3">
               <h4 className="text-success mb-3">View Transactions</h4>
-            <Table striped hover responsive>
-              <thead className="table-success text-center">
-                <tr>
-                  <th>No.</th>
-                  <th>Date</th>
-                  <th>Amount</th>
-                  <th>Method</th>
-                  <th>Status</th>
-                  <th>Reference</th>
-                </tr>
-              </thead>
-              <tbody className="text-center">
-                {transactions.map((transaction, index) => (
-                  <tr key={transaction.reference}>
-                    <td>{index + 1}</td>
-                    <td>{new Date(transaction.paidAt).toLocaleString()}</td>
-                    <td>₦{(transaction.amount / 100).toFixed(2)}</td>
-                    <td>{transaction.paymentMethod}</td>
-                    <td className={transaction.status === 'success' ? 'text-success' : 'text-danger'}> 
-                      {transaction.status} 
-                    </td>
-                    <td>{transaction.reference}</td>
+              <Table striped hover responsive>
+                <thead className="table-success text-center">
+                  <tr>
+                    <th>No.</th>
+                    <th>Date</th>
+                    <th>Amount</th>
+                    <th>Method</th>
+                    <th>Status</th>
+                    <th>Reference</th>
                   </tr>
-                ))}
-              </tbody>
-            </Table>
+                </thead>
+                <tbody className="text-center">
+                  {transactions.map((transaction, index) => (
+                    <tr key={transaction._id}>
+                      <td>{index + 1}</td>
+                      <td>{new Date(transaction.paidAt).toLocaleString()}</td>
+                      <td>₦{(transaction.amount / 100).toFixed(2)}</td>
+                      <td>{transaction.paymentMethod}</td>
+                      <td className={transaction.status === 'success' ? 'text-success' : 'text-danger'}>
+                        {transaction.status}
+                      </td>
+                      <td>{transaction.reference}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
             </div>
 
           ) : (
             <p className="text-center text-muted">No transactions yet</p>
           )
         );
-        
+
       case "my-products":
         return <MyProducts />;
       default:
