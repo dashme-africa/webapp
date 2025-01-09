@@ -19,10 +19,19 @@ const ProductDetails = () => {
 
   const navigate = useNavigate();
 
+  // const buyNowHandler = () => {
+  //   if (!product) return;
+  //   navigate('/checkout', { state: { product, sellerId: product.uploader._id } });
+  // };
+
   const buyNowHandler = () => {
     if (!product) return;
-    navigate('/checkout', { state: { product, sellerId: product.uploader._id } });
-  };
+    if (product.tag === 'Donate') {
+      window.open(`https://docs.google.com/forms/d/e/1FAIpQLSdDy28mu3sKeYonBwFkx5GtDKn5uQIZA4gMBFNCg-iB2MWyVA/viewform?usp=pp_url&entry.1620091898=${product._id}&entry.1090621442=${product.uploader.username}&entry.383730589=${product.title}&entry.1439976010=${product.location}`, '_blank');
+    } else {
+      navigate('/checkout', { state: { product, sellerId: product.uploader._id } });
+    }
+  };    
 
   useEffect(() => {
     const fetchProduct = async () => {
