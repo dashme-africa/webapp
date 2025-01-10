@@ -97,7 +97,6 @@ const UploadPage = () => {
       setIsSubmitting(false);
       return;
     }
-
     if (formData.video && formData.video.size > 10 * 1024 * 1024) { // 10MB limit
       displayAlert('Video file size should not exceed 10MB', 'danger');
       setIsSubmitting(false);
