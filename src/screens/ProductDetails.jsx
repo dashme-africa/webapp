@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next';
 const ProductDetails = () => {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
+  const [currentUser, setCurrentUser] = useState(null); // Add this state variable
   const [primaryImage, setPrimaryImage] = useState(null); // State for the primary image
   const [relatedProducts, setRelatedProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -32,6 +33,28 @@ const ProductDetails = () => {
       navigate('/checkout', { state: { product, sellerId: product.uploader._id } });
     }
   };    
+
+  useEffect(() => {
+    const fetchCurrentUser = async () => {
+      const token = localStorage.getItem("token");
+      if (token) {
+        try {
+          const { data } = await axios.get(`${apiURL}/userProfile/profile`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          setCurrentUser(data); // Update the currentUser state
+          console.log(data)
+        } catch (error) {
+          console.error("Failed to fetch current user", error);
+        }
+      }
+    };
+
+    fetchCurrentUser();
+  }, []);
+
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -151,7 +174,7 @@ const ProductDetails = () => {
               <h4 className="text-primary">Donate</h4>
             )}
 
-            <div className="d-flex  mt-4">
+            {/* <div className="d-flex  mt-4">
               <div className='d-flex flex-column'>
                 <i className='text-danger'>*Coming Soon...</i>
               <Button variant="secondary" className="me-3 disabled">
@@ -163,12 +186,34 @@ const ProductDetails = () => {
               ) : (
                 <Button variant="success" className="ms-2" onClick={buyNowHandler}>Receive Now</Button>
               )}
-            </div>
+            </div> */}
+
+            {currentUser?._id === product.uploader._id ? (
+        <div className="d-flex mt-4">
+          {/* No buttons displayed */}
+        </div>
+      ) : (
+        <div className="d-flex mt-4">
+          <div className='d-flex flex-column'>
+            <i className='text-danger'>*Coming Soon...</i>
+            <Button variant="secondary" className="me-3 disabled">
+              Message Profile
+            </Button>
+          </div>
+          {product.tag === 'For sale' ? (
+            <Button variant="success" className="ms-2 px-4" onClick={buyNowHandler}>
+              Buy Now
+            </Button>
+          ) : (
+            <Button variant="success" className="ms-2" onClick={buyNowHandler}>
+              Receive Now
+            </Button>
+          )}
+        </div>
+      )}
+
           </div>
         </div>
-
-        {/* {relatedProducts?.map((item, index) => ( */}
-              {/* <div key={index} className="me-3" style={{ width: '150px' }} onClick={() => navigate(`/product/${item._id}`)}> */}
 
         {/* Related Products Section */}
         <div className="related-products mt-5">
