@@ -3,12 +3,17 @@ import react from '@vitejs/plugin-react';
 
 export default defineConfig({
   plugins: [react()],
-  base: '/', // Ensures paths are resolved correctly
+  base: '/', // Ensures correct paths
   server: {
-    historyApiFallback: true, // Optional: Needed for local development with SPA routing
+    historyApiFallback: true, // Ensures routing works during development
   },
   build: {
-    outDir: 'dist', // Render expects the build files in the "dist" folder
-    emptyOutDir: true, // Clears old build files before creating new ones
+    outDir: 'dist', // Build output directory
+    emptyOutDir: true, // Clears the output directory before each build
+  },
+  resolve: {
+    alias: {
+      '@': '/src', // Optional alias for your source directory
+    },
   },
 });
