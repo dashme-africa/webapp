@@ -49,11 +49,7 @@ const HomeScreen = ({ selectedCategory }) => {
         <Col>
           <h4 className="mb-0">{selectedCategory ? t(selectedCategory) : t("home.recommended")}</h4>
         </Col>
-        <Col className="text-end">
-          <Link to="/products" className="text-success fs-5 text-decoration-none">
-            {t("home.seeAll")}
-          </Link>
-        </Col>
+
       </Row>
 
       <Row className="px-5">
