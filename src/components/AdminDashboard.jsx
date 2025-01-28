@@ -60,7 +60,7 @@ const AdminDashboard = () => {
 					},
 				};
 				await axios.delete(`${apiURL}/adminProduct/${id}`, config);
-				setProducts(products.filter((product) => product._id !== id));
+				setProducts(products.filter((product) => product.id !== id));
 			} catch (err) {
 				// Add better error logging
 				console.error("Error:", err);
@@ -94,7 +94,7 @@ const AdminDashboard = () => {
 
 			setProducts((prevProducts) =>
 				prevProducts.map((product) =>
-					product._id === id
+					product.id === id
 						? { ...product, status: data.product.status }
 						: product
 				)
@@ -158,7 +158,7 @@ const AdminDashboard = () => {
 				</thead>
 				<tbody>
 					{products.map((product) => (
-						<tr key={product._id}>
+						<tr key={product.id}>
 							<td>
 								<Link to={product.primaryImage}>
 									<img
@@ -221,7 +221,7 @@ const AdminDashboard = () => {
 										<button
 											className="btn btn-success btn-sm me-2"
 											onClick={() =>
-												updateProductStatus(product._id, "approved")
+												updateProductStatus(product.id, "approved")
 											}
 										>
 											Approve
@@ -229,7 +229,7 @@ const AdminDashboard = () => {
 										<button
 											className="btn btn-danger btn-sm me-2"
 											onClick={() =>
-												updateProductStatus(product._id, "rejected")
+												updateProductStatus(product.id, "rejected")
 											}
 										>
 											Reject
@@ -238,13 +238,13 @@ const AdminDashboard = () => {
 								)}
 								<button
 									className="btn btn-primary btn-sm me-2"
-									onClick={() => editProduct(product._id)}
+									onClick={() => editProduct(product.id)}
 								>
 									Edit
 								</button>
 								<button
 									className="btn btn-danger btn-sm"
-									onClick={() => deleteProduct(product._id)}
+									onClick={() => deleteProduct(product.id)}
 								>
 									Delete
 								</button>

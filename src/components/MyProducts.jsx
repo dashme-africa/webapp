@@ -63,7 +63,7 @@ const MyProductsPage = () => {
 	const handleDelete = async (id) => {
 		try {
 			await axios.delete(`${apiURL}/myProducts/delete/${id}`);
-			setProducts(products.filter((product) => product._id !== id));
+			setProducts(products.filter((product) => product.id !== id));
 		} catch (err) {
 			alert("Failed to delete product. Please try again.");
 		}
@@ -113,7 +113,7 @@ const MyProductsPage = () => {
 			) : (
 				<Row>
 					{products.map((product) => (
-						<Col md={4} className="mb-4" key={product._id}>
+						<Col md={4} className="mb-4" key={product.id}>
 							<Card>
 								<Card.Img
 									variant="top"
@@ -135,7 +135,7 @@ const MyProductsPage = () => {
 									</Button>
 									<Button
 										variant="danger"
-										onClick={() => handleDelete(product._id)}
+										onClick={() => handleDelete(product.id)}
 									>
 										Delete
 									</Button>

@@ -21,19 +21,19 @@ const ProductDetails = () => {
 
 	// const buyNowHandler = () => {
 	//   if (!product) return;
-	//   navigate('/checkout', { state: { product, sellerId: product.uploader._id } });
+	//   navigate('/checkout', { state: { product, sellerId: product.uploader.id } });
 	// };
 
 	const buyNowHandler = () => {
 		if (!product) return;
 		if (product.tag === "Donate") {
 			window.open(
-				`https://docs.google.com/forms/d/e/1FAIpQLSdDy28mu3sKeYonBwFkx5GtDKn5uQIZA4gMBFNCg-iB2MWyVA/viewform?usp=pp_url&entry.1620091898=${product._id}&entry.1090621442=${product.user.username}&entry.383730589=${product.title}&entry.1439976010=${product.location}`,
+				`https://docs.google.com/forms/d/e/1FAIpQLSdDy28mu3sKeYonBwFkx5GtDKn5uQIZA4gMBFNCg-iB2MWyVA/viewform?usp=pp_url&entry.1620091898=${product.id}&entry.1090621442=${product.user.username}&entry.383730589=${product.title}&entry.1439976010=${product.location}`,
 				"_blank"
 			);
 		} else {
 			navigate("/checkout", {
-				state: { product, sellerId: product.uploader._id },
+				state: { product, sellerId: product.uploader.id },
 			});
 		}
 	};
@@ -203,7 +203,7 @@ const ProductDetails = () => {
               )}
             </div> */}
 
-						{currentUser?._id === product.uploader._id ? (
+						{currentUser?.id === product.uploader.id ? (
 							<div className="d-flex mt-4">{/* No buttons displayed */}</div>
 						) : (
 							<div className="d-flex mt-4">
@@ -247,7 +247,7 @@ const ProductDetails = () => {
 								<div
 									key={index}
 									className="col"
-									onClick={() => navigate(`/product/${item._id}`)}
+									onClick={() => navigate(`/product/${item.id}`)}
 								>
 									<div className="d-flex gap-2 align-items-baseline">
 										{product.uploader.profilePicture ? (
@@ -275,7 +275,7 @@ const ProductDetails = () => {
 									</div>
 
 									<Card className="my-4 border-0">
-										<Link to={`/product/${item._id}`}>
+										<Link to={`/product/${item.id}`}>
 											{/* Enforce consistent image height */}
 											<Card.Img
 												src={item.primaryImage}
@@ -293,7 +293,7 @@ const ProductDetails = () => {
 											<div className="d-flex justify-content-between align-items-center mb-1 mt-2">
 												{/* Title Section */}
 												<Link
-													to={`/product/${item._id}`}
+													to={`/product/${item.id}`}
 													style={{
 														textDecoration: "none",
 														color: "inherit",
@@ -327,7 +327,7 @@ const ProductDetails = () => {
 											</Card.Text>
 											{/* Button */}
 											<Link
-												to={`/product/${item._id}`}
+												to={`/product/${item.id}`}
 												style={{ textDecoration: "none" }}
 											>
 												<Button variant="success" className="text-white">

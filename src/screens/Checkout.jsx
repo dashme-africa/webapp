@@ -280,7 +280,7 @@ const Checkout = () => {
 				redis_key: rateDetails.redis_key,
 				rate_id: rateDetails.courier.id,
 				rate_amount: rateDetails.amount,
-				product_id: product._id, // Pass product ID
+				product_id: product.id, // Pass product ID
 				quantity: quantity, // Pass quantity
 				product_amount: product.price, // Pass amount of product (before rate was added
 				seller_id: sellerId, // Pass seller ID
@@ -298,7 +298,7 @@ const Checkout = () => {
 					redis_key: rateDetails.redis_key,
 					rate_id: rateDetails.courier.id,
 					rate_amount: rateDetails.amount,
-					product_id: product._id, // Pass product ID
+					product_id: product.id, // Pass product ID
 					quantity: quantity, // Pass quantity
 					product_amount: product.price, // Pass amount of product (before rate was added
 					seller_id: sellerId, // Pass seller ID
