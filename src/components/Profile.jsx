@@ -50,6 +50,7 @@ const AccountSummary = () => {
 		// Fetch user profile
 		const fetchProfile = async () => {
 			const token = localStorage.getItem("token");
+
 			if (token) {
 				try {
 					const { data } = await axios.get(`${apiURL}/userProfile/profile`, {
