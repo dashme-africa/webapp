@@ -13,6 +13,7 @@ const AccountSummary = () => {
 	const [user, setUser] = useState(null);
 	const [image, setImage] = useState(null);
 	const [searchParams, setSearchParams] = useSearchParams();
+	/**@type {[IBank[]]} */
 	const [banks, setBanks] = useState([]);
 	const [filteredBanks, setFilteredBanks] = useState([]);
 	const [formData, setFormData] = useState({
@@ -26,6 +27,7 @@ const AccountSummary = () => {
 		accountName: "",
 		accountNumber: "",
 		bankName: "",
+		bankCode: 0,
 		phoneNumber: "",
 	});
 	const [isVerified, setIsVerified] = useState(false);
@@ -178,8 +180,12 @@ const AccountSummary = () => {
 		}
 	};
 
-	const handleSelectBank = (bankName) => {
-		setFormData((prevData) => ({ ...prevData, bankName }));
+	const handleSelectBank = (bankName, bankCode) => {
+		setFormData((prevData) => ({
+			...prevData,
+			bankName,
+			bankCode,
+		}));
 		setFilteredBanks([]);
 	};
 
@@ -203,7 +209,6 @@ const AccountSummary = () => {
 		if (
 			!formData.fullName ||
 			!formData.username ||
-			!formData.email ||
 			!formData.city ||
 			!formData.state ||
 			!formData.country ||
@@ -230,7 +235,7 @@ const AccountSummary = () => {
 			formDataToSubmit.append("isVerified", isVerified);
 		}
 
-		console.log(formData);
+		// console.log(formData);
 
 		try {
 			const response = await axios.put(
@@ -260,15 +265,23 @@ const AccountSummary = () => {
 			console.error("Failed to update profile:", error);
 		}
 	};
+	// console.log(banks);
 
 	const verifyBankDetails = async () => {
 		try {
-			const { accountNumber, bankName } = formData;
+			let { accountNumber, bankName, bankCode } = formData;
+			if (!bankCode) {
+				bankCode = banks.find((bnk) => bnk.name == bankName)?.code;
+			}
 			if (!accountNumber || !bankName) {
 				displayAlert(
 					"Please fill in the account number and bank name to verify.",
 					"danger"
 				);
+				return;
+			}
+			if (!bankCode) {
+				displayAlert("Please select bank name from the list", "danger");
 				return;
 			}
 
@@ -278,6 +291,7 @@ const AccountSummary = () => {
 					params: {
 						account_number: accountNumber,
 						bank_name: bankName,
+						bank_code: bankCode,
 					},
 				},
 				{
@@ -330,7 +344,7 @@ const AccountSummary = () => {
 				return (
 					<Col
 						md={12}
-						className="bg-light p-3 rounded mb-4 border border-light border-2 "
+						className="bg-light p-3 rounded mb-4  border-light border-2 "
 					>
 						<h4 className="text-success mb-2">Edit Your Profile</h4>
 						{!isVerified ||
@@ -427,7 +441,7 @@ const AccountSummary = () => {
 												<Form.Label>{t("profile.email")}</Form.Label>
 												<Form.Control
 													type="email"
-													name="email"
+													readOnly
 													className="form-control"
 													value={formData.email}
 													onChange={handleChange}
@@ -539,7 +553,7 @@ const AccountSummary = () => {
 								<Col md={6}>
 									<Form.Group className="mb-4">
 										<Form.Label htmlFor="bankName">
-											{t("profile.bankName")}
+											{t("profile.bankName", {})}
 										</Form.Label>
 										<Form.Control
 											type="text"
@@ -557,7 +571,9 @@ const AccountSummary = () => {
 													<li
 														key={bank.code}
 														className="list-group-item"
-														onClick={() => handleSelectBank(bank.name)}
+														onClick={() =>
+															handleSelectBank(bank.name, bank.code)
+														}
 														style={{ cursor: "pointer" }}
 													>
 														{bank.name}
