@@ -92,9 +92,9 @@ const NotificationPage = () => {
 			</Button>
 			<ListGroup>
 				{notifications.length > 0 ? (
-					notifications.map((notif) => (
+					notifications.map((notif, key) => (
 						<ListGroup.Item
-							key={notif.id} // Ensure the key is unique for each notification
+							key={key} // Ensure the key is unique for each notification
 							className={notif.read ? "" : "bg-light"}
 						>
 							<div className="d-flex justify-content-between align-items-center">
