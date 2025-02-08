@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { compute, computed } from "zustand-computed-state";
 import { createJSONStorage, persist } from "zustand/middleware";
-import { User } from "../types";
+import { Product, User } from "../types";
 
 interface UserStore {
 	user: User | null;
@@ -9,6 +9,9 @@ interface UserStore {
 	updateProfile(
 		profile: Omit<User, "notification" | "order" | "products">
 	): void;
+	removeProduct(id: string): void;
+	addProduct(product: Product): void;
+	updateProduct(product: Product): void;
 }
 
 const useUserStore = create<UserStore>()(
@@ -24,6 +27,44 @@ const useUserStore = create<UserStore>()(
 				set((st) => ({
 					...st,
 					user: { products, notification, order, ...profile },
+				}));
+			},
+			removeProduct(id) {
+				const { products, ...user } = get().user!;
+
+				set((st) => ({
+					...st,
+					user: {
+						...user,
+						products: products.filter((prod) => prod.id !== id),
+					},
+				}));
+			},
+			addProduct(product) {
+				const { products, ...user } = get().user!;
+				products.push(product);
+				set((st) => ({
+					...st,
+					user: {
+						...user,
+						products,
+					},
+				}));
+			},
+			updateProduct(product) {
+				const { products, ...user } = get().user!;
+
+				set((st) => ({
+					...st,
+					user: {
+						...user,
+						products: products.map((prod) => {
+							if (prod.id === product.id) {
+								return product;
+							}
+							return prod;
+						}),
+					},
 				}));
 			},
 		})

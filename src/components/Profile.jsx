@@ -1,7 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Container, Row, Col, Form, Button, Alert } from "react-bootstrap";
-import axios from "axios";
-const apiURL = import.meta.env.VITE_API_URL;
 import { Table } from "react-bootstrap";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -18,9 +16,10 @@ const AccountSummary = () => {
 	const updateProfile = useUserStore((st) => st.updateProfile);
 	const [image, setImage] = useState(null);
 	const [searchParams, setSearchParams] = useSearchParams();
-	/**@type {[IBank[]]} */
+	/**@type {[import("../types").IBank[]]} */
 	const [banks, setBanks] = useState([]);
 	const [filteredBanks, setFilteredBanks] = useState([]);
+	const [accountName, setAccountName] = useState(user?.bankName || "");
 	const [formData, setFormData] = useState({
 		fullName: user?.fullName,
 		username: user?.username,
@@ -35,14 +34,16 @@ const AccountSummary = () => {
 		phoneNumber: user?.phoneNumber,
 	});
 	const [isVerified, setIsVerified] = useState(
-		user.accountName && user.accountNumber && user.bankName
+		user?.accountName && user?.accountNumber && user?.bankName
 	);
 	const [showAlert, setShowAlert] = useState(false);
 	const [alertMessage, setAlertMessage] = useState("");
 	const [alertVariant, setAlertVariant] = useState("success");
 	const [activeTab, setActiveTab] = useState("profile");
 	const [transactions, setTransactions] = useState([]);
+	/**@type {[import("../types").Order[]]} */
 	const [orders, setOrders] = useState([]); // New state for orders
+	// const orders = useUserStore((st) => st.user)?.order;
 	const navigate = useNavigate();
 
 	/**@type {React.MutableRefObject<HTMLFormElement|null>} */
@@ -57,44 +58,6 @@ const AccountSummary = () => {
 		}, duration);
 	};
 
-	// console.log(user);
-
-	// useEffect(() => {
-	// 	// Fetch user profile
-	// 	const fetchProfile = async () => {
-	// 		const token = localStorage.getItem("token");
-
-	// 		if (token) {
-	// 			try {
-	// 				const { data } = await axios.get(`${apiURL}/userProfile/profile`, {
-	// 					headers: { Authorization: `Bearer ${token}` },
-	// 				});
-	// 				setUser(data);
-	// 				setFormData((prevData) => ({
-	// 					...prevData,
-	// 					fullName: data.fullName || "",
-	// 					username: data.username || "",
-	// 					email: data.email || "",
-	// 					city: data.city || "",
-	// 					state: data.state || "",
-	// 					country: data.country || "",
-	// 					bio: data.bio || "",
-	// 					accountName: data.accountName || "",
-	// 					accountNumber: data.accountNumber || "",
-	// 					bankName: data.bankName || "",
-	// 					phoneNumber: data.phoneNumber || "",
-	// 				}));
-
-	// 				setIsVerified(data.isVerified || false);
-	// 			} catch (error) {
-	// 				console.error("Failed to fetch user profile", error);
-	// 			}
-	// 		}
-	// 	};
-
-	// 	fetchProfile();
-	// }, []);
-
 	useEffect(() => {
 		const fetchBanks = async () => {
 			const res = await useFetch("/userProfile/banks");
@@ -107,8 +70,13 @@ const AccountSummary = () => {
 	}, []);
 
 	useEffect(() => {
-		if (activeTab === "transactions") {
+		if (activeTab === "") {
 			fetchTransactions();
+		}
+	}, [activeTab]);
+	useEffect(() => {
+		if (activeTab === "orders") {
+			fetchOrders();
 		}
 	}, [activeTab]);
 
@@ -120,44 +88,45 @@ const AccountSummary = () => {
 	}, [searchParams]);
 
 	// Fetch orders
-	// const fetchOrders = async () => {
-	// 	const userId = user.id;
-	// 	try {
-	// 		const token = localStorage.getItem("token");
-	// 		const { data } = await axios.get(`${apiURL}/orders/user/${userId}`, {
-	// 			headers: {
-	// 				Authorization: `Bearer ${token}`,
-	// 			},
-	// 		});
-	// 		const ordersWithShipmentStatus = await Promise.all(
-	// 			data.orders.map(async (order) => {
-	// 				if (order.shipmentReference) {
-	// 					const shipmentStatusResponse = await axios.get(
-	// 						`${apiURL}/track-shipment/${order.shipmentReference}`,
-	// 						{
-	// 							headers: {
-	// 								Authorization: `Bearer ${token}`,
-	// 							},
-	// 						}
-	// 					);
-	// 					// console.log(shipmentStatusResponse.data.data.current_status)
-	// 					return {
-	// 						...order,
-	// 						shipmentStatus: shipmentStatusResponse.data.data.current_status,
-	// 					};
-	// 				} else {
-	// 					return {
-	// 						...order,
-	// 						shipmentStatus: { current_status: "Not Available" },
-	// 					};
-	// 				}
-	// 			})
-	// 		);
-	// 		setOrders(ordersWithShipmentStatus);
-	// 	} catch (error) {
-	// 		console.error("Failed to fetch orders", error);
-	// 	}
-	// };
+	const fetchOrders = async () => {
+		const userId = user?.id;
+		const res = await useFetch(`/orders/user/${userId}`);
+
+		// console.log(res);
+
+		if (!res.ok) return toast.error(res.message);
+
+		const ordersWithShipmentStatus = await Promise.all(
+			res.data.map(async (order) => {
+				if (order.shipmentReference) {
+					const shipmentStatusResponse = await useFetch(
+						`/track-shipment/${order.shipmentReference}`
+					);
+
+					// const shipmentStatusResponse = await axios.get(
+					// 	`${apiURL}/track-shipment/${order.shipmentReference}`,
+					// 	{
+					// 		headers: {
+					// 			Authorization: `Bearer ${token}`,
+					// 		},
+					// 	}
+					// );
+					// console.log(shipmentStatusResponse.data.data.current_status)
+					return {
+						...order,
+						shipmentStatus: shipmentStatusResponse.data.data.current_status,
+					};
+				} else {
+					return {
+						...order,
+						shipmentStatus: { current_status: "Not Available" },
+					};
+				}
+			})
+		);
+		setOrders(ordersWithShipmentStatus);
+		return;
+	};
 
 	const handleImageChange = (e) => {
 		const file = e.target.files[0];
@@ -258,31 +227,6 @@ const AccountSummary = () => {
 		toast.success(res.message);
 		updateProfile(res.data);
 		navigate("/upload");
-		return;
-		try {
-			const response = await axios.put(
-				`${apiURL}/userProfile/profile`,
-				formDataToSubmit,
-				{
-					headers: {
-						Authorization: `Bearer ${token}`,
-					},
-				}
-			);
-
-			if (response.data) {
-				setUser(response.data);
-				displayAlert(t("profile.profileUpdated"));
-				setTimeout(() => {
-					navigate("/upload");
-				}, 3000);
-			} else {
-				toast.error(response.data.message || t("profile.failedToUpdate"));
-			}
-		} catch (error) {
-			toast.error("Failed to update profile.");
-			console.error("Failed to update profile:", error);
-		}
 	}
 	// console.log(banks);
 
@@ -311,52 +255,24 @@ const AccountSummary = () => {
 			bank_name: bankName,
 			bank_code: bankCode,
 		});
+
+		// return console.log({
+		// 	account_number: accountNumber,
+		// 	bank_name: bankName,
+		// 	bank_code: bankCode,
+		// });
+
 		const queryString = searchParams.toString();
 
 		const res = await useFetch(`/userProfile/resolve-account?${queryString}`);
 		// console.log(res);
 		if (!res.ok) return toast.error(res.message);
 
-		setFormData((prevData) => ({
-			...prevData,
-			accountName: res.data.account_name,
-		}));
+		setAccountName(res.data.data.account_name);
+
 		setIsVerified(true);
 
 		toast.success(t("profile.bankVerified"));
-
-		return;
-		try {
-			const response = await axios.get(
-				`${apiURL}/userProfile/resolve-account`,
-				{
-					params: {
-						account_number: accountNumber,
-						bank_name: bankName,
-						bank_code: bankCode,
-					},
-				},
-				{
-					headers: {
-						Authorization: `Bearer ${localStorage.getItem("token")}`,
-					},
-				}
-			);
-
-			if (response.data.data?.account_name) {
-				setFormData((prevData) => ({
-					...prevData,
-					accountName: response.data.data.account_name,
-				}));
-				setIsVerified(true);
-				displayAlert(t("profile.bankVerified"));
-			} else {
-				toast.error(t("profile.bankVerificationFailed"));
-			}
-		} catch (error) {
-			// console.error("Bank verification error:", error);
-			toast.error("Error verifying bank details. Try again later.");
-		}
 	};
 
 	if (!user) {
@@ -408,7 +324,8 @@ const AccountSummary = () => {
 										<img
 											id="profile-img"
 											src={
-												user.profilePicture || "https://via.placeholder.com/150"
+												user?.profilePicture ||
+												"https://via.placeholder.com/150"
 											}
 											alt="Profile"
 											className="rounded-circle border py-3 px-3 img-fluid"
@@ -442,7 +359,7 @@ const AccountSummary = () => {
 													name="fullName"
 													className="form-control"
 													// value={formData.fullName}
-													defaultValue={user.fullName}
+													defaultValue={user?.fullName}
 													onChange={handleChange}
 												/>
 											</Form.Group>
@@ -456,7 +373,7 @@ const AccountSummary = () => {
 													type="text"
 													name="phoneNumber"
 													className="form-control"
-													defaultValue={user.phoneNumber}
+													defaultValue={user?.phoneNumber}
 													placeholder="e.g. 08012345678"
 													onChange={handleChange}
 												/>
@@ -470,7 +387,7 @@ const AccountSummary = () => {
 													// name="email"
 													readOnly
 													className="form-control"
-													defaultValue={user.email}
+													defaultValue={user?.email}
 													onChange={handleChange}
 												/>
 											</Form.Group>
@@ -485,7 +402,7 @@ const AccountSummary = () => {
 													type="text"
 													name="city"
 													className="form-control"
-													defaultValue={user.city}
+													defaultValue={user?.city}
 													onChange={handleChange}
 													placeholder="e.g. Ikeja"
 												/>
@@ -499,7 +416,7 @@ const AccountSummary = () => {
 													type="text"
 													name="state"
 													className="form-control"
-													defaultValue={user.state}
+													defaultValue={user?.state}
 													onChange={handleChange}
 													placeholder="e.g. Lagos"
 												/>
@@ -513,7 +430,7 @@ const AccountSummary = () => {
 													type="text"
 													name="country"
 													className="form-control"
-													defaultValue={user.country}
+													defaultValue={user?.country}
 													onChange={handleChange}
 													placeholder="e.g. Nigeria"
 												/>
@@ -527,7 +444,7 @@ const AccountSummary = () => {
 											name="bio"
 											className="form-control"
 											rows="3"
-											defaultValue={user.bio}
+											defaultValue={user?.bio}
 											onChange={handleChange}
 										/>
 									</Form.Group>
@@ -554,8 +471,8 @@ const AccountSummary = () => {
 											id="accountName"
 											className="form-control"
 											placeholder="Will display after acc. no is verified"
-											defaultValue={user.accountName}
-											onChange={handleChange}
+											defaultValue={accountName}
+											// onChange={handleChange}
 											// disabled={isVerified}
 											readOnly
 										/>
@@ -571,7 +488,7 @@ const AccountSummary = () => {
 											name="accountNumber"
 											id="accountNumber"
 											className="form-control"
-											defaultValue={user.accountNumber}
+											defaultValue={user?.accountNumber}
 											onChange={handleChange}
 											// readOnly={isVerified}
 										/>
@@ -582,16 +499,39 @@ const AccountSummary = () => {
 										<Form.Label htmlFor="bankName">
 											{t("profile.bankName", {})}
 										</Form.Label>
-										<Form.Control
+										{/* <Form.Control
 											type="text"
 											name="bankName"
 											id="bankName"
 											className="form-control"
 											placeholder="Type to find bank name"
-											defaultValue={user.bankName}
+											defaultValue={user?.bankName}
 											onChange={handleChange}
 											// readOnly={isVerified}
-										/>
+										/> */}
+
+										<Form.Select
+											type="text"
+											name="bankName"
+											id="bankName"
+											className="form-control"
+											placeholder="Type to find bank name"
+											defaultValue={user?.bankName}
+											onChange={() => setIsVerified(false)}
+										>
+											<option value="null" selected disabled>
+												Select bank name
+											</option>
+											{banks.map((bank) => (
+												<option
+													// selected={bank.name === user?.bankName}
+													key={bank.id}
+													value={bank.name}
+												>
+													{bank.name}
+												</option>
+											))}
+										</Form.Select>
 										{filteredBanks.length > 0 && (
 											<ul className="list-group mt-1">
 												{filteredBanks.map((bank) => (
@@ -653,15 +593,15 @@ const AccountSummary = () => {
 										{/* <td>{order.id}</td> */}
 										<td>
 											<img
-												src={order.productId.primaryImage}
+												src={order.product.primaryImage}
 												width="70px"
 												alt=""
 											/>
 										</td>
-										<td>{order.productId.title}</td>
+										<td>{order.product.title}</td>
 										{/* <td>{new Date(order.createdAt).toLocaleString()}</td> */}
 										<td>
-											₦{order.productId.price.toFixed(2)}
+											₦{order.product.price?.toFixed(2)}
 											{}
 										</td>
 										<td>{order.quantity}</td>

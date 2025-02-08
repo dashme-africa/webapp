@@ -4,6 +4,9 @@ import { useTranslation } from "react-i18next";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Button, Alert } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import useUserStore from "../store/user.store";
+import { toast } from "sonner";
+import { useFetch } from "../api.service";
 const apiURL = import.meta.env.VITE_API_URL;
 
 const UploadPage = () => {
@@ -23,71 +26,61 @@ const UploadPage = () => {
 		images: [],
 	});
 	const [isSubmitting, setIsSubmitting] = useState(false);
-	const [uploader, setUploader] = useState(null);
-	const [showAlert, setShowAlert] = useState(false);
-	const [alertMessage, setAlertMessage] = useState("");
-	const [alertVariant, setAlertVariant] = useState("success");
-	const displayAlert = (message, variant = "success", duration = 5000) => {
-		setAlertMessage(message);
-		setAlertVariant(variant);
-		setShowAlert(true);
-		setTimeout(() => {
-			setShowAlert(false);
-		}, duration);
-	};
+	const user = useUserStore((st) => st.user);
+	const addProduct = useUserStore((st) => st.addProduct);
 
-	useEffect(() => {
-		const fetchUploader = async () => {
-			const token = localStorage.getItem("token");
-			if (token) {
-				try {
-					const response = await axios.get(`${apiURL}/userProfile/profile`, {
-						headers: { Authorization: `Bearer ${token}` },
-					});
-					setUploader(response.data);
-					if (
-						!response.data.fullName ||
-						!response.data.email ||
-						!response.data.city ||
-						!response.data.state ||
-						!response.data.country ||
-						!response.data.bio ||
-						!response.data.phoneNumber
-					) {
-						displayAlert(
-							"Please complete your profile info to upload a product",
-							"danger"
-						);
-						setTimeout(() => {
-							navigate("/profile"); // Redirect to profile if bank is not verified
-						}, 3000);
-					} else if (!response.data.isVerified) {
-						displayAlert(
-							"Please verify your bank details to upload a product.",
-							"danger"
-						);
-						setTimeout(() => {
-							navigate("/profile"); // Redirect to profile if bank is not verified
-						}, 3000);
-					} else {
-						displayAlert(
-							"Reach a wider audience! Upload your product now.",
-							"success"
-						);
-					}
-				} catch (error) {
-					console.error("Failed to fetch uploader info:", error);
-				}
-			} else {
-				displayAlert("Please log in to access the upload page.", "danger");
-				const timer = setTimeout(() => {
-					navigate("/login", { replace: true });
-				}, 2000);
-				return () => clearTimeout(timer);
-			}
-		};
-		fetchUploader();
-	}, [navigate]);
+	// useEffect(() => {
+	// 	const fetchUploader = async () => {
+	// 		const token = localStorage.getItem("token");
+	// 		if (token) {
+	// 			try {
+	// 				const response = await axios.get(`${apiURL}/userProfile/profile`, {
+	// 					headers: { Authorization: `Bearer ${token}` },
+	// 				});
+	// 				setUploader(response.data);
+	// 				if (
+	// 					!response.data.fullName ||
+	// 					!response.data.email ||
+	// 					!response.data.city ||
+	// 					!response.data.state ||
+	// 					!response.data.country ||
+	// 					!response.data.bio ||
+	// 					!response.data.phoneNumber
+	// 				) {
+	// 					toast.error(
+	// 						"Please complete your profile info to upload a product",
+	//
+	// 					);
+	// 					setTimeout(() => {
+	// 						navigate("/profile"); // Redirect to profile if bank is not verified
+	// 					}, 3000);
+	// 				} else if (!response.data.isVerified) {
+	// 					toast.error(
+	// 						"Please verify your bank details to upload a product.",
+	//
+	// 					);
+	// 					setTimeout(() => {
+	// 						navigate("/profile"); // Redirect to profile if bank is not verified
+	// 					}, 3000);
+	// 				} else {
+	// 					toast.error(
+	// 						"Reach a wider audience! Upload your product now.",
+	// 						"success"
+	// 					);
+	// 				}
+	// 			} catch (error) {
+	// 				console.error("Failed to fetch uploader info:", error);
+	// 			}
+	// 		} else {
+	// 			toast.error("Please log in to access the upload page.", );
+	// 			const timer = setTimeout(() => {
+	// 				navigate("/login", { replace: true });
+	// 			}, 2000);
+	// 			return () => clearTimeout(timer);
+	// 		}
+	// 	};
+	// 	fetchUploader();
+	// }, [navigate]);
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
@@ -98,22 +91,22 @@ const UploadPage = () => {
 			formData.images &&
 			formData.images.some((file) => file.size > 10 * 1024 * 1024)
 		) {
-			displayAlert("Each Image file size should not exceed 10MB", "danger");
+			toast.error("Each Image file size should not exceed 10MB");
 			setIsSubmitting(false);
 			return;
 		}
 
-		console.log(formData.images.length);
+		// console.log(formData.images.length);
 		// Frontend validation for the number of images
 		if (formData.images && formData.images.length > 10) {
-			displayAlert(t("upload.maxImagesError"), "danger");
+			toast.error(t("upload.maxImagesError"));
 			setIsSubmitting(false);
 			return;
 		}
 
 		if (formData.video && formData.video.size > 10 * 1024 * 1024) {
 			// 10MB limit
-			displayAlert("Video file size should not exceed 10MB", "danger");
+			toast.error("Video file size should not exceed 10MB");
 			setIsSubmitting(false);
 			return;
 		}
@@ -130,7 +123,7 @@ const UploadPage = () => {
 			) &&
 			(!formData.video || formData.video === null)
 		) {
-			displayAlert("A video is required for the selected category", "danger");
+			toast.error("A video is required for the selected category");
 			setIsSubmitting(false);
 			return;
 		}
@@ -174,7 +167,7 @@ const UploadPage = () => {
 				formData.primaryImageIndex < 0 ||
 				formData.primaryImageIndex >= uploadedImages.length
 			) {
-				displayAlert(t("upload.selectPrimaryImage"), "danger");
+				toast.error(t("upload.selectPrimaryImage"));
 				setIsSubmitting(false);
 				return;
 			}
@@ -186,29 +179,28 @@ const UploadPage = () => {
 				category: formData.category,
 				price: formData.price,
 				priceCategory: formData.priceCategory,
-				location: `${uploader.city}, ${uploader.state}, ${uploader.country}`,
+				location: `${user.city}, ${user.state}, ${user.country}`,
 				specification: formData.specification,
 				condition: formData.condition,
 				primaryImageIndex: formData.primaryImageIndex,
 				images: uploadedImages.join(", "),
 				video: uploadedVideo,
-				uploader: uploader.id,
+				uploader: user.id,
 			};
 
 			// Verify uploader profile completeness
 			if (
-				!uploader ||
-				!uploader.fullName ||
-				!uploader.email ||
-				!uploader.phoneNumber ||
-				!uploader.city ||
-				!uploader.state ||
-				!uploader.country ||
-				!uploader.bio
+				!user ||
+				!user.fullName ||
+				!user.email ||
+				!user.phoneNumber ||
+				!user.city ||
+				!user.state ||
+				!user.country ||
+				!user.bio
 			) {
-				displayAlert(
-					"Please complete your profile info before uploading a product.",
-					"danger"
+				toast.error(
+					"Please complete your profile info before uploading a product."
 				);
 				setIsSubmitting(false);
 				setTimeout(() => {
@@ -218,8 +210,8 @@ const UploadPage = () => {
 			}
 
 			// Verify uploader
-			if (uploader && !uploader.isVerified) {
-				displayAlert(t("upload.verifiedError"), "danger");
+			if (user && !user.isVerified) {
+				toast.error(t("upload.verifiedError"));
 				setIsSubmitting(false);
 				setTimeout(() => {
 					navigate("/profile");
@@ -229,38 +221,22 @@ const UploadPage = () => {
 
 			// Ensure at least one image is uploaded
 			if (!formData.images || formData.images.length === 0) {
-				displayAlert(t("upload.addImageError"), "danger");
+				toast.error(t("upload.addImageError"));
 				setIsSubmitting(false);
 				return;
 			}
 
 			// Now handle submission to your backend
-			const endpoint =
-				activeTab === "sell"
-					? `${apiURL}/products`
-					: `${apiURL}/products/donate`;
-			const response = await axios.post(endpoint, updatedData);
+			const endpoint = activeTab === "sell" ? `/products` : `/products/donate`;
 
-			// Reset form data after successful submission
-			setFormData({
-				title: "",
-				description: "",
-				category: "",
-				price: "",
-				priceCategory: "",
-				location: "",
-				images: [],
-				video: null,
-				primaryImageIndex: null,
-				specification: "",
-				condition: "",
-			});
+			const res = await useFetch(endpoint, "POST", updatedData);
+			setIsSubmitting(false);
 
-			// Show success message
-			displayAlert(t("upload.successMessage"));
-
-			// Redirect after a delay
-			setTimeout(() => navigate("/"), 3000);
+			if (!res.ok) return toast.error(res.message);
+			toast.success(res.message);
+			addProduct(res.data);
+			// console.log(res);
+			navigate("/");
 		} catch (error) {
 			console.error("An unexpected error occurred:", error);
 			if (
@@ -268,9 +244,9 @@ const UploadPage = () => {
 				error.response.data &&
 				error.response.data.message
 			) {
-				displayAlert(`${error.response.data.message}`, "danger");
+				toast.error(`${error.response.data.message}`);
 			} else {
-				displayAlert("An unexpected error occurred.", "danger");
+				toast.error("An unexpected error occurred.");
 			}
 		} finally {
 			setIsSubmitting(false);
@@ -328,7 +304,7 @@ const UploadPage = () => {
 
 		if (file && file.size > 10 * 1024 * 1024) {
 			// 10MB limit
-			displayAlert("Video file size should not exceed 10MB", "danger");
+			toast.error("Video file size should not exceed 10MB");
 			return;
 		}
 
@@ -374,20 +350,6 @@ const UploadPage = () => {
 						<h3 className="text-center mb-4">
 							{activeTab === "sell" ? t("upload.sell") : t("upload.donate")}
 						</h3>
-
-						<Alert
-							variant={alertVariant}
-							show={showAlert}
-							style={{
-								position: "fixed",
-								top: "10%",
-								left: "50%",
-								zIndex: 1000,
-								transform: "translate(-50%, -50%)",
-							}}
-						>
-							{alertMessage}
-						</Alert>
 
 						{/* Image Upload */}
 						<div className="mb-3">
@@ -607,9 +569,7 @@ const UploadPage = () => {
 								className="form-control"
 								name="location"
 								value={
-									uploader
-										? `${uploader.city}, ${uploader.state}, ${uploader.country}`
-										: ""
+									user ? `${user.city}, ${user.state}, ${user.country}` : ""
 								}
 								onChange={handleInputChange}
 								placeholder={t("upload.enterLocation")}

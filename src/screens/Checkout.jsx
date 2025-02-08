@@ -4,12 +4,18 @@ import { Form, Button, Alert, Card } from "react-bootstrap";
 import axios from "axios";
 
 const apiURL = import.meta.env.VITE_API_URL;
+import { toast } from "sonner";
+import useAuthStore from "../store/auth.store";
+import useUserStore from "../store/user.store";
+import { useFetch } from "../api.service";
 
 const Checkout = () => {
 	const { state } = useLocation();
+	/**@type {{product:import("../types").Product}} */
 	const { product, sellerId } = state || {};
 	const [quantity, setQuantity] = useState(1);
-	const [user, setUser] = useState({ fullName: "", email: "" });
+	const [$user, setUser] = useState({ fullName: "", email: "" });
+	const user = useUserStore((st) => st.user);
 	const [couriers, setCouriers] = useState([]);
 	const [suggestions, setSuggestions] = useState({
 		toAddress: [],
@@ -19,28 +25,18 @@ const Checkout = () => {
 	const [selectedCourier, setSelectedCourier] = useState("");
 	const [rateDetails, setRateDetails] = useState(null);
 	const [sellerBankDetails, setSellerBankDetails] = useState(null);
-	const [showAlert, setShowAlert] = useState(false);
-	const [alertMessage, setAlertMessage] = useState("");
-	const [alertVariant, setAlertVariant] = useState("success");
-	const displayAlert = (message, variant = "success", duration = 5000) => {
-		setAlertMessage(message);
-		setAlertVariant(variant);
-		setShowAlert(true);
-		setTimeout(() => {
-			setShowAlert(false);
-		}, duration);
-	};
+
 	const navigate = useNavigate();
-	const token = localStorage.getItem("token");
+	const isAuthenticated = useAuthStore((st) => st.authed);
 	const [deliveryDetails, setDeliveryDetails] = useState({
 		fromAddress: { name: "", email: "", address: "", phone: "" },
 		toAddress: {
-			name: "",
-			email: "",
-			city: "",
-			state: "",
-			country: "",
-			phone: "",
+			name: user?.fullName,
+			email: user?.email,
+			city: user?.city,
+			state: user?.state,
+			country: user?.country,
+			phone: user?.phoneNumber,
 		},
 		parcels: { width: "10", length: "10", height: "5", weight: "2" },
 		items: [
@@ -54,82 +50,42 @@ const Checkout = () => {
 			},
 		],
 	});
-
-	// useEffect(() => {
-	//   if (!token) {
-	//     displayAlert('Please log in to access the checkout page.', 'danger');
-	//     const timer = setTimeout(() => {
-	//       navigate('/login', { replace: true });
-	//     }, 2000);
-	//     return () => clearTimeout(timer);
-	//   }
-	// }, [token, navigate]);
+	// console.log(state);
 
 	useEffect(() => {
-		const fetchUser = async () => {
-			const token = localStorage.getItem("token");
-			if (token) {
-				try {
-					const { data } = await axios.get(`${apiURL}/userProfile/profile`, {
-						headers: { Authorization: `Bearer ${token}` },
-					});
-					setUser({
-						id: data.id,
-						fullName: data.fullName,
-						email: data.email,
-						city: data.city,
-						state: data.state,
-						country: data.country,
-						phoneNumber: data.phoneNumber,
-					});
-					setDeliveryDetails((prev) => ({
-						...prev,
-						toAddress: {
-							...prev.toAddress,
-							name: data.fullName,
-							email: data.email,
-							city: data.city,
-							state: data.state,
-							country: data.country,
-							phone: data.phoneNumber,
-						},
-					}));
-				} catch (error) {
-					console.error("Error fetching user data:", error);
-				}
-			}
-		};
-
-		const fetchSellerDetails = async () => {
-			if (sellerId) {
-				try {
-					const { data } = await axios.get(
-						`${apiURL}/payment/seller/${sellerId}`
-					);
-					const sellerAddress = `${data.seller.city}, ${data.seller.state}, ${data.seller.country}`;
-					setDeliveryDetails((prev) => ({
-						...prev,
-						fromAddress: {
-							name: data.seller.fullName,
-							email: data.seller.email,
-							address: sellerAddress,
-							phone: data.seller.phoneNumber,
-						},
-					}));
-					setSellerBankDetails(data);
-				} catch (error) {
-					console.error("Error fetching seller details:", error);
-				}
-			}
-		};
-
-		fetchUser();
-		fetchSellerDetails();
+		setSellerBankDetails(product.user);
 	}, [sellerId]);
+
+	// useEffect(() => {
+	// 	const fetchSellerDetails = async () => {
+	// 		if (sellerId) {
+	// 			try {
+	// 				const { data } = await axios.get(
+	// 					`${apiURL}/payment/seller/${sellerId}`
+	// 				);
+	// 				const sellerAddress = `${data.seller.city}, ${data.seller.state}, ${data.seller.country}`;
+	// 				setDeliveryDetails((prev) => ({
+	// 					...prev,
+	// 					fromAddress: {
+	// 						name: data.seller.fullName,
+	// 						email: data.seller.email,
+	// 						address: sellerAddress,
+	// 						phone: data.seller.phoneNumber,
+	// 					},
+	// 				}));
+	// 				setSellerBankDetails(data);
+	// 			} catch (error) {
+	// 				console.error("Error fetching seller details:", error);
+	// 			}
+	// 		}
+	// 	};
+
+	// 	fetchSellerDetails();
+	// }, [sellerId]);
 
 	const handleFetchCouriers = async () => {
 		if (!type) {
-			displayAlert("Please select type and fetch couriers.", "danger");
+			toast.error("Please select type and fetch couriers.", "danger");
 			return;
 		}
 		try {
@@ -137,18 +93,18 @@ const Checkout = () => {
 				params: { type },
 			});
 			setCouriers(response.data.data || []);
-			displayAlert(
+			toast.error(
 				"Couriers fetched successfully! You can now choose a courier."
 			);
 		} catch (error) {
 			console.error("Error fetching couriers:", error);
-			displayAlert("Failed to fetch couriers.", "danger");
+			toast.error("Failed to fetch couriers.", "danger");
 		}
 	};
 
 	const handleFetchRate = async () => {
 		if (!selectedCourier) {
-			displayAlert("Please select a courier to calculate rate", "danger");
+			toast.error("Please select a courier to calculate rate", "danger");
 			return;
 		}
 		const validatePayload = (payload) => {
@@ -203,7 +159,7 @@ const Checkout = () => {
 			// Validate payload before making the request
 			const validationError = validatePayload(payload);
 			if (validationError) {
-				displayAlert(validationError, "danger");
+				toast.error(validationError, "danger");
 				return;
 			}
 			const { data } = await axios.post(`${apiURL}/rates`, payload);
@@ -211,17 +167,17 @@ const Checkout = () => {
 
 			if (data.data.rates && data.data.rates.status === true) {
 				setRateDetails(data.data.rates);
-				displayAlert("Rate fetched successfully!. Proceed to payment");
+				toast.error("Rate fetched successfully!. Proceed to payment");
 			} else {
 				const errorMessage = data.data.rates.message || "Failed to fetch rates";
-				displayAlert(errorMessage, "danger");
+				toast.error(errorMessage, "danger");
 			}
 		} catch (error) {
 			console.error(
 				"Error fetching rates:",
 				error.response?.data || error.message
 			);
-			displayAlert("Failed to fetch rates.", "danger");
+			toast.error("Failed to fetch rates.", "danger");
 		}
 	};
 
@@ -240,85 +196,127 @@ const Checkout = () => {
 
 	const handlePayment = async () => {
 		if (!sellerBankDetails) {
-			displayAlert(
+			toast.error(
 				"The seller's bank account details have not been verified",
 				"danger"
 			);
 			return;
 		}
-		if (!rateDetails) {
-			displayAlert("Calculate Rate before proceeding to checkout", "danger");
-			return;
-		}
+		// if (!rateDetails) {
+		// 	toast.error("Calculate Rate before proceeding to checkout", "danger");
+		// 	return;
+		// }
 
 		const productAmount = product.price * quantity;
-		const shippingAmount = rateDetails.amount;
-		const totalAmount = productAmount + shippingAmount;
-		const platformCharge =
-			Math.floor((10 / 100) * productAmount) + shippingAmount;
+		// const shippingAmount = rateDetails.amount;
+		const totalAmount = productAmount; //+ shippingAmount;
 
-		try {
-			// Initiating subaccount creation for the seller
-			const subaccountResponse = await axios.post(
-				`${apiURL}/payment/subaccount`,
-				{
-					businessName: sellerBankDetails.seller.accountName,
-					bankName: sellerBankDetails.seller.bankName,
-					accountNumber: sellerBankDetails.seller.accountNumber,
-					percentageCharge: 10,
-				}
-			);
+		const platformCharge = Math.floor((10 / 100) * productAmount); //+ shippingAmount;
+		const subaccountResponse = await useFetch("/payment/subaccount", "POST", {
+			businessName: sellerBankDetails.accountName,
+			bankName: sellerBankDetails.bankName,
+			accountNumber: sellerBankDetails.accountNumber,
+			percentageCharge: 10,
+		});
+		// console.log(subaccountResponse);
 
-			const subaccountCode = subaccountResponse.data.data.subaccount_code;
+		if (!subaccountResponse.ok) return toast.error(subaccountResponse.message);
 
-			// Pass product ID, quantity, amount, rate amount, and seller ID
-			console.log({
+		const subaccountCode = subaccountResponse.data.data.subaccount_code;
+		console.log({
+			email: user.email,
+			amount: totalAmount * 100, // convert to kobo
+			subaccount: subaccountCode,
+			transaction_charge: platformCharge * 100, // convert to kobo
+			// redis_key: rateDetails.redis_key,
+			// rate_id: rateDetails.courier.id,
+			// rate_amount: rateDetails.amount,
+			product_id: product.id, // Pass product ID
+			quantity: quantity, // Pass quantity
+			product_amount: product.price, // Pass amount of product (before rate was added
+			seller_id: product.uploader, // Pass seller ID
+			user_id: user.id, // Pass user ID
+		});
+
+		const transactionResponse = await useFetch(
+			`/payment/initialize-transaction`,
+			"POST",
+			{
 				email: user.email,
 				amount: totalAmount * 100, // convert to kobo
 				subaccount: subaccountCode,
 				transaction_charge: platformCharge * 100, // convert to kobo
-				redis_key: rateDetails.redis_key,
-				rate_id: rateDetails.courier.id,
-				rate_amount: rateDetails.amount,
+				// redis_key: rateDetails.redis_key,
+				// rate_id: rateDetails.courier.id,
+				// rate_amount: rateDetails.amount,
 				product_id: product.id, // Pass product ID
 				quantity: quantity, // Pass quantity
 				product_amount: product.price, // Pass amount of product (before rate was added
-				seller_id: sellerId, // Pass seller ID
+				seller_id: product.uploader, // Pass seller ID
 				user_id: user.id, // Pass user ID
-			});
+			}
+		);
+		console.log(transactionResponse);
 
-			// Initializing the transaction with metadata
-			const transactionResponse = await axios.post(
-				`${apiURL}/payment/initialize-transaction`,
-				{
-					email: user.email,
-					amount: totalAmount * 100, // convert to kobo
-					subaccount: subaccountCode,
-					transaction_charge: platformCharge * 100, // convert to kobo
-					redis_key: rateDetails.redis_key,
-					rate_id: rateDetails.courier.id,
-					rate_amount: rateDetails.amount,
-					product_id: product.id, // Pass product ID
-					quantity: quantity, // Pass quantity
-					product_amount: product.price, // Pass amount of product (before rate was added
-					seller_id: sellerId, // Pass seller ID
-					user_id: user.id, // Pass user ID
-				}
-			);
+		if (!transactionResponse.ok)
+			return toast.error(transactionResponse.message);
 
-			displayAlert("Payment initialization successful. Redirecting...");
-			// Redirect to Paystack payment page
-			window.location.href = transactionResponse.data.data.authorization_url;
-		} catch (error) {
-			console.error(
-				"Error during payment:",
-				error.response?.data.message || error.message
-			);
-			displayAlert(
-				"Payment initialization failed. Please try again.",
-				"danger"
-			);
-		}
+		toast.success(transactionResponse.message);
+
+		window.location.href = transactionResponse.data.data.authorization_url;
+
+		return;
+		// Initiating subaccount creation for the seller
+		// const subaccountResponse = await axios.post(
+		// 	`${apiURL}/payment/subaccount`,
+		// 	{
+		// businessName: sellerBankDetails.seller.accountName,
+		// bankName: sellerBankDetails.seller.bankName,
+		// accountNumber: sellerBankDetails.seller.accountNumber,
+		// percentageCharge: 10,
+		// 	}
+		// );
+
+		// const subaccountCode = subaccountResponse.data.data.subaccount_code;
+
+		// Pass product ID, quantity, amount, rate amount, and seller ID
+		// console.log({
+		// 	email: user.email,
+		// 	amount: totalAmount * 100, // convert to kobo
+		// 	subaccount: subaccountCode,
+		// 	transaction_charge: platformCharge * 100, // convert to kobo
+		// 	redis_key: rateDetails.redis_key,
+		// 	rate_id: rateDetails.courier.id,
+		// 	rate_amount: rateDetails.amount,
+		// 	product_id: product.id, // Pass product ID
+		// 	quantity: quantity, // Pass quantity
+		// 	product_amount: product.price, // Pass amount of product (before rate was added
+		// 	seller_id: sellerId, // Pass seller ID
+		// 	user_id: user.id, // Pass user ID
+		// });
+
+		// Initializing the transaction with metadata
+		// const transactionResponse = await axios.post(
+		// 	`${apiURL}/payment/initialize-transaction`,
+		// 	{
+		// 		email: user.email,
+		// 		amount: totalAmount * 100, // convert to kobo
+		// 		subaccount: subaccountCode,
+		// 		transaction_charge: platformCharge * 100, // convert to kobo
+		// 		redis_key: rateDetails.redis_key,
+		// 		rate_id: rateDetails.courier.id,
+		// 		rate_amount: rateDetails.amount,
+		// 		product_id: product.id, // Pass product ID
+		// 		quantity: quantity, // Pass quantity
+		// 		product_amount: product.price, // Pass amount of product (before rate was added
+		// 		seller_id: sellerId, // Pass seller ID
+		// 		user_id: user.id, // Pass user ID
+		// 	}
+		// );
+
+		toast.error("Payment initialization successful. Redirecting...");
+		// Redirect to Paystack payment page
+		window.location.href = transactionResponse.data.data.authorization_url;
 	};
 
 	const handleInputChange = (section, field, value, index = null) => {
@@ -340,19 +338,7 @@ const Checkout = () => {
 				{/* Billing Details */}
 				<div className="col-md-6">
 					<h3 className="mb-4 text-success">Billing Details</h3>
-					<Alert
-						variant={alertVariant}
-						show={showAlert}
-						style={{
-							position: "fixed",
-							top: "10%",
-							left: "50%",
-							transform: "translate(-50%, -50%)",
-							zIndex: 1000,
-						}}
-					>
-						{alertMessage}
-					</Alert>
+
 					<i>
 						Having Troubles During Checkout, click either live chat or{" "}
 						<a
@@ -367,7 +353,7 @@ const Checkout = () => {
 						<Form.Group className="mb-2 mt-3">
 							<Form.Label>Name</Form.Label>
 							<Form.Control
-								value={
+								defaultValue={
 									deliveryDetails.toAddress
 										? deliveryDetails.toAddress.name
 										: ""
@@ -376,7 +362,7 @@ const Checkout = () => {
 								readOnly
 							/>
 						</Form.Group>
-						{!token && (
+						{!isAuthenticated && (
 							<p>
 								Please register <Link to="/register">here</Link>
 							</p>

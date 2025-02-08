@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Alert } from "react-bootstrap";
 // import ReCAPTCHA from "react-google-recaptcha";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { toast } from "sonner";
+import { useFetch } from "../api.service";
 
 const apiURL = import.meta.env.VITE_API_URL;
 // const siteKey = "6LcNPqwqAAAAAGaqwfOrxhB8t8av07unRcvt-UfC"; // Google reCAPTCHA site key
@@ -18,9 +18,6 @@ const Register = () => {
 	});
 	// const [captchaToken, setCaptchaToken] = useState(null); // Store the reCAPTCHA token
 	const [isSubmitting, setIsSubmitting] = useState(false);
-	const [showAlert, setShowAlert] = useState(false);
-	const [alertMessage, setAlertMessage] = useState("");
-	const [alertVariant, setAlertVariant] = useState("danger");
 	const [passwordType, setPasswordType] = useState("password");
 	const [icon, setIcon] = useState(<FaEyeSlash />);
 	const [confirmPasswordType, setConfirmPasswordType] = useState("password");
@@ -30,14 +27,6 @@ const Register = () => {
 
 	const navigate = useNavigate();
 
-	const displayAlert = (message, variant = "danger", duration = 5000) => {
-		setAlertMessage(message);
-		setAlertVariant(variant);
-		setShowAlert(true);
-		setTimeout(() => {
-			setShowAlert(false);
-		}, duration);
-	};
 	const togglePassword = () => {
 		if (passwordType === "password") {
 			setPasswordType("text");
@@ -69,11 +58,6 @@ const Register = () => {
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 
-		// if (!captchaToken) {
-		//   displayAlert("Please complete the reCAPTCHA verification.", "danger");
-		//   return;
-		// }
-
 		if (
 			!formData.password ||
 			!formData.confirmPassword ||
@@ -81,12 +65,12 @@ const Register = () => {
 			!formData.username ||
 			!formData.email
 		) {
-			displayAlert("All fields are required", "danger");
+			toast.error("All fields are required");
 			return;
 		}
 
 		if (formData.password !== formData.confirmPassword) {
-			displayAlert("Passwords do not match.", "danger");
+			toast.error("Passwords do not match.");
 			return;
 		}
 
@@ -96,30 +80,20 @@ const Register = () => {
 				formData.username
 			);
 		if (usernameLooksLikeEmail) {
-			displayAlert("Username cannot be an email address.", "danger");
+			toast.error("Username cannot be an email address.");
 			return;
 		}
 
-		setIsSubmitting(true);
-
 		// const data = { ...formData, captchaToken }; // Include captchaToken in the data
 		const data = { ...formData }; // Include captchaToken in the data
+		setIsSubmitting(true);
+		const res = await useFetch("/users/register", "POST", data);
+		setIsSubmitting(false);
 
-		try {
-			const response = await axios.post(`${apiURL}/users/register`, data);
+		if (!res.ok) return toast.error(res.message);
 
-			displayAlert("Registration Successful.", "success");
-			setTimeout(() => {
-				navigate("/login");
-			}, 2000);
-		} catch (error) {
-			const errorMessage =
-				error.response?.data?.message ||
-				"Something went wrong. Please try again.";
-			displayAlert(errorMessage, "danger");
-		} finally {
-			setIsSubmitting(false);
-		}
+		toast.success(res.message);
+		navigate("/login");
 	};
 
 	return (
@@ -129,20 +103,7 @@ const Register = () => {
 				{/* Left Column: Form */}
 				<div className="col-md-6 p-5 bg-light">
 					<h2 className="mb-4">Register with email</h2>
-					{/* <Alert variant={alertVariant} show={showAlert}>
-						{"alertMessage"}
-					</Alert> */}
-					{showAlert && (
-						<p
-							className={`px-3 mb-4 py-2 border ${
-								alertVariant == "success"
-									? "text-green-700 border-green-700"
-									: "text-red-700 border-red-700"
-							}`}
-						>
-							{alertMessage}
-						</p>
-					)}
+
 					<form onSubmit={handleSubmit}>
 						{/* Full Name */}
 						<div className="mb-4">
