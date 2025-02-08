@@ -5,16 +5,18 @@ import { Card, Button, Spinner, Alert, Badge } from "react-bootstrap";
 import { useNavigate, Link } from "react-router-dom";
 import { FaUser } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
+import { useFetch } from "../api.service";
+import useUserStore from "../store/user.store";
 
 const ProductDetails = () => {
 	const { id } = useParams();
 	const [product, setProduct] = useState(null);
-	const [currentUser, setCurrentUser] = useState(null); // Add this state variable
+	const currentUser = useUserStore((st) => st.user);
 	const [primaryImage, setPrimaryImage] = useState(null); // State for the primary image
 	const [relatedProducts, setRelatedProducts] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
-	const apiURL = import.meta.env.VITE_API_URL;
 	const { t } = useTranslation();
 
 	const navigate = useNavigate();
@@ -38,44 +40,47 @@ const ProductDetails = () => {
 		}
 	};
 
-	useEffect(() => {
-		const fetchCurrentUser = async () => {
-			const token = localStorage.getItem("token");
-			if (token) {
-				try {
-					const { data } = await axios.get(`${apiURL}/userProfile/profile`, {
-						headers: {
-							Authorization: `Bearer ${token}`,
-						},
-					});
-					setCurrentUser(data); // Update the currentUser state
-					console.log(data);
-				} catch (error) {
-					console.error("Failed to fetch current user", error);
-				}
-			}
-		};
+	// useEffect(() => {
+	// 	const fetchCurrentUser = async () => {
+	// 		const res = await useFetch("/userProfile/profile");
+	// 		console.log(res);
 
-		fetchCurrentUser();
-	}, []);
+	// 		return;
+	// 		const token = localStorage.getItem("token");
+	// 		if (token) {
+	// 			try {
+	// 				const {
+	// 					data: { data },
+	// 				} = await axios.get(`${apiURL}/userProfile/profile`, {
+	// 					headers: {
+	// 						Authorization: `Bearer ${token}`,
+	// 					},
+	// 				});
+
+	// 				// console.log("data", data);
+
+	// 				setCurrentUser(data); // Update the currentUser state
+	// 				console.log(data);
+	// 			} catch (error) {
+	// 				console.error("Failed to fetch current user", error);
+	// 			}
+	// 		}
+	// 	};
+
+	// 	fetchCurrentUser();
+	// }, []);
 
 	useEffect(() => {
 		const fetchProduct = async () => {
-			try {
-				const { data } = await axios.get(`${apiURL}/products/${id}`);
-				setProduct(data);
-				setPrimaryImage(data.primaryImage); // Initialize the primary image
-				console.log(data);
+			const res = await useFetch(`/products/${id}`);
 
-				const relatedProductsResponse = await axios.get(
-					`${apiURL}/myProducts?uploader=${data.uploader}`
-				);
-				setRelatedProducts(relatedProductsResponse.data);
-			} catch (err) {
-				setError("Failed to fetch product details. Please try again.");
-			} finally {
-				setLoading(false);
-			}
+			if (!res.ok) return toast.error(res.message);
+
+			setProduct(res.data);
+			setPrimaryImage(res.data.primaryImage); // Initialize the primary image
+			setRelatedProducts(res.data.relatedProducts);
+			setLoading(false);
+			return;
 		};
 		fetchProduct();
 	}, [id]);
@@ -203,7 +208,7 @@ const ProductDetails = () => {
               )}
             </div> */}
 
-						{currentUser?.id === product.uploader.id ? (
+						{currentUser?.id == product.uploader ? (
 							<div className="d-flex mt-4">{/* No buttons displayed */}</div>
 						) : (
 							<div className="d-flex mt-4">

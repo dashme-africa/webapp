@@ -13,10 +13,9 @@ const useNotifications = (isAdmin = false) => {
 
 		try {
 			const config = { headers: { Authorization: `Bearer ${token}` } };
-			const { data } = await axios.get(
-				`${apiURL}/notifyAdmin/notifications`,
-				config
-			);
+			const { data } = (
+				await axios.get(`${apiURL}/notifyAdmin/notifications`, config)
+			).data;
 			setNotifications(data.data);
 			setUnreadCount(
 				data.data.filter((notification) => !notification.read).length

@@ -4,6 +4,8 @@ import { useTranslation } from "react-i18next";
 import Product from "../components/Product";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { toast } from "sonner";
+import { useFetch } from "../api.service";
 
 const apiURL = import.meta.env.VITE_API_URL;
 
@@ -14,31 +16,18 @@ const HomeScreen = ({ selectedCategory }) => {
 
 	useEffect(() => {
 		const fetchCategoryProducts = async () => {
-			try {
-				const endpoint = selectedCategory
-					? `${apiURL}/products/?category=${selectedCategory}`
-					: `${apiURL}/products`;
+			const endpoint = selectedCategory
+				? `/products/?category=${selectedCategory}`
+				: `/products`;
 
-				const { data } = await axios.get(endpoint);
+			const res = await useFetch(endpoint);
+			if (!res.ok) return toast.error(res.message);
+			// console.log(res);
+			setProducts(res.data);
 
-				// Filter products to include only approved ones
-				const approvedProducts = data.filter(
-					(product) => product.status === "approved"
-				);
-
-				// Sort approved products by creation date
-				const sortedProducts = approvedProducts.sort(
-					(a, b) => new Date(b.createdAt) - new Date(a.createdAt)
-				);
-
-				setProducts(sortedProducts);
-
-				// Scroll to the product section
-				if (productsSectionRef.current) {
-					productsSectionRef.current.scrollIntoView({ behavior: "smooth" });
-				}
-			} catch (error) {
-				console.error("Error fetching products:", error);
+			// Scroll to the product section
+			if (productsSectionRef.current) {
+				productsSectionRef.current.scrollIntoView({ behavior: "smooth" });
 			}
 		};
 

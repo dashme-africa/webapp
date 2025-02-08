@@ -9,56 +9,58 @@ import {
 	Modal,
 	Form,
 } from "react-bootstrap";
+import useUserStore from "../store/user.store";
 const apiURL = import.meta.env.VITE_API_URL;
 
 const MyProductsPage = () => {
-	const [products, setProducts] = useState([]);
+	const [_, setProducts] = useState([]);
+	const products = useUserStore((st) => st.user)?.products;
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState("");
 	const [showModal, setShowModal] = useState(false);
 	const [editingProduct, setEditingProduct] = useState(null);
 	const [uploaderId, setUploaderId] = useState(null);
 
-	useEffect(() => {
-		// Function to fetch the current user data (from localStorage or API)
-		const fetchUserData = async () => {
-			const token = localStorage.getItem("token");
+	// useEffect(() => {
+	// 	// Function to fetch the current user data (from localStorage or API)
+	// 	const fetchUserData = async () => {
+	// 		const token = localStorage.getItem("token");
 
-			if (token) {
-				try {
-					const { data } = await axios.get(`${apiURL}/userProfile/profile`, {
-						headers: {
-							Authorization: `Bearer ${token}`,
-						},
-					});
-					const currentUserId = data.id;
-					setUploaderId(currentUserId);
-				} catch (err) {
-					setError("Failed to fetch user data. Please try again.");
-				}
-			}
-		};
+	// 		if (token) {
+	// 			try {
+	// 				const { data } = await axios.get(`${apiURL}/userProfile/profile`, {
+	// 					headers: {
+	// 						Authorization: `Bearer ${token}`,
+	// 					},
+	// 				});
+	// 				const currentUserId = data.id;
+	// 				setUploaderId(currentUserId);
+	// 			} catch (err) {
+	// 				setError("Failed to fetch user data. Please try again.");
+	// 			}
+	// 		}
+	// 	};
 
-		fetchUserData();
-	}, []);
-	useEffect(() => {
-		if (uploaderId) {
-			const fetchMyProducts = async () => {
-				try {
-					const response = await axios.get(
-						`${apiURL}/myProducts?uploader=${uploaderId}`
-					);
-					setProducts(response.data);
-					setLoading(false);
-				} catch (err) {
-					setError("You have not uploaded any product");
-					setLoading(false);
-				}
-			};
+	// 	fetchUserData();
+	// }, []);
+	// useEffect(() => {
+	// 	if (uploaderId) {
+	// 		const fetchMyProducts = async () => {
+	// 			try {
+	// 				const response = await axios.get(
+	// 					`${apiURL}/myProducts?uploader=${uploaderId}`
+	// 				);
+	// 				setProducts(response.data);
+	// 				setLoading(false);
+	// 			} catch (err) {
+	// 				setError("You have not uploaded any product");
+	// 				setLoading(false);
+	// 			}
+	// 		};
 
-			fetchMyProducts();
-		}
-	}, [uploaderId]);
+	// 		fetchMyProducts();
+	// 	}
+	// }, [uploaderId]);
 
 	const handleDelete = async (id) => {
 		try {
@@ -81,13 +83,13 @@ const MyProductsPage = () => {
 
 	const handleModalSave = async () => {
 		try {
-			const { _id, ...updatedProduct } = editingProduct;
-			const response = await axios.put(
-				`${apiURL}/myProducts/${_id}`,
-				updatedProduct
-			);
+			const { id, ...updatedProduct } = editingProduct;
+			const response = await axios.put(`${apiURL}/myProducts/${id}`, {
+				...updatedProduct,
+				price: +updatedProduct.price,
+			});
 			setProducts(
-				products.map((prod) => (prod.id === _id ? response.data : prod))
+				products.map((prod) => (prod.id === id ? response.data : prod))
 			);
 			handleModalClose();
 		} catch (err) {
@@ -95,9 +97,9 @@ const MyProductsPage = () => {
 		}
 	};
 
-	if (loading) {
-		return <div>Loading...</div>;
-	}
+	// if (loading) {
+	// 	return <div>Loading...</div>;
+	// }
 
 	if (error) {
 		return <div className="text-danger">{error}</div>;

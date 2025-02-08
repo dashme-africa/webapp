@@ -444,7 +444,7 @@ const Checkout = () => {
 							</div>
 						</Form.Group>
 
-						<Form.Group className="mb-2">
+						{/* <Form.Group className="mb-2">
 							<Form.Label>Type</Form.Label>
 							<br />
 							<i>
@@ -482,7 +482,7 @@ const Checkout = () => {
 						</Form.Group>
 						<Button className="mb-3" onClick={handleFetchRate}>
 							Calculate Rate
-						</Button>
+						</Button> */}
 					</Form>
 				</div>
 

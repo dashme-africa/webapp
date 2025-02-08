@@ -44,6 +44,12 @@ const HeroPage = ({ setSelectedCategory }) => {
 			>
 				<nav className="d-flex justify-content-start flex-nowrap overflow-auto">
 					<button
+						onClick={() => setSelectedCategory("")}
+						className="btn btn-link text-decoration-none mx-2 mb-3 text-dark fs-6"
+					>
+						{t("all") || "all"}
+					</button>
+					<button
 						onClick={() => setSelectedCategory("Clothes")}
 						className="btn btn-link text-decoration-none mx-2 mb-3 text-dark fs-6"
 					>

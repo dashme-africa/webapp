@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Container, Row, Col, Form, Button, Alert } from "react-bootstrap";
 import axios from "axios";
 const apiURL = import.meta.env.VITE_API_URL;
@@ -7,30 +7,36 @@ import { useTranslation } from "react-i18next";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import "../custom.css";
 import MyProducts from "./MyProducts";
+import useUserStore from "../store/user.store";
+import { toast } from "sonner";
+import { useFetch } from "../api.service";
 
 const AccountSummary = () => {
 	const { t } = useTranslation();
-	const [user, setUser] = useState(null);
+	const [_, setUser] = useState(null);
+	const user = useUserStore((st) => st.user);
+	const updateProfile = useUserStore((st) => st.updateProfile);
 	const [image, setImage] = useState(null);
 	const [searchParams, setSearchParams] = useSearchParams();
 	/**@type {[IBank[]]} */
 	const [banks, setBanks] = useState([]);
 	const [filteredBanks, setFilteredBanks] = useState([]);
 	const [formData, setFormData] = useState({
-		fullName: "",
-		username: "",
-		email: "",
-		city: "",
-		state: "",
-		country: "",
-		bio: "",
-		accountName: "",
-		accountNumber: "",
-		bankName: "",
-		bankCode: 0,
-		phoneNumber: "",
+		fullName: user?.fullName,
+		username: user?.username,
+		city: user?.city,
+		state: user?.state,
+		country: user?.country,
+		bio: user?.bio,
+		accountName: user?.accountName,
+		accountNumber: user?.accountNumber,
+		bankName: user?.bankName,
+		bankCode: getBankCode(user?.bankName) || 0,
+		phoneNumber: user?.phoneNumber,
 	});
-	const [isVerified, setIsVerified] = useState(false);
+	const [isVerified, setIsVerified] = useState(
+		user.accountName && user.accountNumber && user.bankName
+	);
 	const [showAlert, setShowAlert] = useState(false);
 	const [alertMessage, setAlertMessage] = useState("");
 	const [alertVariant, setAlertVariant] = useState("success");
@@ -38,6 +44,9 @@ const AccountSummary = () => {
 	const [transactions, setTransactions] = useState([]);
 	const [orders, setOrders] = useState([]); // New state for orders
 	const navigate = useNavigate();
+
+	/**@type {React.MutableRefObject<HTMLFormElement|null>} */
+	const formRef = useRef(null);
 
 	const displayAlert = (message, variant = "success", duration = 10000) => {
 		setAlertMessage(message);
@@ -48,50 +57,51 @@ const AccountSummary = () => {
 		}, duration);
 	};
 
-	useEffect(() => {
-		// Fetch user profile
-		const fetchProfile = async () => {
-			const token = localStorage.getItem("token");
+	// console.log(user);
 
-			if (token) {
-				try {
-					const { data } = await axios.get(`${apiURL}/userProfile/profile`, {
-						headers: { Authorization: `Bearer ${token}` },
-					});
-					setUser(data);
-					setFormData((prevData) => ({
-						...prevData,
-						fullName: data.fullName || "",
-						username: data.username || "",
-						email: data.email || "",
-						city: data.city || "",
-						state: data.state || "",
-						country: data.country || "",
-						bio: data.bio || "",
-						accountName: data.accountName || "",
-						accountNumber: data.accountNumber || "",
-						bankName: data.bankName || "",
-						phoneNumber: data.phoneNumber || "",
-					}));
+	// useEffect(() => {
+	// 	// Fetch user profile
+	// 	const fetchProfile = async () => {
+	// 		const token = localStorage.getItem("token");
 
-					setIsVerified(data.isVerified || false);
-				} catch (error) {
-					console.error("Failed to fetch user profile", error);
-				}
-			}
-		};
+	// 		if (token) {
+	// 			try {
+	// 				const { data } = await axios.get(`${apiURL}/userProfile/profile`, {
+	// 					headers: { Authorization: `Bearer ${token}` },
+	// 				});
+	// 				setUser(data);
+	// 				setFormData((prevData) => ({
+	// 					...prevData,
+	// 					fullName: data.fullName || "",
+	// 					username: data.username || "",
+	// 					email: data.email || "",
+	// 					city: data.city || "",
+	// 					state: data.state || "",
+	// 					country: data.country || "",
+	// 					bio: data.bio || "",
+	// 					accountName: data.accountName || "",
+	// 					accountNumber: data.accountNumber || "",
+	// 					bankName: data.bankName || "",
+	// 					phoneNumber: data.phoneNumber || "",
+	// 				}));
 
-		fetchProfile();
-	}, []);
+	// 				setIsVerified(data.isVerified || false);
+	// 			} catch (error) {
+	// 				console.error("Failed to fetch user profile", error);
+	// 			}
+	// 		}
+	// 	};
+
+	// 	fetchProfile();
+	// }, []);
 
 	useEffect(() => {
 		const fetchBanks = async () => {
-			try {
-				const response = await axios.get(`${apiURL}/userProfile/banks`);
-				setBanks(response.data);
-			} catch (error) {
-				console.error("Error fetching bank list:", error.message);
-			}
+			const res = await useFetch("/userProfile/banks");
+			// console.log(res);
+
+			if (!res.ok) return toast.error(res.message);
+			setBanks(res.data);
 		};
 		fetchBanks();
 	}, []);
@@ -110,50 +120,44 @@ const AccountSummary = () => {
 	}, [searchParams]);
 
 	// Fetch orders
-	const fetchOrders = async () => {
-		const userId = user.id;
-		try {
-			const token = localStorage.getItem("token");
-			const { data } = await axios.get(`${apiURL}/orders/user/${userId}`, {
-				headers: {
-					Authorization: `Bearer ${token}`,
-				},
-			});
-			const ordersWithShipmentStatus = await Promise.all(
-				data.orders.map(async (order) => {
-					if (order.shipmentReference) {
-						const shipmentStatusResponse = await axios.get(
-							`${apiURL}/track-shipment/${order.shipmentReference}`,
-							{
-								headers: {
-									Authorization: `Bearer ${token}`,
-								},
-							}
-						);
-						// console.log(shipmentStatusResponse.data.data.current_status)
-						return {
-							...order,
-							shipmentStatus: shipmentStatusResponse.data.data.current_status,
-						};
-					} else {
-						return {
-							...order,
-							shipmentStatus: { current_status: "Not Available" },
-						};
-					}
-				})
-			);
-			setOrders(ordersWithShipmentStatus);
-		} catch (error) {
-			console.error("Failed to fetch orders", error);
-		}
-	};
-
-	useEffect(() => {
-		if (user) {
-			fetchOrders();
-		}
-	}, [user]);
+	// const fetchOrders = async () => {
+	// 	const userId = user.id;
+	// 	try {
+	// 		const token = localStorage.getItem("token");
+	// 		const { data } = await axios.get(`${apiURL}/orders/user/${userId}`, {
+	// 			headers: {
+	// 				Authorization: `Bearer ${token}`,
+	// 			},
+	// 		});
+	// 		const ordersWithShipmentStatus = await Promise.all(
+	// 			data.orders.map(async (order) => {
+	// 				if (order.shipmentReference) {
+	// 					const shipmentStatusResponse = await axios.get(
+	// 						`${apiURL}/track-shipment/${order.shipmentReference}`,
+	// 						{
+	// 							headers: {
+	// 								Authorization: `Bearer ${token}`,
+	// 							},
+	// 						}
+	// 					);
+	// 					// console.log(shipmentStatusResponse.data.data.current_status)
+	// 					return {
+	// 						...order,
+	// 						shipmentStatus: shipmentStatusResponse.data.data.current_status,
+	// 					};
+	// 				} else {
+	// 					return {
+	// 						...order,
+	// 						shipmentStatus: { current_status: "Not Available" },
+	// 					};
+	// 				}
+	// 			})
+	// 		);
+	// 		setOrders(ordersWithShipmentStatus);
+	// 	} catch (error) {
+	// 		console.error("Failed to fetch orders", error);
+	// 	}
+	// };
 
 	const handleImageChange = (e) => {
 		const file = e.target.files[0];
@@ -170,6 +174,8 @@ const AccountSummary = () => {
 
 	const handleChange = (e) => {
 		const { name, value } = e.target;
+		if (name == "accountName" || name == "accountNumber" || name == "bankName")
+			setIsVerified(false);
 		setFormData((prevData) => ({ ...prevData, [name]: value }));
 
 		if (name === "bankName") {
@@ -189,16 +195,25 @@ const AccountSummary = () => {
 		setFilteredBanks([]);
 	};
 
-	const handleSubmit = async (e) => {
-		e.preventDefault();
-		const token = localStorage.getItem("token");
+	/**
+	 *
+	 * @param {React.FormEvent<HTMLFormElement>} ev
+	 * @returns
+	 */
+	async function handleSubmit(ev) {
+		ev.preventDefault();
 
 		// Initialize formDataToSubmit first
-		const formDataToSubmit = new FormData();
+		// console.log("state");
+		// console.table([formData]);
+		// console.log("formData");
+		// console.table([Object.fromEntries(new FormData(ev.currentTarget))]);
+		const formDataToSubmit = new FormData(ev.currentTarget);
+		const formData = Object.fromEntries(formDataToSubmit);
 
-		Object.keys(formData).forEach((key) => {
-			formDataToSubmit.append(key, formData[key]);
-		});
+		// Object.keys(formData).forEach((key) => {
+		// 	formDataToSubmit.append(key, formData[key]);
+		// });
 
 		// Append image if it exists
 		if (image) {
@@ -206,16 +221,18 @@ const AccountSummary = () => {
 		}
 
 		// Validate form data
+		// console.log([...formDataToSubmit.entries()]);
+		// console.log(formData);
+
 		if (
 			!formData.fullName ||
-			!formData.username ||
 			!formData.city ||
 			!formData.state ||
 			!formData.country ||
 			!formData.bio ||
 			!formData.phoneNumber
 		) {
-			displayAlert("Please complete your profile information", "danger");
+			toast.error("Please complete your profile information");
 			return;
 		}
 
@@ -226,7 +243,7 @@ const AccountSummary = () => {
 			!formData.bankName ||
 			!isVerified
 		) {
-			displayAlert(`${t("profile.verifyBankDetails")}`, "danger");
+			toast.error(`${t("profile.verifyBankDetails")}`);
 			return;
 		}
 
@@ -235,8 +252,13 @@ const AccountSummary = () => {
 			formDataToSubmit.append("isVerified", isVerified);
 		}
 
-		// console.log(formData);
+		const res = await useFetch("/userProfile/profile", "PUT", formDataToSubmit);
+		if (!res.ok) return toast.error(res.message);
 
+		toast.success(res.message);
+		updateProfile(res.data);
+		navigate("/upload");
+		return;
 		try {
 			const response = await axios.put(
 				`${apiURL}/userProfile/profile`,
@@ -255,36 +277,56 @@ const AccountSummary = () => {
 					navigate("/upload");
 				}, 3000);
 			} else {
-				displayAlert(
-					response.data.message || t("profile.failedToUpdate"),
-					"danger"
-				);
+				toast.error(response.data.message || t("profile.failedToUpdate"));
 			}
 		} catch (error) {
-			displayAlert("Failed to update profile.", "danger");
+			toast.error("Failed to update profile.");
 			console.error("Failed to update profile:", error);
 		}
-	};
+	}
 	// console.log(banks);
 
 	const verifyBankDetails = async () => {
-		try {
-			let { accountNumber, bankName, bankCode } = formData;
-			if (!bankCode) {
-				bankCode = banks.find((bnk) => bnk.name == bankName)?.code;
-			}
-			if (!accountNumber || !bankName) {
-				displayAlert(
-					"Please fill in the account number and bank name to verify.",
-					"danger"
-				);
-				return;
-			}
-			if (!bankCode) {
-				displayAlert("Please select bank name from the list", "danger");
-				return;
-			}
+		const formData = Object.fromEntries(new FormData(formRef.current));
 
+		let { accountNumber, bankName, bankCode } = formData;
+
+		if (!bankCode) {
+			bankCode = getBankCode(bankName);
+		}
+		// console.log({ accountNumber, bankName, bankCode });
+		// return;
+
+		if (!accountNumber || !bankName) {
+			toast.error("Please fill in the account number and bank name to verify.");
+			return;
+		}
+		if (!bankCode) {
+			toast.error("Please select bank name from the list");
+			return;
+		}
+
+		const searchParams = new URLSearchParams({
+			account_number: accountNumber,
+			bank_name: bankName,
+			bank_code: bankCode,
+		});
+		const queryString = searchParams.toString();
+
+		const res = await useFetch(`/userProfile/resolve-account?${queryString}`);
+		// console.log(res);
+		if (!res.ok) return toast.error(res.message);
+
+		setFormData((prevData) => ({
+			...prevData,
+			accountName: res.data.account_name,
+		}));
+		setIsVerified(true);
+
+		toast.success(t("profile.bankVerified"));
+
+		return;
+		try {
 			const response = await axios.get(
 				`${apiURL}/userProfile/resolve-account`,
 				{
@@ -309,11 +351,11 @@ const AccountSummary = () => {
 				setIsVerified(true);
 				displayAlert(t("profile.bankVerified"));
 			} else {
-				displayAlert(t("profile.bankVerificationFailed"), "danger");
+				toast.error(t("profile.bankVerificationFailed"));
 			}
 		} catch (error) {
 			// console.error("Bank verification error:", error);
-			displayAlert("Error verifying bank details. Try again later.", "danger");
+			toast.error("Error verifying bank details. Try again later.");
 		}
 	};
 
@@ -323,20 +365,16 @@ const AccountSummary = () => {
 
 	// Fetch transactions
 	const fetchTransactions = async () => {
-		// setLoading(true);
-		try {
-			const token = localStorage.getItem("token");
-			const { data } = await axios.get(`${apiURL}/transactions`, {
-				headers: { Authorization: `Bearer ${token}` },
-			});
-			setTransactions(data.data); // Set transactions data
-			// console.log("Transactions fetched successfully", data);
-		} catch (error) {
-			console.error("Failed to fetch transactions", error);
-		} finally {
-			// setLoading(false);
-		}
+		const res = await useFetch("/transactions");
+		if (!res.ok) return toast.error(res.message);
+		// console.log(res);
+
+		setTransactions(res.data); // Set transactions data
 	};
+
+	function getBankCode(bankName) {
+		return banks?.find((bnk) => bnk.name == bankName)?.code;
+	}
 
 	const renderContent = () => {
 		switch (activeTab) {
@@ -361,20 +399,7 @@ const AccountSummary = () => {
 							</i>
 						) : null}
 
-						<Alert
-							variant={alertVariant}
-							show={showAlert}
-							style={{
-								position: "fixed",
-								top: "10%",
-								left: "50%",
-								transform: "translate(-50%, -50%)",
-								zIndex: 1000,
-							}}
-						>
-							{alertMessage}
-						</Alert>
-						<Form onSubmit={handleSubmit}>
+						<Form ref={formRef} onSubmit={handleSubmit}>
 							{/* Profile Details? */}
 							<Row className="mb-3 gx-5 mt-4">
 								{/* Profile Picture */}
@@ -416,7 +441,8 @@ const AccountSummary = () => {
 													type="text"
 													name="fullName"
 													className="form-control"
-													value={formData.fullName}
+													// value={formData.fullName}
+													defaultValue={user.fullName}
 													onChange={handleChange}
 												/>
 											</Form.Group>
@@ -430,7 +456,7 @@ const AccountSummary = () => {
 													type="text"
 													name="phoneNumber"
 													className="form-control"
-													value={formData.phoneNumber}
+													defaultValue={user.phoneNumber}
 													placeholder="e.g. 08012345678"
 													onChange={handleChange}
 												/>
@@ -441,9 +467,10 @@ const AccountSummary = () => {
 												<Form.Label>{t("profile.email")}</Form.Label>
 												<Form.Control
 													type="email"
+													// name="email"
 													readOnly
 													className="form-control"
-													value={formData.email}
+													defaultValue={user.email}
 													onChange={handleChange}
 												/>
 											</Form.Group>
@@ -458,7 +485,7 @@ const AccountSummary = () => {
 													type="text"
 													name="city"
 													className="form-control"
-													value={formData.city}
+													defaultValue={user.city}
 													onChange={handleChange}
 													placeholder="e.g. Ikeja"
 												/>
@@ -472,7 +499,7 @@ const AccountSummary = () => {
 													type="text"
 													name="state"
 													className="form-control"
-													value={formData.state}
+													defaultValue={user.state}
 													onChange={handleChange}
 													placeholder="e.g. Lagos"
 												/>
@@ -486,7 +513,7 @@ const AccountSummary = () => {
 													type="text"
 													name="country"
 													className="form-control"
-													value={formData.country}
+													defaultValue={user.country}
 													onChange={handleChange}
 													placeholder="e.g. Nigeria"
 												/>
@@ -500,7 +527,7 @@ const AccountSummary = () => {
 											name="bio"
 											className="form-control"
 											rows="3"
-											value={formData.bio}
+											defaultValue={user.bio}
 											onChange={handleChange}
 										/>
 									</Form.Group>
@@ -527,9 +554,9 @@ const AccountSummary = () => {
 											id="accountName"
 											className="form-control"
 											placeholder="Will display after acc. no is verified"
-											value={formData.accountName}
+											defaultValue={user.accountName}
 											onChange={handleChange}
-											disabled={isVerified}
+											// disabled={isVerified}
 											readOnly
 										/>
 									</Form.Group>
@@ -544,9 +571,9 @@ const AccountSummary = () => {
 											name="accountNumber"
 											id="accountNumber"
 											className="form-control"
-											value={formData.accountNumber}
+											defaultValue={user.accountNumber}
 											onChange={handleChange}
-											disabled={isVerified}
+											// readOnly={isVerified}
 										/>
 									</Form.Group>
 								</Col>
@@ -561,9 +588,9 @@ const AccountSummary = () => {
 											id="bankName"
 											className="form-control"
 											placeholder="Type to find bank name"
-											value={formData.bankName}
+											defaultValue={user.bankName}
 											onChange={handleChange}
-											disabled={isVerified}
+											// readOnly={isVerified}
 										/>
 										{filteredBanks.length > 0 && (
 											<ul className="list-group mt-1">
@@ -767,7 +794,7 @@ const AccountSummary = () => {
 
 				<Col
 					md={9}
-					className="bg-light py-4 px-4 rounded shadow-sm mb-4 border border-light border-2"
+					className="bg-light py-4 px-4 rounded shadow-sm mb-4  border-light border-2"
 				>
 					{renderContent()}
 				</Col>

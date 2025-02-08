@@ -1,84 +1,51 @@
 import React, { useEffect, useState } from "react";
 import { ListGroup, Button, Spinner, Alert } from "react-bootstrap";
 import axios from "axios";
+import useNotificationStore from "../store/notification.store";
+import { useFetch } from "../api.service";
+import { toast } from "sonner";
+import useUserStore from "./../store/user.store";
 
 const NotificationPage = () => {
-	const [notifications, setNotifications] = useState([]);
+	// const [notifications, setNotifications] = useState([]);
+	const user = useUserStore((st) => st.user);
+	const notifications = useNotificationStore((st) => st.notifications);
+
+	const setNotifications = useNotificationStore((st) => st.update);
+	const _markAsRead = useNotificationStore((st) => st.markAsRead);
+	const markAllAsRead = useNotificationStore((st) => st.markAllRead);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState("");
-	const apiURL = import.meta.env.VITE_API_URL;
 
 	useEffect(() => {
-		const fetchNotifications = async () => {
-			const token = localStorage.getItem("token");
-			if (!token) return;
+		async function fetchNotifications() {
+			const res = await useFetch("/notify/notifications");
+			setLoading(false);
 
-			try {
-				const { data } = await axios.get(`${apiURL}/notify/notifications`, {
-					headers: {
-						Authorization: `Bearer ${token}`,
-					},
-				});
-				// Ensure the response contains notifications in the correct format
-				setNotifications(data?.data || []); // Correct access to the notifications array
-			} catch (error) {
-				setError("Error fetching notifications");
-				console.error(error.response?.data?.message || error.message);
-			} finally {
-				setLoading(false);
-			}
-		};
+			if (!res.ok) return toast.error(res.message);
+
+			setNotifications(res.data);
+			return;
+		}
 
 		fetchNotifications();
 	}, []);
 
 	const markAsRead = async (id) => {
-		try {
-			const token = localStorage.getItem("token");
-			await axios.patch(
-				`${apiURL}/notify/notifications/${id}/mark-read`,
-				{},
-				{
-					headers: {
-						Authorization: `Bearer ${token}`,
-					},
-				}
-			);
-			setNotifications((prev) =>
-				prev.map((notif) =>
-					notif.id === id ? { ...notif, read: true } : notif
-				)
-			);
-		} catch (error) {
-			console.error(
-				"Error marking notification as read:",
-				error.response?.data?.message || error.message
-			);
-		}
+		const res = await useFetch(
+			`/notify/notifications/${id}/mark-read`,
+			"PATCH",
+			{}
+		);
+		if (!res.ok) return toast.error(res.message);
+		_markAsRead(id);
 	};
 
-	const markAllAsRead = async () => {
-		try {
-			const token = localStorage.getItem("token");
-			await axios.patch(
-				`${apiURL}/notify/notifications/mark-read`,
-				{},
-				{
-					headers: {
-						Authorization: `Bearer ${token}`,
-					},
-				}
-			);
-			setNotifications((prev) =>
-				prev.map((notif) => ({ ...notif, read: true }))
-			);
-		} catch (error) {
-			console.error(
-				"Error marking all notifications as read:",
-				error.response?.data?.message || error.message
-			);
-		}
-	};
+	// const markAllAsRead = async () => {
+	// 	const res = await useFetch(`/notify/notifications/mark-read`, "PATCH", {});
+	// 	if (!res.ok) return toast.error(res.message);
+	// 	_markAllAsRead();
+	// };
 
 	if (loading) return <Spinner animation="border" />;
 
@@ -91,7 +58,7 @@ const NotificationPage = () => {
 				Mark All as Read
 			</Button>
 			<ListGroup>
-				{notifications.length > 0 ? (
+				{notifications && notifications.length > 0 ? (
 					notifications.map((notif, key) => (
 						<ListGroup.Item
 							key={key} // Ensure the key is unique for each notification

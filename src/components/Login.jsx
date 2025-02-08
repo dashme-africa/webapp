@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import axios from "axios";
 import { Alert } from "react-bootstrap";
 const apiURL = import.meta.env.VITE_API_URL;
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { useFetch } from "../api.service";
+import { toast } from "sonner";
+import useAuthStore from "../store/auth.store";
 
 const Login = () => {
 	const [email, setEmail] = useState("");
@@ -16,21 +19,8 @@ const Login = () => {
 	const [passwordType, setPasswordType] = useState("password");
 	const [icon, setIcon] = useState(<FaEyeSlash />);
 	const navigate = useNavigate();
-	// Redirect if already logged in
-	// useEffect(() => {
-	//   if (localStorage.getItem("token")) {
-	//     navigate("/");
-	//   }
-	// }, [navigate]);
-
-	const displayAlert = (message, variant = "success", duration = 5000) => {
-		setAlertMessage(message);
-		setAlertVariant(variant);
-		setShowAlert(true);
-		setTimeout(() => {
-			setShowAlert(false);
-		}, duration);
-	};
+	const authenticate = useAuthStore((st) => st.autheenticate);
+	const [searchParams] = useSearchParams();
 
 	const togglePassword = () => {
 		if (passwordType === "password") {
@@ -46,29 +36,38 @@ const Login = () => {
 		e.preventDefault();
 		setError("");
 		setIsSubmitting(true);
+		const res = await useFetch("/users/login", "POST", { email, password });
+		setIsSubmitting(false);
 
-		try {
-			const response = await axios.post(`${apiURL}/users/login`, {
-				email,
-				password,
-			});
+		if (!res.ok) return toast.error(res.message);
 
-			// Save token to local storage
-			localStorage.setItem("token", response.data.token);
+		toast.success(res.message);
 
-			displayAlert("Login Successful", "success");
-			setTimeout(() => {
-				// Navigate to home page
-				navigate("/");
-			}, 2000);
-		} catch (error) {
-			displayAlert(
-				error.response?.data?.message || "Invalid credentials",
-				"danger"
-			);
-		} finally {
-			setIsSubmitting(false);
-		}
+		authenticate(res.data.token);
+		navigate(searchParams.get("redirect") || "/");
+
+		// try {
+		// 	const response = await axios.post(`${apiURL}/users/login`, {
+		// 		email,
+		// 		password,
+		// 	});
+
+		// 	// Save token to local storage
+		// 	localStorage.setItem("token", response.data.token);
+
+		// 	displayAlert("Login Successful", "success");
+		// 	setTimeout(() => {
+		// 		// Navigate to home page
+		// 		navigate("/");
+		// 	}, 2000);
+		// } catch (error) {
+		// 	displayAlert(
+		// 		error.response?.data?.message || "Invalid credentials",
+		// 		"danger"
+		// 	);
+		// } finally {
+		// 	setIsSubmitting(false);
+		// }
 	};
 
 	return (
