@@ -5,7 +5,7 @@ import { createJSONStorage, persist } from "zustand/middleware";
 interface AuthStore {
 	authed: boolean;
 	token: string;
-	autheenticate(token: string): void;
+	authenticate(token: string): void;
 	logout(): void;
 }
 
@@ -14,7 +14,7 @@ const useAuthStore = create<AuthStore>()(
 		computed((set, get) =>
 			compute<AuthStore>({
 				token: "",
-				autheenticate(token) {
+				authenticate(token) {
 					set((st) => ({ ...st, token }));
 				},
 				logout() {

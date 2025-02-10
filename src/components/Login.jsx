@@ -19,7 +19,7 @@ const Login = () => {
 	const [passwordType, setPasswordType] = useState("password");
 	const [icon, setIcon] = useState(<FaEyeSlash />);
 	const navigate = useNavigate();
-	const authenticate = useAuthStore((st) => st.autheenticate);
+	const authenticate = useAuthStore((st) => st.authenticate);
 	const [searchParams] = useSearchParams();
 
 	const togglePassword = () => {

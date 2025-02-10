@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
+import { useAdminFetch } from "../api.service";
+import { toast } from "sonner";
+import useProductStore from "../store/product.store";
 const apiURL = import.meta.env.VITE_API_URL;
 
 const EditProduct = () => {
 	const { id } = useParams();
 	const [product, setProduct] = useState({});
+	const updateProduct = useProductStore((st) => st.update);
 	const [image, setImage] = useState(null);
 	const [error, setError] = useState("");
 	const [successMessage, setSuccessMessage] = useState("");
@@ -13,26 +17,13 @@ const EditProduct = () => {
 
 	useEffect(() => {
 		const fetchProduct = async () => {
-			const token = localStorage.getItem("adminToken");
-			if (!token) {
-				navigate("/adminLogin");
-				return;
-			}
+			const res = await useAdminFetch(`/adminProduct/${id}`);
+			console.log(res);
 
-			try {
-				const config = {
-					headers: {
-						Authorization: `Bearer ${token}`,
-					},
-				};
-				const { data } = await axios.get(
-					`${apiURL}/adminProduct/${id}`,
-					config
-				);
-				setProduct(data);
-			} catch (err) {
-				setError(err.response?.data?.message || "Failed to fetch product");
-			}
+			if (!res.ok) return toast.error(res.message);
+			// toast.success(res.message);
+
+			setProduct(res.data);
 		};
 
 		fetchProduct();
@@ -50,51 +41,34 @@ const EditProduct = () => {
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-		const token = localStorage.getItem("adminToken");
 
-		try {
-			const formData = new FormData();
-			formData.append("title", product.title);
-			formData.append("description", product.description);
-			formData.append("price", product.price);
-			formData.append("category", product.category);
-			formData.append("location", product.location);
-			formData.append("tag", product.tag);
-			formData.append("priceCategory", product.priceCategory);
+		const formData = new FormData();
+		formData.append("title", product.title);
+		formData.append("description", product.description);
+		formData.append("price", product.price);
+		formData.append("category", product.category);
+		formData.append("location", product.location);
+		formData.append("tag", product.tag);
+		formData.append("priceCategory", product.priceCategory);
 
-			// If there's an image, append it to the form data
-			if (image) {
-				formData.append("image", image);
-			}
-
-			// Log the FormData content for debugging
-			formData.forEach((value, key) => {
-				console.log(key, value);
-			});
-
-			const config = {
-				headers: {
-					"Content-Type": "multipart/form-data",
-					Authorization: `Bearer ${token}`,
-				},
-			};
-			const { data } = await axios.put(
-				`${apiURL}/adminProduct/${id}`,
-				formData,
-				config
-			);
-			// console.log(data);
-
-			// Set success message after successful update
-			setSuccessMessage("Product updated successfully!");
-			setError("");
-			setTimeout(() => {
-				navigate("/adminDashboard");
-			}, 2000);
-		} catch (err) {
-			setError(err.response?.data?.message || "Failed to update product");
-			setSuccessMessage("");
+		// If there's an image, append it to the form data
+		if (image) {
+			formData.append("image", image);
 		}
+
+		// Log the FormData content for debugging
+		formData.forEach((value, key) => {
+			console.log(key, value);
+		});
+
+		const res = await useAdminFetch(`/adminProduct/${id}`, "PUT", formData);
+		// console.log(res);
+
+		if (!res.ok) return toast.error(res.message);
+		toast.success(res.message);
+
+		updateProduct(res.data);
+		navigate("/adminDashboard");
 	};
 
 	return (

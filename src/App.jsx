@@ -76,27 +76,9 @@ const App = () => {
 					{/* <Route path="/adminRegister" element={<AdminRegister />} /> */}
 					<Route path="/admin/products/edit/:id" element={<EditProduct />} />
 
-					<Route
-						path="/adminDashboard"
-						element={
-							<AdminDashboard
-								notifications={notifications}
-								unreadCount={unreadCount}
-								markNotificationAsRead={markNotificationAsRead}
-							/>
-						}
-					/>
+					<Route path="/adminDashboard" element={<AdminDashboard />} />
 
-					<Route
-						path="/admin/notifications"
-						element={
-							<AdminNotification
-								notifications={notifications}
-								markNotificationAsRead={markNotificationAsRead}
-								markAllNotificationsAsRead={markAllNotificationsAsRead}
-							/>
-						}
-					/>
+					<Route path="/admin/notifications" element={<AdminNotification />} />
 
 					<Route
 						path="/"

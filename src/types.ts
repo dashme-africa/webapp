@@ -12,6 +12,12 @@ export type APIResponse<D = unknown> =
 	  }
 	| { ok: true; message: string; data: D };
 
+export interface Admin {
+	id: string;
+	v: number | null;
+	email: string;
+	password: string;
+}
 export interface User {
 	id: string;
 	v: number | null;

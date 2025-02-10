@@ -1,13 +1,30 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Button } from "react-bootstrap";
+import useAdminStore from "../store/admin.store";
+import { useAdminFetch } from "../api.service";
+import { toast } from "sonner";
 
-const AdminNotification = ({
-	notifications,
-	markNotificationAsRead,
-	markAllNotificationsAsRead,
-}) => {
+const AdminNotification = () => {
+	const notifications = useAdminStore((st) => st.notifications);
+	const markAsRead = useAdminStore((st) => st.markNotificationAsRead);
+	const markAllNotificationsAsRead = useAdminStore(
+		(st) => st.markAllNotificationsAsRead
+	);
 	// console.log(notifications);
+
+	async function markNotificationAsRead(id) {
+		const res = await useAdminFetch(
+			`/notifyAdmin/notifications/${id}/mark-read`,
+			"PATCH",
+			{}
+		);
+		// console.log(res);
+
+		if (!res.ok) return toast.error(res.message);
+		toast.success(res.message);
+		markAsRead(id);
+	}
 	return (
 		<div className="container my-5">
 			<Link to="/adminDashboard">

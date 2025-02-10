@@ -5,26 +5,19 @@ import { useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const apiURL = import.meta.env.VITE_API_URL;
+import { toast } from "sonner";
+import { useFetch } from "../api.service";
+import useAdminStore from "../store/admin.store";
 
 const AdminLogin = () => {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [error, setError] = useState("");
 	const navigate = useNavigate();
-	const [showAlert, setShowAlert] = useState(true);
-	const [alertMessage, setAlertMessage] = useState("");
-	const [alertVariant, setAlertVariant] = useState("danger");
 	const [passwordType, setPasswordType] = useState("password");
 	const [icon, setIcon] = useState(<FaEyeSlash />);
-
-	const displayAlert = (message, variant = "danger", duration = 5000) => {
-		setAlertMessage(message);
-		setAlertVariant(variant);
-		setShowAlert(true);
-		setTimeout(() => {
-			setShowAlert(false);
-		}, duration);
-	};
+	const authenticate = useAdminStore((st) => st.authenticate);
+	const updateAdmin = useAdminStore((st) => st.updateAdmin);
 
 	const togglePassword = () => {
 		if (passwordType === "password") {
@@ -38,20 +31,16 @@ const AdminLogin = () => {
 
 	const handleLogin = async (e) => {
 		e.preventDefault();
-		setError("");
-		try {
-			const { data } = await axios.post(`${apiURL}/admin/login`, {
-				email,
-				password,
-			});
-			localStorage.setItem("adminToken", data.token);
-			displayAlert("Login Successful", "success");
-			setTimeout(() => {
-				navigate("/adminDashboard");
-			}, 2000);
-		} catch (err) {
-			setError(err.response?.data?.message || "Login failed");
-		}
+
+		const res = await useFetch("/admin/login", "POST", { email, password });
+		console.log(res);
+
+		if (!res.ok) return toast.error(res.message);
+		toast.success(res.message);
+
+		authenticate(res.data.token);
+		updateAdmin(res.data.admin);
+		navigate("/adminDashboard");
 	};
 
 	return (
@@ -62,21 +51,7 @@ const AdminLogin = () => {
 				style={{ width: "300px" }}
 			>
 				<h2 className="text-center mb-4">Admin Login</h2>
-				{/* {error && <Alert variant="danger">{error}</Alert>} */}
-				{/* <Alert variant={alertVariant} show={showAlert}>
-          {alertMessage}
-        </Alert> */}
-				{error && (
-					<p
-						className={`px-3 mb-4 py-2 border ${
-							alertVariant == "success"
-								? "text-green-700 border-green-700"
-								: "text-red-700 border-red-700"
-						}`}
-					>
-						{error}
-					</p>
-				)}
+
 				<Form.Group className="mb-3">
 					<Form.Label>Email Address</Form.Label>
 					<Form.Control
@@ -107,8 +82,7 @@ const AdminLogin = () => {
 				</Form.Group>
 
 				<Button type="submit" variant="success" className="w-100">
-					{" "}
-					Login{" "}
+					Login
 				</Button>
 			</Form>
 		</Container>
