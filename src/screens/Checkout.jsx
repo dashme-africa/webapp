@@ -264,59 +264,6 @@ const Checkout = () => {
 		toast.success(transactionResponse.message);
 
 		window.location.href = transactionResponse.data.data.authorization_url;
-
-		return;
-		// Initiating subaccount creation for the seller
-		// const subaccountResponse = await axios.post(
-		// 	`${apiURL}/payment/subaccount`,
-		// 	{
-		// businessName: sellerBankDetails.seller.accountName,
-		// bankName: sellerBankDetails.seller.bankName,
-		// accountNumber: sellerBankDetails.seller.accountNumber,
-		// percentageCharge: 10,
-		// 	}
-		// );
-
-		// const subaccountCode = subaccountResponse.data.data.subaccount_code;
-
-		// Pass product ID, quantity, amount, rate amount, and seller ID
-		// console.log({
-		// 	email: user.email,
-		// 	amount: totalAmount * 100, // convert to kobo
-		// 	subaccount: subaccountCode,
-		// 	transaction_charge: platformCharge * 100, // convert to kobo
-		// 	redis_key: rateDetails.redis_key,
-		// 	rate_id: rateDetails.courier.id,
-		// 	rate_amount: rateDetails.amount,
-		// 	product_id: product.id, // Pass product ID
-		// 	quantity: quantity, // Pass quantity
-		// 	product_amount: product.price, // Pass amount of product (before rate was added
-		// 	seller_id: sellerId, // Pass seller ID
-		// 	user_id: user.id, // Pass user ID
-		// });
-
-		// Initializing the transaction with metadata
-		// const transactionResponse = await axios.post(
-		// 	`${apiURL}/payment/initialize-transaction`,
-		// 	{
-		// 		email: user.email,
-		// 		amount: totalAmount * 100, // convert to kobo
-		// 		subaccount: subaccountCode,
-		// 		transaction_charge: platformCharge * 100, // convert to kobo
-		// 		redis_key: rateDetails.redis_key,
-		// 		rate_id: rateDetails.courier.id,
-		// 		rate_amount: rateDetails.amount,
-		// 		product_id: product.id, // Pass product ID
-		// 		quantity: quantity, // Pass quantity
-		// 		product_amount: product.price, // Pass amount of product (before rate was added
-		// 		seller_id: sellerId, // Pass seller ID
-		// 		user_id: user.id, // Pass user ID
-		// 	}
-		// );
-
-		toast.error("Payment initialization successful. Redirecting...");
-		// Redirect to Paystack payment page
-		window.location.href = transactionResponse.data.data.authorization_url;
 	};
 
 	const handleInputChange = (section, field, value, index = null) => {

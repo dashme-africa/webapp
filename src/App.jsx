@@ -39,6 +39,7 @@ import AccountSummary from "./components/AccountSummary";
 import "./index.css";
 import { toast, Toaster } from "sonner";
 import useAuthStore from "./store/auth.store";
+import useAdminStore from "./store/admin.store";
 
 const App = () => {
 	const dispatch = useDispatch();
@@ -74,11 +75,32 @@ const App = () => {
 				<Routes>
 					<Route path="/adminLogin" element={<AdminLogin />} />
 					{/* <Route path="/adminRegister" element={<AdminRegister />} /> */}
-					<Route path="/admin/products/edit/:id" element={<EditProduct />} />
+					<Route
+						path="/admin/products/edit/:id"
+						element={
+							<OnlyAdmin>
+								<EditProduct />
+							</OnlyAdmin>
+						}
+					/>
 
-					<Route path="/adminDashboard" element={<AdminDashboard />} />
+					<Route
+						path="/adminDashboard"
+						element={
+							<OnlyAdmin>
+								<AdminDashboard />
+							</OnlyAdmin>
+						}
+					/>
 
-					<Route path="/admin/notifications" element={<AdminNotification />} />
+					<Route
+						path="/admin/notifications"
+						element={
+							<OnlyAdmin>
+								<AdminNotification />
+							</OnlyAdmin>
+						}
+					/>
 
 					<Route
 						path="/"
@@ -223,16 +245,17 @@ const App = () => {
 
 export default App;
 
-function OnlyAuthenticated({ children }) {
-	const isAuthenticated = useAuthStore((st) => st.authed);
+function OnlyAdmin({ children }) {
+	const isAuthenticated = useAdminStore((st) => st.authed);
 
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		if (!isAuthenticated) toast.warning("Please login first");
+		if (!isAuthenticated) {
+			toast.warning("Please login first");
+			navigate("/adminLogin");
+		}
 	}, []);
 
-	if (!isAuthenticated) navigate("/login");
-
-	return children;
+	return isAuthenticated ? children : <></>;
 }

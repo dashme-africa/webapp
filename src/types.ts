@@ -41,6 +41,7 @@ export interface User {
 	updatedAt: Date;
 	products: Product[];
 	notification: Notification[];
+	transaction: Transaction[];
 	order: Order[];
 }
 

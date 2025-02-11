@@ -70,10 +70,11 @@ const AccountSummary = () => {
 	}, []);
 
 	useEffect(() => {
-		if (activeTab === "") {
+		if (activeTab === "transactions") {
 			fetchTransactions();
 		}
 	}, [activeTab]);
+
 	useEffect(() => {
 		if (activeTab === "orders") {
 			fetchOrders();
@@ -283,7 +284,7 @@ const AccountSummary = () => {
 	const fetchTransactions = async () => {
 		const res = await useFetch("/transactions");
 		if (!res.ok) return toast.error(res.message);
-		// console.log(res);
+		console.log(res);
 
 		setTransactions(res.data); // Set transactions data
 	};
