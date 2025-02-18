@@ -38,19 +38,11 @@ import ResetPassword from "./components/ResetPassword";
 import AccountSummary from "./components/AccountSummary";
 import "./index.css";
 import { toast, Toaster } from "sonner";
-import useAuthStore from "./store/auth.store";
 import useAdminStore from "./store/admin.store";
 
 const App = () => {
 	const dispatch = useDispatch();
 	const [selectedCategory, setSelectedCategory] = useState("");
-
-	const {
-		notifications,
-		unreadCount,
-		markNotificationAsRead,
-		markAllNotificationsAsRead,
-	} = useNotifications(true);
 
 	useEffect(() => {
 		const sampleItems = ["Item 1", "Item 2", "Item 3"];
