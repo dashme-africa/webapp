@@ -197,6 +197,7 @@ const UploadPage = () => {
 				!user.city ||
 				!user.state ||
 				!user.country ||
+				!user.street ||
 				!user.bio
 			) {
 				toast.error(
@@ -569,7 +570,9 @@ const UploadPage = () => {
 								className="form-control"
 								name="location"
 								value={
-									user ? `${user.city}, ${user.state}, ${user.country}` : ""
+									user
+										? `${user.street}, ${user.city}, ${user.state}, ${user.country}`
+										: ""
 								}
 								onChange={handleInputChange}
 								placeholder={t("upload.enterLocation")}

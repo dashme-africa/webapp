@@ -27,6 +27,7 @@ export interface User {
 	bio: string | null;
 	city: string | null;
 	country: string | null;
+	street: string | null;
 	email: string;
 	fullName: string;
 	isVerified: boolean;

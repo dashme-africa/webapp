@@ -26,6 +26,7 @@ const AccountSummary = () => {
 		city: user?.city,
 		state: user?.state,
 		country: user?.country,
+		street: user?.street,
 		bio: user?.bio,
 		accountName: user?.accountName,
 		accountNumber: user?.accountNumber,
@@ -199,6 +200,7 @@ const AccountSummary = () => {
 			!formData.city ||
 			!formData.state ||
 			!formData.country ||
+			!formData.street ||
 			!formData.bio ||
 			!formData.phoneNumber
 		) {
@@ -308,6 +310,7 @@ const AccountSummary = () => {
 						!formData.city ||
 						!formData.state ||
 						!formData.country ||
+						!formData.street ||
 						!formData.bio ||
 						!formData.phoneNumber ? (
 							<i className="d-block text-danger">
@@ -396,6 +399,17 @@ const AccountSummary = () => {
 									</Row>
 
 									<Row>
+										<Form.Group className="mb-4">
+											<Form.Label>Address Line 1 (street)</Form.Label>
+											<Form.Control
+												type="text"
+												name="street"
+												className="form-control"
+												defaultValue={user?.street}
+												onChange={handleChange}
+												placeholder="e.g. No. 9 Mary street"
+											/>
+										</Form.Group>
 										<Col md={4}>
 											<Form.Group className="mb-4">
 												<Form.Label>City</Form.Label>

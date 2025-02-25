@@ -36,6 +36,7 @@ const Checkout = () => {
 			city: user?.city,
 			state: user?.state,
 			country: user?.country,
+			street: user?.street,
 			phone: user?.phoneNumber,
 		},
 		parcels: { width: "10", length: "10", height: "5", weight: "2" },
@@ -131,6 +132,9 @@ const Checkout = () => {
 			if (!deliveryDetails.toAddress.country) {
 				return "Country is required.";
 			}
+			if (!deliveryDetails.toAddress.street) {
+				return "Street is required.";
+			}
 			if (!toAddress.phone || !/^0\d{10}$/.test(toAddress.phone)) {
 				return "Invalid phone number. Please enter 11 digits starting with 0.";
 			}
@@ -138,7 +142,7 @@ const Checkout = () => {
 		};
 
 		try {
-			const address = `${deliveryDetails.toAddress.city}, ${deliveryDetails.toAddress.state}, ${deliveryDetails.toAddress.country}`;
+			const address = `${deliveryDetails.toAddress.street}, ${deliveryDetails.toAddress.city}, ${deliveryDetails.toAddress.state}, ${deliveryDetails.toAddress.country}`;
 
 			const payload = {
 				type,
@@ -325,13 +329,23 @@ const Checkout = () => {
 
 						{/* Address Details */}
 						<Form.Group className="mb-2">
+							<div className="me-2 flex-grow mb-3">
+								<Form.Label>Address Line 1 (Street)</Form.Label>
+								<Form.Control
+									value={deliveryDetails.toAddress?.street}
+									onChange={(e) =>
+										handleInputChange("toAddress", "street", e.target.value)
+									}
+									placeholder="e.g. No. 9 Mary street"
+								/>
+							</div>
 							<div className="d-flex justify-content-between">
 								<div className="me-2 flex-grow-1">
 									<Form.Label>City</Form.Label>
 									<Form.Control
-										value={deliveryDetails.toAddress?.city}
+										value={deliveryDetails.toAddress?.street}
 										onChange={(e) =>
-											handleInputChange("toAddress", "city", e.target.value)
+											handleInputChange("toAddress", "street", e.target.value)
 										}
 										placeholder="e.g. Ikeja"
 									/>
