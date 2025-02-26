@@ -18,24 +18,9 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: "20"
-      # ------------------CACHE NODE_MODULE---------------
-      # - name: Cache npm dependencies
-      #   uses: actions/cache@v3
-      #   id: cache-node-modules
-      #   with:
-      #     path: "**/node_modules"
-      #     key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-      # - name: 🔨 Install Dependencies
-      #   if: steps.cache-node-modules.outputs.cache-hit != 'true'
-      #   run: |
-      #     npm install
-      #   env:
-      #     NODE_OPTIONS: "--max_old_space_size=4096"
-      #     CI: false
-      # ------------------------------------------------------------
       - name: 🏗 Build Project
         env:
-          VITE_API_URL: https://dashmeafrica-backend-gilt.vercel.app/api
+          VITE_API_URL: https://api.dashmeafrica.com/api
           VITE_GTAG_ID: G-2KMBVRVQ0C
         run: |
           npm install
