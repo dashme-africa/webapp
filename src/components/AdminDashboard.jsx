@@ -64,20 +64,28 @@ const AdminDashboard = () => {
 
 	return (
 		<div className="container my-5">
-			<h1>Admin Dashboard</h1>
+			<div className="flex mb-3 gap-3">
+				<h1>Admin Dashboard</h1>
 
-			{/* Notifications Bell */}
-			<Nav.Link href="/admin/notifications" className="me-3 position-relative">
-				<FaBell size={30} />
-				{unreadCount > 0 && (
-					<span
-						className="position-absolute top-0 start-0 translate-middle badge rounded-pill bg-danger"
-						style={{ fontSize: "0.8em" }}
-					>
-						{unreadCount}
-					</span>
-				)}
-			</Nav.Link>
+				{/* Notifications Bell */}
+				<Nav.Link
+					href="/admin/notifications"
+					className="me-3 position-relative"
+				>
+					<FaBell size={30} />
+					{unreadCount > 0 && (
+						<span
+							className="position-absolute top-0 start-0 translate-middle badge rounded-pill bg-danger"
+							style={{ fontSize: "0.8em" }}
+						>
+							{unreadCount}
+						</span>
+					)}
+				</Nav.Link>
+				<Nav.Link href="/admin/transactions" className="me-3 position-relative">
+					Transactions
+				</Nav.Link>
+			</div>
 
 			{/* Table for products */}
 			<table className="table table-bordered">

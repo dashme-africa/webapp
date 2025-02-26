@@ -286,7 +286,6 @@ const AccountSummary = () => {
 	const fetchTransactions = async () => {
 		const res = await useFetch("/transactions");
 		if (!res.ok) return toast.error(res.message);
-		console.log(res);
 
 		setTransactions(res.data); // Set transactions data
 	};

@@ -110,6 +110,7 @@ export interface Transaction {
 	transactionId: string;
 	updatedAt: Date;
 	order: Order | null;
+	user: User;
 }
 
 export interface Notification {
