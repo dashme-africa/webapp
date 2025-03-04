@@ -241,11 +241,13 @@ const UploadPage = () => {
 		} catch (error) {
 			console.error("An unexpected error occurred:", error);
 			if (
-				error.response &&
-				error.response.data &&
-				error.response.data.message
+				error?.response &&
+				error?.response?.data &&
+				error?.response?.data?.message
 			) {
-				toast.error(`${error.response.data.message}`);
+				toast.error(`${error.response.data.message}`, {
+					description: JSON.stringify(error),
+				});
 			} else {
 				toast.error("An unexpected error occurred.");
 			}

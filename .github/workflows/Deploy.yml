@@ -20,6 +20,7 @@ jobs:
           node-version: "20"
       - name: 🏗 Build Project
         env:
+          # VITE_API_URL: https://dashmeafrica-backend-gilt.vercel.app/api
           VITE_API_URL: https://api.dashmeafrica.com/api
           VITE_GTAG_ID: G-2KMBVRVQ0C
         run: |
