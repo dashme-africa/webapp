@@ -40,6 +40,11 @@ export interface User {
 	resetPasswordExpires: Date | null;
 	createdAt: Date;
 	updatedAt: Date;
+	refID: string;
+	referredBy: string;
+	referrals: {
+		username: string;
+	}[];
 	products: Product[];
 	notification: Notification[];
 	transaction: Transaction[];

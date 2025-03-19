@@ -8,6 +8,7 @@ import MyProducts from "./MyProducts";
 import useUserStore from "../store/user.store";
 import { toast } from "sonner";
 import { useFetch } from "../api.service";
+import MyReferrals from "./ReferralsPage";
 
 const AccountSummary = () => {
 	const { t } = useTranslation();
@@ -49,15 +50,6 @@ const AccountSummary = () => {
 
 	/**@type {React.MutableRefObject<HTMLFormElement|null>} */
 	const formRef = useRef(null);
-
-	const displayAlert = (message, variant = "success", duration = 10000) => {
-		setAlertMessage(message);
-		setAlertVariant(variant);
-		setShowAlert(true);
-		setTimeout(() => {
-			setShowAlert(false);
-		}, duration);
-	};
 
 	useEffect(() => {
 		const fetchBanks = async () => {
@@ -105,15 +97,6 @@ const AccountSummary = () => {
 						`/track-shipment/${order.shipmentReference}`
 					);
 
-					// const shipmentStatusResponse = await axios.get(
-					// 	`${apiURL}/track-shipment/${order.shipmentReference}`,
-					// 	{
-					// 		headers: {
-					// 			Authorization: `Bearer ${token}`,
-					// 		},
-					// 	}
-					// );
-					// console.log(shipmentStatusResponse.data.data.current_status)
 					return {
 						...order,
 						shipmentStatus: shipmentStatusResponse.data.data.current_status,
@@ -173,27 +156,11 @@ const AccountSummary = () => {
 	 */
 	async function handleSubmit(ev) {
 		ev.preventDefault();
-
-		// Initialize formDataToSubmit first
-		// console.log("state");
-		// console.table([formData]);
-		// console.log("formData");
-		// console.table([Object.fromEntries(new FormData(ev.currentTarget))]);
 		const formDataToSubmit = new FormData(ev.currentTarget);
 		const formData = Object.fromEntries(formDataToSubmit);
-
-		// Object.keys(formData).forEach((key) => {
-		// 	formDataToSubmit.append(key, formData[key]);
-		// });
-
-		// Append image if it exists
 		if (image) {
 			formDataToSubmit.append("image", image);
 		}
-
-		// Validate form data
-		// console.log([...formDataToSubmit.entries()]);
-		// console.log(formData);
 
 		if (
 			!formData.fullName ||
@@ -241,8 +208,6 @@ const AccountSummary = () => {
 		if (!bankCode) {
 			bankCode = getBankCode(bankName);
 		}
-		// console.log({ accountNumber, bankName, bankCode });
-		// return;
 
 		if (!accountNumber || !bankName) {
 			toast.error("Please fill in the account number and bank name to verify.");
@@ -258,12 +223,6 @@ const AccountSummary = () => {
 			bank_name: bankName,
 			bank_code: bankCode,
 		});
-
-		// return console.log({
-		// 	account_number: accountNumber,
-		// 	bank_name: bankName,
-		// 	bank_code: bankCode,
-		// });
 
 		const queryString = searchParams.toString();
 
@@ -513,16 +472,6 @@ const AccountSummary = () => {
 										<Form.Label htmlFor="bankName">
 											{t("profile.bankName", {})}
 										</Form.Label>
-										{/* <Form.Control
-											type="text"
-											name="bankName"
-											id="bankName"
-											className="form-control"
-											placeholder="Type to find bank name"
-											defaultValue={user?.bankName}
-											onChange={handleChange}
-											// readOnly={isVerified}
-										/> */}
 
 										<Form.Select
 											type="text"
@@ -683,6 +632,8 @@ const AccountSummary = () => {
 
 			case "my-products":
 				return <MyProducts />;
+			case "referrals":
+				return <MyReferrals />;
 			default:
 				return <h4>Select a section</h4>;
 		}
@@ -708,6 +659,17 @@ const AccountSummary = () => {
 								onClick={() => setActiveTab("profile")}
 							>
 								My Profile
+							</li>
+							<li
+								className={`px-3 py-3 rounded ${
+									activeTab === "referrals"
+										? "bg-success text-white"
+										: "hover-bg-success"
+								}`}
+								style={{ cursor: "pointer" }}
+								onClick={() => setActiveTab("referrals")}
+							>
+								Referrals
 							</li>
 							<li
 								className={`px-3 py-3 rounded ${

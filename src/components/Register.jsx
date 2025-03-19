@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 // import ReCAPTCHA from "react-google-recaptcha";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { toast } from "sonner";
@@ -9,12 +9,14 @@ const apiURL = import.meta.env.VITE_API_URL;
 // const siteKey = "6LcNPqwqAAAAAGaqwfOrxhB8t8av07unRcvt-UfC"; // Google reCAPTCHA site key
 
 const Register = () => {
+	const [searchParams] = useSearchParams();
 	const [formData, setFormData] = useState({
 		fullName: "",
 		username: "",
 		email: "",
 		password: "",
 		confirmPassword: "",
+		referredBy: searchParams.get("ref") || "",
 	});
 	// const [captchaToken, setCaptchaToken] = useState(null); // Store the reCAPTCHA token
 	const [isSubmitting, setIsSubmitting] = useState(false);
@@ -184,6 +186,20 @@ const Register = () => {
 							>
 								{confirmPasswordIcon}
 							</span>
+						</div>
+
+						{/* Referral */}
+						<div className="mb-4">
+							<input
+								type="text"
+								name="referredBy"
+								className="form-control"
+								value={formData.referredBy}
+								onChange={handleChange}
+								placeholder="Referral code (Optional)"
+								required
+							/>
+							{/* <small className="form-text text-muted">Optional</small> */}
 						</div>
 
 						{/* Terms */}

@@ -12,6 +12,7 @@ interface UserStore {
 	removeProduct(id: string): void;
 	addProduct(product: Product): void;
 	updateProduct(product: Product): void;
+	updateRefID(refID: string): void;
 }
 
 const useUserStore = create<UserStore>()(
@@ -66,6 +67,10 @@ const useUserStore = create<UserStore>()(
 						}),
 					},
 				}));
+			},
+			updateRefID(refID) {
+				const user = get().user!;
+				set((st) => ({ ...st, user: { ...user, refID } }));
 			},
 		})
 	)
