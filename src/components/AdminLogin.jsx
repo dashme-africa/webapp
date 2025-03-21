@@ -33,7 +33,7 @@ const AdminLogin = () => {
 		e.preventDefault();
 
 		const res = await useFetch("/admin/login", "POST", { email, password });
-		console.log(res);
+		// console.log(res);
 
 		if (!res.ok) return toast.error(res.message);
 		toast.success(res.message);

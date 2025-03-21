@@ -40,6 +40,7 @@ import "./index.css";
 import { toast, Toaster } from "sonner";
 import useAdminStore from "./store/admin.store";
 import AdminTransactions from "./screens/AdminTransactions";
+import AdminUserPage from "./screens/AdminUsers";
 
 const App = () => {
 	const dispatch = useDispatch();
@@ -85,6 +86,16 @@ const App = () => {
 							</OnlyAdmin>
 						}
 					/>
+
+					<Route
+						path="/admin/users"
+						element={
+							<OnlyAdmin>
+								<AdminUserPage />
+							</OnlyAdmin>
+						}
+					/>
+
 					<Route
 						path="/admin/transactions"
 						element={

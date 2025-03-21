@@ -82,6 +82,9 @@ const AdminDashboard = () => {
 						</span>
 					)}
 				</Nav.Link>
+				<Nav.Link href="/admin/users" className="me-3 position-relative">
+					Users
+				</Nav.Link>
 				<Nav.Link href="/admin/transactions" className="me-3 position-relative">
 					Transactions
 				</Nav.Link>
@@ -109,7 +112,7 @@ const AdminDashboard = () => {
 							<td>
 								<Link to={product.primaryImage}>
 									<img
-										src={product.primaryImage || "/placeholder.png"}
+										src={product.primaryImage || "/placeholder.jpg"}
 										alt={product.title}
 										style={{
 											width: "80px",

@@ -42,9 +42,8 @@ export interface User {
 	updatedAt: Date;
 	refID: string;
 	referredBy: string;
-	referrals: {
-		username: string;
-	}[];
+	referrals: User[];
+	referralCount: string;
 	products: Product[];
 	notification: Notification[];
 	transaction: Transaction[];
