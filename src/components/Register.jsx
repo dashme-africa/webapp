@@ -197,7 +197,6 @@ const Register = () => {
 								value={formData.referredBy}
 								onChange={handleChange}
 								placeholder="Referral code (Optional)"
-								required
 							/>
 							{/* <small className="form-text text-muted">Optional</small> */}
 						</div>
